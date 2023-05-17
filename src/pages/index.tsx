@@ -22,7 +22,7 @@ function CalendarComponent(){
 
   return(
 
-    <div className="max-w-xs mt-20 bg-white">
+    <div className=" mt-20 max-w-xs bg-[#fff] py-4 px-6 rounded-2xl rounded-br-[4.5em] shadow-sm">
     <AgeForm />
     <div>
       <p className="my-3 text-center">something goes here</p>
@@ -44,7 +44,7 @@ function AgeForm() {
             Day
           </label>
           <input
-          className="text-xl bg-transparent"
+          className="text-xl bg-sky-500"
             type="text"
             inputMode="numeric"
             pattern="d?d"
@@ -61,7 +61,7 @@ function AgeForm() {
             Month
           </label>
           <input
-          className="text-xl bg-transparent"
+          className="text-xl bg-sky-500"
             type="text"
             inputMode="numeric"
             pattern="d?d"
@@ -78,7 +78,7 @@ function AgeForm() {
             Year
           </label>
           <input
-          className="text-xl bg-transparent"
+          className="text-xl bg-sky-500"
             type="text"
             inputMode="numeric"
             pattern="dddd"
