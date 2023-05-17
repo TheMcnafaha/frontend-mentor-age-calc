@@ -22,7 +22,7 @@ function CalendarComponent(){
 
   return(
 
-    <div className=" mt-20 max-w-xs bg-[#fff] py-4 px-6 rounded-2xl rounded-br-[4.5em] shadow-sm">
+    <div className=" mt-20 max-w-[340px] bg-[#fff] py-4 px-6 rounded-2xl rounded-br-[4.5em] shadow-sm">
     <AgeForm />
     <div>
       <p className="my-3 text-center">something goes here</p>
@@ -35,8 +35,8 @@ function CalendarComponent(){
 function AgeForm() {
   return (
     <>
-      <form action="" className="flex outline">
-        <div className="flex flex-col w-1/3 ">
+      <form action="" className="flex">
+        <div className="flex flex-col w-1/3 pr-5 ">
           <label
             htmlFor="day"
             className=" text-xs uppercase text-template_smokey_grey font-light"
@@ -44,7 +44,7 @@ function AgeForm() {
             Day
           </label>
           <input
-          className="text-xl bg-sky-500"
+          className="text-xl border rounded ml-[.10rem] pl-3 py-1 m-1  "
             type="text"
             inputMode="numeric"
             pattern="d?d"
@@ -53,7 +53,7 @@ function AgeForm() {
           />
         </div>
 
-        <div className="flex flex-col w-1/3 ">
+        <div className="flex flex-col w-1/3 pr-5 ">
           <label
             htmlFor="month"
             className=" text-xs uppercase text-template_smokey_grey font-light"
@@ -61,7 +61,7 @@ function AgeForm() {
             Month
           </label>
           <input
-          className="text-xl bg-sky-500"
+          className="text-xl border rounded ml-[.10rem] pl-3 py-1 m-1  "
             type="text"
             inputMode="numeric"
             pattern="d?d"
@@ -70,7 +70,7 @@ function AgeForm() {
           />
         </div>
 
-        <div className="flex flex-col w-1/3 ">
+        <div className="flex flex-col w-1/3 pr-5 ">
           <label
             htmlFor="year"
             className=" text-xs uppercase text-template_smokey_grey font-light"
@@ -78,7 +78,7 @@ function AgeForm() {
             Year
           </label>
           <input
-          className="text-xl bg-sky-500"
+          className="text-xl border rounded ml-[.10rem] pl-3 py-1 m-1  "
             type="text"
             inputMode="numeric"
             pattern="dddd"
