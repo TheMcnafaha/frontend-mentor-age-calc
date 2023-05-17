@@ -13,8 +13,10 @@ const Home: NextPage = () => {
       <main>
         <AgeForm />
 
-<div></div>
-<DisplayResult/>
+        <div>
+          <p className="text-center my-3">something goes here</p>
+        </div>
+        <DisplayResult />
       </main>
     </>
   );
@@ -23,14 +25,9 @@ const Home: NextPage = () => {
 function AgeForm() {
   return (
     <>
-      <form action="">
-        <div>
+      <form action="" className="flex outline" >
+        <div className="grid w-1/3 ">
           <label htmlFor="day">Day</label>
-          <label htmlFor="month">Month</label>
-          <label htmlFor="year">Year</label>
-        </div>
-
-        <div>
           <input
             type="text"
             inputMode="numeric"
@@ -38,6 +35,10 @@ function AgeForm() {
             id="day"
             defaultValue={24}
           />
+        </div>
+
+        <div className="grid w-1/3 ">
+          <label htmlFor="month">Month</label>
           <input
             type="text"
             inputMode="numeric"
@@ -45,6 +46,10 @@ function AgeForm() {
             id="month"
             defaultValue={"09"}
           />
+        </div>
+
+        <div className="grid w-1/3 ">
+          <label htmlFor="year">Year</label>
           <input
             type="text"
             inputMode="numeric"
@@ -58,19 +63,17 @@ function AgeForm() {
   );
 }
 
-
-function DisplayResult(){
-
+function DisplayResult() {
   return (
     <>
-    <h1>
-      38 years 
-      <br></br>
-      3 months
-      <br></br>
-      26 days
-    </h1>
+      <h1 className=" text-3xl outline-dotted">
+        <span className=" text-template_purple">38</span> years
+        <br></br>
+        <span className=" text-template_purple">3</span> months
+        <br></br>
+        <span className=" text-template_purple">26</span> days
+      </h1>
     </>
-  )
+  );
 }
 export default Home;
