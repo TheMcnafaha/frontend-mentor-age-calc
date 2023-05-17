@@ -90,7 +90,7 @@ function AgeForm() {
 function DisplayResult() {
   return (
     <>
-      <h1 className="  text-5xl  font-extrabold italic outline-dotted ">
+      <h1 className="  text-5xl  font-extrabold italic mb-6 ">
         <span className=" text-template_purple">38</span> years
         <br></br>
         <span className=" text-template_purple">3</span> months
