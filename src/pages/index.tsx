@@ -11,10 +11,66 @@ const Home: NextPage = () => {
         <link rel="icon" href="/calculator-svgrepo-com.svg" />
       </Head>
       <main>
-       
+        <AgeForm />
+
+<div></div>
+<DisplayResult/>
       </main>
     </>
   );
 };
 
+function AgeForm() {
+  return (
+    <>
+      <form action="">
+        <div>
+          <label htmlFor="day">Day</label>
+          <label htmlFor="month">Month</label>
+          <label htmlFor="year">Year</label>
+        </div>
+
+        <div>
+          <input
+            type="text"
+            inputMode="numeric"
+            pattern="d?d"
+            id="day"
+            defaultValue={24}
+          />
+          <input
+            type="text"
+            inputMode="numeric"
+            pattern="d?d"
+            id="month"
+            defaultValue={"09"}
+          />
+          <input
+            type="text"
+            inputMode="numeric"
+            pattern="dddd"
+            id="year"
+            defaultValue={1984}
+          />
+        </div>
+      </form>
+    </>
+  );
+}
+
+
+function DisplayResult(){
+
+  return (
+    <>
+    <h1>
+      38 years 
+      <br></br>
+      3 months
+      <br></br>
+      26 days
+    </h1>
+    </>
+  )
+}
 export default Home;
