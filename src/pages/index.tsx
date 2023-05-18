@@ -1,7 +1,7 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-
+import Image from "next/image";
 const Home: NextPage = () => {
   return (
     <>
@@ -19,11 +19,9 @@ const Home: NextPage = () => {
 
 function CalendarComponent() {
   return (
-    <div className=" mt-20 max-w-[340px] rounded-2xl rounded-br-[4.5em] bg-[#fff] px-6 py-4 shadow-sm">
+    <div className=" mt-20 flex max-w-[340px] flex-col rounded-2xl rounded-br-[4.5em] bg-[#fff] px-6 py-4 shadow-sm">
       <AgeForm />
-      <div>
-        <p className="my-3 text-center">something goes here</p>
-      </div>
+      <MiddleGraphic />
       <DisplayResult />
     </div>
   );
@@ -31,7 +29,7 @@ function CalendarComponent() {
 function AgeForm() {
   return (
     <>
-      <form action="" className="flex mt-5">
+      <form action="" className="mt-5 flex">
         <div className="flex w-1/3 flex-col pr-5 ">
           <label
             htmlFor="day"
@@ -87,10 +85,28 @@ function AgeForm() {
   );
 }
 
+function MiddleGraphic() {
+  return (
+    <>
+      <div className="relative top-[53px] w-full ring-1 ring-template_ligth_grey "></div>
+      <div className="z-10 flex min-w-full justify-center">
+        <div className=" mb-4 mt-5 flex  h-16 w-16  rounded-full bg-template_purple p-4 ">
+          <Image
+            src="/icon-arrow.svg"
+            width={46}
+            height={44}
+            alt="downpointing  arrow"
+          />
+        </div>
+      </div>
+    </>
+  );
+}
+
 function DisplayResult() {
   return (
     <>
-      <h1 className="  text-5xl  font-extrabold italic mb-6 ">
+      <h1 className="  mb-6  text-5xl font-extrabold italic ">
         <span className=" text-template_purple">38</span> years
         <br></br>
         <span className=" text-template_purple">3</span> months
