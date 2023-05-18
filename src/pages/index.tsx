@@ -104,6 +104,8 @@ function MiddleGraphic() {
 }
 
 function DisplayResult() {
+  const myTime: Date = new Date();
+
   return (
     <>
       <h1 className="  mb-6  text-5xl font-extrabold italic ">
@@ -116,4 +118,36 @@ function DisplayResult() {
     </>
   );
 }
+
+function getTimeFromUnixEpochs(start: number, end: number): string {
+  //constants as milliseconds
+  const year = 31_556_952_000;
+  let delta = start - end;
+
+  if (delta % year === 0) {
+    return `${Math.floor(delta / year)} years`;
+  }
+  let output: string = "";
+  output = `${Math.floor(delta / year)} years`;
+  delta = delta % year;
+
+  //constants as milliseconds
+  const month = 2_629_746_000;
+
+  if (delta % month === 0) {
+    return (output += `\n${Math.floor(delta / month)} months`);
+  }
+
+  //constants as milliseconds
+  const day = 86_400_000;
+  return (output += `\n${Math.floor(delta / month)} months \n${Math.floor(
+    (delta % month) / day
+  )} days`);
+}
+
+const today: Date = new Date();
+const myDOB: Date = new Date("November 22,2003 ");
+
+console.log(getTimeFromUnixEpochs(today.getTime(), myDOB.getTime()));
+
 export default Home;
