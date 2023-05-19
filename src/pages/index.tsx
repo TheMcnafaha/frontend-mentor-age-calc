@@ -26,20 +26,20 @@ type TypeAge = {
 type TypePropAge = {
   age: TypeAge;
 };
-type TypeStateAge={
-  nextAge:Function
-}
+type TypeStateAge = {
+  nextAge: Function;
+};
 
 function CalendarComponent() {
   const [age, setAge] = useState({ year: 38, month: 3, day: 26 } as TypeAge);
 
-  function nextAge(nextAge:TypeAge){
-    setAge(nextAge)
+  function nextAge(nextAge: TypeAge) {
+    setAge(nextAge);
   }
   return (
     <div className=" mt-20 flex max-w-[340px] flex-col rounded-2xl rounded-br-[4.5em] bg-[#fff] px-6 py-4 shadow-sm">
       <AgeForm />
-      <MiddleGraphic nextAge={nextAge}/>
+      <MiddleGraphic nextAge={nextAge} />
       <DisplayResult age={age} />
     </div>
   );
@@ -103,18 +103,20 @@ function AgeForm() {
   );
 }
 
-function MiddleGraphic({nextAge}:TypeStateAge) {
+function MiddleGraphic({ nextAge }: TypeStateAge) {
+  const test = { month: 11, year: 11, day: 11 } as TypeAge;
   return (
     <>
       <div className="relative top-[53px] w-full ring-1 ring-template_ligth_grey "></div>
       <div className="z-10 flex min-w-full justify-center">
-        <div className=" mb-4 mt-5 flex  h-16 w-16  rounded-full bg-template_purple p-4 ">
-          <input
+        <input
+          className=" mb-4 mt-5 flex  h-16 w-16  rounded-full bg-template_purple p-4 "
+          id="nextAge"
           type="image"
-            src="/icon-arrow.svg"
-            alt="downpointing  arrow"
-          />
-        </div>
+          src="/icon-arrow.svg"
+          alt="downpointing  arrow"
+          onClick={() => nextAge(test)}
+        />
       </div>
     </>
   );
