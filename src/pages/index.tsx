@@ -18,19 +18,23 @@ const Home: NextPage = () => {
   );
 };
 
-type TypeAge={
-  year:number,
-  month:number,
-  day:number
-}
+type TypeAge = {
+  year: number;
+  month: number;
+  day: number;
+};
+type TypePropAge = {
+  age: TypeAge;
+};
+
 function CalendarComponent() {
-  const [age,setAge]=useState({year:38,month:3,day:26} as TypeAge)
-  console.log(`inital age`, age)
+  const [age, setAge] = useState({ year: 38, month: 3, day: 26 } as TypeAge);
+  
   return (
     <div className=" mt-20 flex max-w-[340px] flex-col rounded-2xl rounded-br-[4.5em] bg-[#fff] px-6 py-4 shadow-sm">
       <AgeForm />
       <MiddleGraphic />
-      <DisplayResult />
+      <DisplayResult age={age} />
     </div>
   );
 }
@@ -111,16 +115,16 @@ function MiddleGraphic() {
   );
 }
 
-function DisplayResult() {
+function DisplayResult({ age }: TypePropAge) {
   const myTime: Date = new Date();
   return (
     <>
       <h1 className="  mb-6  text-5xl font-extrabold italic ">
-        <span className=" text-template_purple">38</span> years
+        <span className=" text-template_purple">{age.year}</span> years
         <br></br>
-        <span className=" text-template_purple">3</span> months
+        <span className=" text-template_purple">{age.month}</span> months
         <br></br>
-        <span className=" text-template_purple">26</span> days
+        <span className=" text-template_purple">{age.day}</span> days
       </h1>
     </>
   );
