@@ -26,14 +26,20 @@ type TypeAge = {
 type TypePropAge = {
   age: TypeAge;
 };
+type TypeStateAge={
+  nextAge:Function
+}
 
 function CalendarComponent() {
   const [age, setAge] = useState({ year: 38, month: 3, day: 26 } as TypeAge);
-  
+
+  function nextAge(nextAge:TypeAge){
+    setAge(nextAge)
+  }
   return (
     <div className=" mt-20 flex max-w-[340px] flex-col rounded-2xl rounded-br-[4.5em] bg-[#fff] px-6 py-4 shadow-sm">
       <AgeForm />
-      <MiddleGraphic />
+      <MiddleGraphic nextAge={nextAge}/>
       <DisplayResult age={age} />
     </div>
   );
@@ -97,16 +103,15 @@ function AgeForm() {
   );
 }
 
-function MiddleGraphic() {
+function MiddleGraphic({nextAge}:TypeStateAge) {
   return (
     <>
       <div className="relative top-[53px] w-full ring-1 ring-template_ligth_grey "></div>
       <div className="z-10 flex min-w-full justify-center">
         <div className=" mb-4 mt-5 flex  h-16 w-16  rounded-full bg-template_purple p-4 ">
-          <Image
+          <input
+          type="image"
             src="/icon-arrow.svg"
-            width={46}
-            height={44}
             alt="downpointing  arrow"
           />
         </div>
