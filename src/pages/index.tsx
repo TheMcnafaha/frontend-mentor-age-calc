@@ -44,9 +44,10 @@ function CalendarComponent() {
         action=""
         onSubmit={(e) => {
           e.preventDefault();
-          const newAge=fixedNewAgeValueDOM()
-          if(!(newAge instanceof Error)){nextAge(newAge)}
-          
+          const newAge = fixedNewAgeValueDOM();
+          if (!(newAge instanceof Error)) {
+            nextAge(newAge);
+          }
         }}
       >
         <AgeFormInput />
@@ -145,30 +146,40 @@ function DisplayResult({ age }: TypePropAge) {
   );
 }
 
-function getTimeFromUnixEpochs(start: number, end: number): string {
+function getTimeFromUnixEpochs(start: number, end: number): TypeAge {
+  const output = {
+    year: 0,
+    month: 0,
+    day: 0,
+  };
   //constants as milliseconds
   const year = 31_556_952_000;
   let delta = start - end;
 
   if (delta % year === 0) {
-    return `${Math.floor(delta / year)} years`;
+    output.year = Math.floor(delta / year);
+    return output;
   }
-  let output: string = "";
-  output = `${Math.floor(delta / year)} years`;
+  output.year = Math.floor(delta / year);
+
   delta = delta % year;
 
   //constants as milliseconds
   const month = 2_629_746_000;
 
   if (delta % month === 0) {
-    return (output += `\n${Math.floor(delta / month)} months`);
+    output.month = Math.floor(delta / year);
+
+    return output;
   }
 
   //constants as milliseconds
   const day = 86_400_000;
-  return (output += `\n${Math.floor(delta / month)} months \n${Math.floor(
-    (delta % month) / day
-  )} days`);
+  output.month = Math.floor(delta / month);
+  output.day = Math.floor((delta % month) / day);
+  console.log(output);
+
+  return output;
 }
 
 const today: Date = new Date();
@@ -177,23 +188,32 @@ const myDOB: Date = new Date("November 22,2003 ");
 console.log(getTimeFromUnixEpochs(today.getTime(), myDOB.getTime()));
 
 function fixedNewAgeValueDOM(): TypeAge | Error {
-  const newYear =Number( (document.getElementById("year") as HTMLInputElement)!.value);
-  const newMonth =Number( (document.getElementById("month") as HTMLInputElement)!
-    .value);
-  const newDay =Number( (document.getElementById("day") as HTMLInputElement)!.value);
+  const newYear = Number(
+    (document.getElementById("year") as HTMLInputElement)!.value
+  );
+  const newMonth = Number(
+    (document.getElementById("month") as HTMLInputElement)!.value
+  );
+  const newDay = Number(
+    (document.getElementById("day") as HTMLInputElement)!.value
+  );
 
   if (
     typeof newDay === "number" &&
     typeof newMonth === "number" &&
     typeof newYear === "number"
   ) {
-    return {
-      year: newYear,
-      month: newMonth,
-      day: newDay,
-    };}
+    // input has been sanitanized so far but not processed
+    const presentTime = new Date();
+    const inputTime = new Date(newYear, newMonth, newDay);
+    return getTimeFromUnixEpochs(
+      presentTime.getTime(),
+      inputTime.getTime()
+    );
 
-    throw new FormatError("data must be number");
   }
+
+  throw new FormatError("data must be number");
+}
 
 export default Home;
