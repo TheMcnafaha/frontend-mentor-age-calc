@@ -2,7 +2,7 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { HTMLInputTypeAttribute, useState } from "react";
 const Home: NextPage = () => {
   return (
     <>
@@ -38,11 +38,18 @@ function CalendarComponent() {
   }
   return (
     <div className=" mt-20 flex max-w-[340px] flex-col rounded-2xl rounded-br-[4.5em] bg-[#fff] px-6 py-4 shadow-sm">
-      <form action="" onClick={() => nextAge(test)}>
-      <AgeFormInput />
-      <AgeFormSubmit/>
+      <form
+        action=""
+        onSubmit={(e) => {
+          e.preventDefault();
+          const newAge=fixedNewAgeValueDOM()
+          nextAge(newAge);
+        }}
+      >
+        <AgeFormInput />
+        <AgeFormSubmit />
       </form>
-      
+
       <DisplayResult age={age} />
     </div>
   );
@@ -62,7 +69,6 @@ function AgeFormInput() {
             className="m-1  ml-[.10rem] rounded py-1 pl-3 text-xl mix-blend-darken ring-1 ring-template_ligth_grey  "
             type="text"
             inputMode="numeric"
-            pattern="d?d"
             id="day"
             defaultValue={24}
           />
@@ -79,7 +85,6 @@ function AgeFormInput() {
             className="m-1  ml-[.10rem] rounded py-1 pl-3 text-xl mix-blend-darken ring-1 ring-template_ligth_grey  "
             type="text"
             inputMode="numeric"
-            pattern="d?d"
             id="month"
             defaultValue={"09"}
           />
@@ -96,7 +101,6 @@ function AgeFormInput() {
             className="m-1  ml-[.10rem] rounded  py-1 pl-3 text-xl mix-blend-darken ring-1 ring-template_ligth_grey  "
             type="text"
             inputMode="numeric"
-            pattern="dddd"
             id="year"
             defaultValue={1984}
           />
@@ -107,13 +111,12 @@ function AgeFormInput() {
 }
 
 function AgeFormSubmit() {
-  
   return (
     <>
       <div className="relative top-[53px] w-full ring-1 ring-template_ligth_grey"></div>
       <div className=" flex min-w-full justify-center">
         <input
-          className=" mb-4 mt-5 flex  h-16 w-16  rounded-full bg-template_purple p-4 z-10 "
+          className=" z-10 mb-4 mt-5  flex h-16  w-16 rounded-full bg-template_purple p-4 "
           id="nextAge"
           type="image"
           src="/icon-arrow.svg"
@@ -169,5 +172,25 @@ const today: Date = new Date();
 const myDOB: Date = new Date("November 22,2003 ");
 
 console.log(getTimeFromUnixEpochs(today.getTime(), myDOB.getTime()));
+
+function fixedNewAgeValueDOM(): TypeAge | Error {
+  const newYear =Number( (document.getElementById("year") as HTMLInputElement)!.value);
+  const newMonth =Number( (document.getElementById("month") as HTMLInputElement)!
+    .value);
+  const newDay =Number( (document.getElementById("day") as HTMLInputElement)!.value);
+
+  if (
+    typeof newDay === "number" &&
+    typeof newMonth === "number" &&
+    typeof newYear === "number"
+  ) {
+    return {
+      year: newYear,
+      month: newMonth,
+      day: newDay,
+    };}
+
+    throw new Error("data must be number");
+  }
 
 export default Home;
