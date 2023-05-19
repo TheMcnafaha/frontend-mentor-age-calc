@@ -32,15 +32,15 @@ type TypeStateAge = {
 
 function CalendarComponent() {
   const [age, setAge] = useState({ year: 38, month: 3, day: 26 } as TypeAge);
-
+  const test = { month: 11, year: 11, day: 11 } as TypeAge;
   function nextAge(nextAge: TypeAge) {
     setAge(nextAge);
   }
   return (
     <div className=" mt-20 flex max-w-[340px] flex-col rounded-2xl rounded-br-[4.5em] bg-[#fff] px-6 py-4 shadow-sm">
-      <form action="">
+      <form action="" onClick={() => nextAge(test)}>
       <AgeFormInput />
-      <AgeFormSubmit nextAge={nextAge} />
+      <AgeFormSubmit/>
       </form>
       
       <DisplayResult age={age} />
@@ -106,8 +106,8 @@ function AgeFormInput() {
   );
 }
 
-function AgeFormSubmit({ nextAge }: TypeStateAge) {
-  const test = { month: 11, year: 11, day: 11 } as TypeAge;
+function AgeFormSubmit() {
+  
   return (
     <>
       <div className="relative top-[53px] w-full ring-1 ring-template_ligth_grey"></div>
@@ -118,7 +118,6 @@ function AgeFormSubmit({ nextAge }: TypeStateAge) {
           type="image"
           src="/icon-arrow.svg"
           alt="downpointing  arrow"
-          onClick={() => nextAge(test)}
         />
       </div>
     </>
