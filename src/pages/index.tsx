@@ -30,6 +30,8 @@ type TypeStateAge = {
   nextAge: Function;
 };
 
+class FormatError extends Error {}
+
 function CalendarComponent() {
   const [age, setAge] = useState({ year: 38, month: 3, day: 26 } as TypeAge);
   const test = { month: 11, year: 11, day: 11 } as TypeAge;
@@ -43,7 +45,8 @@ function CalendarComponent() {
         onSubmit={(e) => {
           e.preventDefault();
           const newAge=fixedNewAgeValueDOM()
-          nextAge(newAge);
+          if(!(newAge instanceof Error)){nextAge(newAge)}
+          
         }}
       >
         <AgeFormInput />
@@ -190,7 +193,7 @@ function fixedNewAgeValueDOM(): TypeAge | Error {
       day: newDay,
     };}
 
-    throw new Error("data must be number");
+    throw new FormatError("data must be number");
   }
 
 export default Home;
