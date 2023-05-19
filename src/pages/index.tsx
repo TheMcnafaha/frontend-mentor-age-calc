@@ -38,16 +38,19 @@ function CalendarComponent() {
   }
   return (
     <div className=" mt-20 flex max-w-[340px] flex-col rounded-2xl rounded-br-[4.5em] bg-[#fff] px-6 py-4 shadow-sm">
-      <AgeForm />
-      <MiddleGraphic nextAge={nextAge} />
+      <form action="">
+      <AgeFormInput />
+      <AgeFormSubmit nextAge={nextAge} />
+      </form>
+      
       <DisplayResult age={age} />
     </div>
   );
 }
-function AgeForm() {
+function AgeFormInput() {
   return (
     <>
-      <form action="" className="mt-5 flex">
+      <div className="mt-5 flex">
         <div className="flex w-1/3 flex-col pr-5 ">
           <label
             htmlFor="day"
@@ -98,19 +101,19 @@ function AgeForm() {
             defaultValue={1984}
           />
         </div>
-      </form>
+      </div>
     </>
   );
 }
 
-function MiddleGraphic({ nextAge }: TypeStateAge) {
+function AgeFormSubmit({ nextAge }: TypeStateAge) {
   const test = { month: 11, year: 11, day: 11 } as TypeAge;
   return (
     <>
-      <div className="relative top-[53px] w-full ring-1 ring-template_ligth_grey "></div>
-      <div className="z-10 flex min-w-full justify-center">
+      <div className="relative top-[53px] w-full ring-1 ring-template_ligth_grey"></div>
+      <div className=" flex min-w-full justify-center">
         <input
-          className=" mb-4 mt-5 flex  h-16 w-16  rounded-full bg-template_purple p-4 "
+          className=" mb-4 mt-5 flex  h-16 w-16  rounded-full bg-template_purple p-4 z-10 "
           id="nextAge"
           type="image"
           src="/icon-arrow.svg"
