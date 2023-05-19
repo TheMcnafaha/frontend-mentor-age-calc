@@ -2,6 +2,7 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
+import { useState } from "react";
 const Home: NextPage = () => {
   return (
     <>
@@ -17,7 +18,14 @@ const Home: NextPage = () => {
   );
 };
 
+type TypeAge={
+  year:number,
+  month:number,
+  day:number
+}
 function CalendarComponent() {
+  const [age,setAge]=useState({year:38,month:3,day:26} as TypeAge)
+  console.log(`inital age`, age)
   return (
     <div className=" mt-20 flex max-w-[340px] flex-col rounded-2xl rounded-br-[4.5em] bg-[#fff] px-6 py-4 shadow-sm">
       <AgeForm />
@@ -105,7 +113,6 @@ function MiddleGraphic() {
 
 function DisplayResult() {
   const myTime: Date = new Date();
-
   return (
     <>
       <h1 className="  mb-6  text-5xl font-extrabold italic ">
