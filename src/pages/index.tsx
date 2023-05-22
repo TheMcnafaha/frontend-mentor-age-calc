@@ -147,17 +147,12 @@ function DisplayResult({ age }: TypePropAge) {
 }
 
 // This fn works more like "time till my bday, with years since my bday added" than an aprox of time lived bc this method aligns better with human's view of age
-// age is realitive to bdays, not some binding time like the number of milliseconds since DOB
-// however, this approach means you can have  days>30 (eg: a DOB of 2003-11-22 and a present time of 2023-5-21 will result in 19yrs, 5mths, and 32 dys)
-//  that come from the days from your b-day-month to your bday-day and the days left in the current month (in the forementioned example: 10+22 respectively)
+// since age is realitive to bdays, not some binding unir of time like the number of milliseconds since DOB
+// however, this approach has "carry over months", meaning a person will often have more months than the year
+// eg: a DOB of 2003-11-22 and a present time of 2023-5-22 would have lived for 19 years and 6 months bc while the present year has 5 months, they lived the one month from nov 22 to dec 22 of 2022
+// 2+3+2+2+2+2+3+2+2+2+3 +(37+11+39+58+19+37+49+55+41+18+5+43)/60
 function getAge(start: Date): TypeAge {
-  /*
-steps to make this work:
-1. Get delta of years
-2. Get days till next month 
-3. Count Months till bday
-4. Add Bday date
- */
+
   const age: TypeAge = {
     year: 0,
     month: 0,
@@ -165,16 +160,16 @@ steps to make this work:
   };
   const present: Date = new Date();
   // in js months start at 0
-  const deltaOfMonths = present.getMonth()+1 ;
-  age.month = deltaOfMonths;
+  const deltaOfMonths = present.getMonth() + 1;
+  age.month = deltaOfMonths + 1;
   //get days till next month
   const lastDayOfPresentMonth = new Date(
     present.getFullYear(),
     present.getMonth() + 1,
     0
   ).getDate();
-  age.day = lastDayOfPresentMonth - present.getDate() + start.getDate();
-    console.log(lastDayOfPresentMonth)
+  // age.day = lastDayOfPresentMonth - present.getDate() + start.getDate();
+  console.log(lastDayOfPresentMonth);
   // check to see if bday has already passed or not relative to present time
   if (
     present.getMonth() - start.getMonth() < 1 &&
@@ -182,16 +177,27 @@ steps to make this work:
   ) {
     // code only triggers if bday is ahead of present
     age.year = present.getFullYear() - start.getFullYear() - 1;
-
+  } else {
+    age.year = present.getFullYear() - start.getFullYear();
   }
 
-  // day overwrite
-  
+  // if current month's day is ahead, on, or behind of start age affects month count
+  const dayDelta = start.getDate() - present.getDate();
 
+  if (dayDelta > 0) {
+    age.day = dayDelta;
+    return age;
+  }
+  if (dayDelta === 0) {
+    return age;
+  }
+  // code only runs if daydelta<0
+  age.month--;
+  age.day = lastDayOfPresentMonth - present.getDate() + start.getDate();
   return age;
 }
 
-const today: Date = new Date();
+
 const myDOB: Date = new Date("November 22,2003 ");
 
 console.log(getAge(myDOB));
