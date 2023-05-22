@@ -146,46 +146,55 @@ function DisplayResult({ age }: TypePropAge) {
   );
 }
 
-function getTimeFromUnixEpochs(start: number, end: number): TypeAge {
-  const output = {
+// This fn works more like "time till my bday, with years since my bday added" than an aprox of time lived bc this method aligns better with human's view of age
+// age is realitive to bdays, not some binding time like the number of milliseconds since DOB
+// however, this approach means you can have  days>30 (eg: a DOB of 2003-11-22 and a present time of 2023-5-21 will result in 19yrs, 5mths, and 32 dys)
+//  that come from the days from your b-day-month to your bday-day and the days left in the current month (in the forementioned example: 10+22 respectively)
+function getAge(start: Date): TypeAge {
+  /*
+steps to make this work:
+1. Get delta of years
+2. Get days till next month 
+3. Count Months till bday
+4. Add Bday date
+ */
+  const age: TypeAge = {
     year: 0,
     month: 0,
     day: 0,
   };
-  //constants as milliseconds
-  const year = 31_556_952_000;
-  let delta = start - end;
+  const present: Date = new Date();
+  // in js months start at 0
+  const deltaOfMonths = present.getMonth()+1 ;
+  age.month = deltaOfMonths;
+  //get days till next month
+  const lastDayOfPresentMonth = new Date(
+    present.getFullYear(),
+    present.getMonth() + 1,
+    0
+  ).getDate();
+  age.day = lastDayOfPresentMonth - present.getDate() + start.getDate();
+    console.log(lastDayOfPresentMonth)
+  // check to see if bday has already passed or not relative to present time
+  if (
+    present.getMonth() - start.getMonth() < 1 &&
+    present.getDate() - start.getDate() < 1
+  ) {
+    // code only triggers if bday is ahead of present
+    age.year = present.getFullYear() - start.getFullYear() - 1;
 
-  if (delta % year === 0) {
-    output.year = Math.floor(delta / year);
-    return output;
   }
-  output.year = Math.floor(delta / year);
 
-  delta = delta % year;
+  // day overwrite
+  
 
-  //constants as milliseconds
-  const month = 2_629_746_000;
-
-  if (delta % month === 0) {
-    output.month = Math.floor(delta / year);
-
-    return output;
-  }
-
-  //constants as milliseconds
-  const day = 86_400_000;
-  output.month = Math.floor(delta / month);
-  output.day = Math.floor((delta % month) / day);
-  console.log(output);
-
-  return output;
+  return age;
 }
 
 const today: Date = new Date();
 const myDOB: Date = new Date("November 22,2003 ");
 
-console.log(getTimeFromUnixEpochs(today.getTime(), myDOB.getTime()));
+console.log(getAge(myDOB));
 
 function fixedNewAgeValueDOM(): TypeAge | Error {
   const newYear = Number(
@@ -206,11 +215,7 @@ function fixedNewAgeValueDOM(): TypeAge | Error {
     // input has been sanitanized so far but not processed
     const presentTime = new Date();
     const inputTime = new Date(newYear, newMonth, newDay);
-    return getTimeFromUnixEpochs(
-      presentTime.getTime(),
-      inputTime.getTime()
-    );
-
+    return getAge(presentTime.getTime(), inputTime.getTime());
   }
 
   throw new FormatError("data must be number");
