@@ -38,7 +38,7 @@ function CalendarComponent() {
     setAge(nextAge);
   }
   return (
-    <div className=" mt-20 flex max-w-[340px] flex-col rounded-2xl rounded-br-[4.5em] bg-[#fff] px-6 py-4 shadow-sm">
+    <div className=" mt-20 flex max-w-[340px] flex-col rounded-2xl rounded-br-[4.5em] bg-[#fff] px-6 py-4 shadow-sm lg:max-w-[400px] ">
       <form
         action=""
         onSubmit={(e) => {
@@ -69,7 +69,7 @@ function AgeFormInput() {
             Day
           </label>
           <input
-            className="m-1  ml-[.10rem] rounded py-1 pl-3 text-xl mix-blend-darken ring-1 ring-template_ligth_grey  "
+            className="m-1  ml-[.10rem] rounded py-1 pl-3 text-xl mix-blend-darken ring-1      ring-template_ligth_grey hover:ring-template_purple  "
             type="text"
             inputMode="numeric"
             id="day"
@@ -85,7 +85,7 @@ function AgeFormInput() {
             Month
           </label>
           <input
-            className="m-1  ml-[.10rem] rounded py-1 pl-3 text-xl mix-blend-darken ring-1 ring-template_ligth_grey  "
+            className="m-1  ml-[.10rem] rounded py-1 pl-3 text-xl mix-blend-darken ring-1      ring-template_ligth_grey hover:ring-template_purple  "
             type="text"
             inputMode="numeric"
             id="month"
@@ -101,7 +101,7 @@ function AgeFormInput() {
             Year
           </label>
           <input
-            className="m-1  ml-[.10rem] rounded  py-1 pl-3 text-xl mix-blend-darken ring-1 ring-template_ligth_grey  "
+            className="m-1  ml-[.10rem] rounded  py-1 pl-3 text-xl mix-blend-darken ring-1       ring-template_ligth_grey hover:ring-template_purple  "
             type="text"
             inputMode="numeric"
             id="year"
@@ -117,9 +117,9 @@ function AgeFormSubmit() {
   return (
     <>
       <div className="relative top-[53px] w-full ring-1 ring-template_ligth_grey"></div>
-      <div className=" flex min-w-full justify-center">
+      <div className=" flex min-w-full justify-center lg:justify-end">
         <input
-          className=" z-10 mb-4 mt-5  flex h-16  w-16 rounded-full bg-template_purple p-4 "
+          className=" z-10 mb-4 mt-5  flex h-16  w-16 rounded-full bg-template_purple p-4 hover:bg-template_off_black"
           id="nextAge"
           type="image"
           src="/icon-arrow.svg"
@@ -184,13 +184,18 @@ function getAge(birth_date: Date): TypeAge {
     age.year = present.getFullYear() - birth_date.getFullYear() - 1;
 
     if (birth_date.getMonth() === present.getMonth()) {
-      const lastDayOfPreviousPresentMonth=new Date(present.getFullYear(),present.getMonth()-1,0).getDate()
-      const dayGapOfPreviousAndPresentMonth=lastDayOfPreviousPresentMonth-birth_date.getDate()
-      age.month=11
-      age.day=dayGapOfPreviousAndPresentMonth+ present.getDate()
+      const lastDayOfPreviousPresentMonth = new Date(
+        present.getFullYear(),
+        present.getMonth() - 1,
+        0
+      ).getDate();
+      const dayGapOfPreviousAndPresentMonth =
+        lastDayOfPreviousPresentMonth - birth_date.getDate();
+      age.month = 11;
+      age.day = dayGapOfPreviousAndPresentMonth + present.getDate();
     } else {
       age.month = 12 - birth_date.getMonth() + present.getMonth();
-      age.day=present.getDate()-birth_date.getDate()
+      age.day = present.getDate() - birth_date.getDate();
     }
   }
   return age;
@@ -251,7 +256,7 @@ const testAgeArgs = [
   new Date(2003, 5 - 1, 24),
   new Date(2003, 5 - 1, 25),
   new Date(2003, 6 - 1, 24),
-  myDOB
+  myDOB,
 ];
 const testAgeOutput: Array<TypeAge> = [
   { year: 20, month: 0, day: 0 },

@@ -11,6 +11,11 @@ export default {
       template_smokey_grey: "hsl(0, 1%, 44%)",
       template_off_black: "hsl(0, 0%, 8%)",
     },
+    screens: {
+
+      'lg': '1440px',
+      // => @media (min-width: 1440px) { ... }
+    },
     extend: {},
   },
   plugins: [],
