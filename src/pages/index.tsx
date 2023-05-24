@@ -163,33 +163,35 @@ function getAge(birth_date: Date): TypeAge {
     birth_date.getMonth() === present.getMonth()
   ) {
     age.year = present.getFullYear() - birth_date.getFullYear();
-    return age
+    return age;
   }
 
   // check to see if person's bday has passed or not
   if (
     birth_date.getMonth() < present.getMonth() ||
     (birth_date.getMonth() === present.getMonth() &&
-      birth_date.getDate() > present.getDate())
+      birth_date.getDate() < present.getDate())
   ) {
     // code runs only if bday has passed
-    const monthDelta=birth_date.getMonth()-present.getMonth()
-    const dayDelta=birth_date.getDate()-present.getDate()
-    const yearDelta=present.getFullYear()-birth_date.getFullYear()
-    age.year=yearDelta
-    age.month=monthDelta
-    age.day=dayDelta
- 
+    const monthDelta = birth_date.getMonth() - present.getMonth();
+    const dayDelta = birth_date.getDate() - present.getDate();
+    const yearDelta = present.getFullYear() - birth_date.getFullYear();
+    age.year = yearDelta;
+    age.month = monthDelta;
+    age.day = dayDelta;
   } else {
     // code runs only if bday has yet to pass
-    age.year=present.getFullYear()-birth_date.getFullYear()-1
+    age.year = present.getFullYear() - birth_date.getFullYear() - 1;
 
-    if(birth_date.getMonth() === present.getMonth()){
-    
+    if (birth_date.getMonth() === present.getMonth()) {
+      const lastDayOfPreviousPresentMonth=new Date(present.getFullYear(),present.getMonth()-1,0).getDate()
+      const dayGapOfPreviousAndPresentMonth=lastDayOfPreviousPresentMonth-birth_date.getDate()
+      age.month=11
+      age.day=dayGapOfPreviousAndPresentMonth+ present.getDate()
+    } else {
+      age.month = 12 - birth_date.getMonth() + present.getMonth();
+      age.day=present.getDate()-birth_date.getDate()
     }
-    age.month= 12-birth_date.getMonth()+present.getMonth()
-    
-
   }
   return age;
 }
@@ -249,11 +251,13 @@ const testAgeArgs = [
   new Date(2003, 5 - 1, 24),
   new Date(2003, 5 - 1, 25),
   new Date(2003, 6 - 1, 24),
+  myDOB
 ];
 const testAgeOutput: Array<TypeAge> = [
   { year: 20, month: 0, day: 0 },
-  { year: 20, month: 0, day: 1 },
+  { year: 19, month: 11, day: 30 },
   { year: 19, month: 11, day: 0 },
+  { year: 19, month: 6, day: 2 },
 ];
 
 testIterator(getAge, testAgeArgs, testAgeOutput);
