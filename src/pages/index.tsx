@@ -163,17 +163,33 @@ function getAge(birth_date: Date): TypeAge {
     birth_date.getMonth() === present.getMonth()
   ) {
     age.year = present.getFullYear() - birth_date.getFullYear();
+    return age
   }
 
   // check to see if person's bday has passed or not
   if (
-    birth_date.getMonth() > present.getMonth() ||
+    birth_date.getMonth() < present.getMonth() ||
     (birth_date.getMonth() === present.getMonth() &&
       birth_date.getDate() > present.getDate())
   ) {
     // code runs only if bday has passed
+    const monthDelta=birth_date.getMonth()-present.getMonth()
+    const dayDelta=birth_date.getDate()-present.getDate()
+    const yearDelta=present.getFullYear()-birth_date.getFullYear()
+    age.year=yearDelta
+    age.month=monthDelta
+    age.day=dayDelta
+ 
   } else {
     // code runs only if bday has yet to pass
+    age.year=present.getFullYear()-birth_date.getFullYear()-1
+
+    if(birth_date.getMonth() === present.getMonth()){
+    
+    }
+    age.month= 12-birth_date.getMonth()+present.getMonth()
+    
+
   }
   return age;
 }
@@ -212,7 +228,7 @@ function testIterator(fn: Function, args: Array<any>, output: Array<any>) {
 
   for (let index = 0; index < args.length; index++) {
     const element = args[index];
-    if (JSON.stringify(fn(element) )=== JSON.stringify(output[index])) {
+    if (JSON.stringify(fn(element)) === JSON.stringify(output[index])) {
       console.log(
         `Passed: ${JSON.stringify(fn(element))} -->== ${JSON.stringify(
           output[index]
@@ -228,7 +244,6 @@ function testIterator(fn: Function, args: Array<any>, output: Array<any>) {
     }
   }
 }
-
 
 const testAgeArgs = [
   new Date(2003, 5 - 1, 24),
