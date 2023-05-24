@@ -1,8 +1,7 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
-import Image from "next/image";
-import { HTMLInputTypeAttribute, useState } from "react";
+import { useState } from "react";
+
 const Home: NextPage = () => {
   return (
     <>
@@ -151,7 +150,7 @@ function DisplayResult({ age }: TypePropAge) {
 // however, this approach has "carry over months", meaning a person will often have more months than the year
 // eg: a DOB of 2003-11-22 and a present time of 2023-5-22 would have lived for 19 years and 6 months bc while the present year has 5 months, they lived the one month from nov 22 to dec 22 of 2022
 // 2+3+2+2+2+2+3+2+2+2+3 +(37+11+39+58+19+37+49+55+41+18+5+43)/60
-function getAge(start: Date): TypeAge {
+function getAge(birth_date: Date): TypeAge {
 
   const age: TypeAge = {
     year: 0,
@@ -159,42 +158,19 @@ function getAge(start: Date): TypeAge {
     day: 0,
   };
   const present: Date = new Date();
-  // in js months start at 0
-  const deltaOfMonths = present.getMonth() + 1;
-  age.month = deltaOfMonths + 1;
-  //get days till next month
-  const lastDayOfPresentMonth = new Date(
-    present.getFullYear(),
-    present.getMonth() + 1,
-    0
-  ).getDate();
-  // age.day = lastDayOfPresentMonth - present.getDate() + start.getDate();
-  console.log(lastDayOfPresentMonth);
-  // check to see if bday has already passed or not relative to present time
-  if (
-    present.getMonth() - start.getMonth() < 1 &&
-    present.getDate() - start.getDate() < 1
-  ) {
-    // code only triggers if bday is ahead of present
-    age.year = present.getFullYear() - start.getFullYear() - 1;
-  } else {
-    age.year = present.getFullYear() - start.getFullYear();
-  }
+  
+if(birth_date.getDate()===present.getDate()&&birth_date.getMonth()===present.getMonth()){
+  age.year=present.getFullYear()-birth_date.getFullYear()
+  
+}
 
-  // if current month's day is ahead, on, or behind of start age affects month count
-  const dayDelta = start.getDate() - present.getDate();
-
-  if (dayDelta > 0) {
-    age.day = dayDelta;
-    return age;
+  // check to see if person's bday has passed or not
+  if(birth_date.getMonth()>present.getMonth() || (birth_date.getMonth()===present.getMonth()&&birth_date.getDate()>present.getDate())){
+    // code runs only if bday has passed
+  }else{
+    // code runs only if bday has yet to pass
   }
-  if (dayDelta === 0) {
-    return age;
-  }
-  // code only runs if daydelta<0
-  age.month--;
-  age.day = lastDayOfPresentMonth - present.getDate() + start.getDate();
-  return age;
+  return age
 }
 
 
@@ -220,7 +196,7 @@ function fixedNewAgeValueDOM(): TypeAge | Error {
   ) {
     // input has been sanitanized so far but not processed
   
-    const inputTime = new Date(newYear, newMonth, newDay);
+    const inputTime = new Date(newYear, newMonth-1, newDay);
     return getAge( inputTime);
   }
 
