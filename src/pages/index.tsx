@@ -151,32 +151,34 @@ function DisplayResult({ age }: TypePropAge) {
 // eg: a DOB of 2003-11-22 and a present time of 2023-5-22 would have lived for 19 years and 6 months bc while the present year has 5 months, they lived the one month from nov 22 to dec 22 of 2022
 // 2+3+2+2+2+2+3+2+2+2+3 +(37+11+39+58+19+37+49+55+41+18+5+43)/60
 function getAge(birth_date: Date): TypeAge {
-
   const age: TypeAge = {
     year: 0,
     month: 0,
     day: 0,
   };
   const present: Date = new Date();
-  
-if(birth_date.getDate()===present.getDate()&&birth_date.getMonth()===present.getMonth()){
-  age.year=present.getFullYear()-birth_date.getFullYear()
-  
-}
+
+  if (
+    birth_date.getDate() === present.getDate() &&
+    birth_date.getMonth() === present.getMonth()
+  ) {
+    age.year = present.getFullYear() - birth_date.getFullYear();
+  }
 
   // check to see if person's bday has passed or not
-  if(birth_date.getMonth()>present.getMonth() || (birth_date.getMonth()===present.getMonth()&&birth_date.getDate()>present.getDate())){
+  if (
+    birth_date.getMonth() > present.getMonth() ||
+    (birth_date.getMonth() === present.getMonth() &&
+      birth_date.getDate() > present.getDate())
+  ) {
     // code runs only if bday has passed
-  }else{
+  } else {
     // code runs only if bday has yet to pass
   }
-  return age
+  return age;
 }
 
-
 const myDOB: Date = new Date("November 22,2003 ");
-
-console.log(getAge(myDOB));
 
 function fixedNewAgeValueDOM(): TypeAge | Error {
   const newYear = Number(
@@ -195,12 +197,49 @@ function fixedNewAgeValueDOM(): TypeAge | Error {
     typeof newYear === "number"
   ) {
     // input has been sanitanized so far but not processed
-  
-    const inputTime = new Date(newYear, newMonth-1, newDay);
-    return getAge( inputTime);
+
+    const inputTime = new Date(newYear, newMonth - 1, newDay);
+    return getAge(inputTime);
   }
 
   throw new FormatError("data must be number");
 }
 
+function testIterator(fn: Function, args: Array<any>, output: Array<any>) {
+  if (args.length !== output.length) {
+    throw Error("Unmatchings arrs!!!!");
+  }
+
+  for (let index = 0; index < args.length; index++) {
+    const element = args[index];
+    if (JSON.stringify(fn(element) )=== JSON.stringify(output[index])) {
+      console.log(
+        `Passed: ${JSON.stringify(fn(element))} -->== ${JSON.stringify(
+          output[index]
+        )}`
+      );
+    } else {
+      console.log(
+        `Failed: ${JSON.stringify(fn(element))} -->!= ${JSON.stringify(
+          output[index]
+        )}`
+      );
+      break;
+    }
+  }
+}
+
+
+const testAgeArgs = [
+  new Date(2003, 5 - 1, 24),
+  new Date(2003, 5 - 1, 25),
+  new Date(2003, 6 - 1, 24),
+];
+const testAgeOutput: Array<TypeAge> = [
+  { year: 20, month: 0, day: 0 },
+  { year: 20, month: 0, day: 1 },
+  { year: 19, month: 11, day: 0 },
+];
+
+testIterator(getAge, testAgeArgs, testAgeOutput);
 export default Home;
