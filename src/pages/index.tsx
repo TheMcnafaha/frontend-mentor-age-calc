@@ -69,7 +69,7 @@ function AgeFormInput() {
             Day
           </label>
           <input
-            className="m-1  ml-[.10rem] rounded py-1 pl-3 text-xl mix-blend-darken ring-1      ring-template_ligth_grey hover:ring-template_purple  "
+            className="m-1  ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl mix-blend-darken ring-1       ring-template_ligth_grey hover:ring-template_purple  "
             type="text"
             inputMode="numeric"
             id="day"
@@ -85,7 +85,7 @@ function AgeFormInput() {
             Month
           </label>
           <input
-            className="m-1  ml-[.10rem] rounded py-1 pl-3 text-xl mix-blend-darken ring-1      ring-template_ligth_grey hover:ring-template_purple  "
+            className="m-1  ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl mix-blend-darken ring-1       ring-template_ligth_grey hover:ring-template_purple  "
             type="text"
             inputMode="numeric"
             id="month"
@@ -101,7 +101,7 @@ function AgeFormInput() {
             Year
           </label>
           <input
-            className="m-1  ml-[.10rem] rounded  py-1 pl-3 text-xl mix-blend-darken ring-1       ring-template_ligth_grey hover:ring-template_purple  "
+            className="m-1  ml-[.10rem] cursor-pointer  rounded py-1 pl-3 text-xl mix-blend-darken ring-1       ring-template_ligth_grey hover:ring-template_purple  "
             type="text"
             inputMode="numeric"
             id="year"
