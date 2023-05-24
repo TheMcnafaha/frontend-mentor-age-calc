@@ -219,9 +219,9 @@ function fixedNewAgeValueDOM(): TypeAge | Error {
     typeof newYear === "number"
   ) {
     // input has been sanitanized so far but not processed
-    const presentTime = new Date();
+  
     const inputTime = new Date(newYear, newMonth, newDay);
-    return getAge(presentTime.getTime(), inputTime.getTime());
+    return getAge( inputTime);
   }
 
   throw new FormatError("data must be number");
