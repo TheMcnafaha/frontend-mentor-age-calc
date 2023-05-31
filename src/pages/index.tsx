@@ -1,6 +1,8 @@
 import { type NextPage } from "next";
 import Head from "next/head";
+import next from "next/types";
 import { useState } from "react";
+import { date } from "zod";
 
 const Home: NextPage = () => {
   return (
@@ -22,8 +24,18 @@ type TypeAge = {
   month: number;
   day: number;
 };
+type TypeInputAge = {
+  year: number | undefined;
+  month: number | undefined;
+  day: number | undefined;
+};
 type TypePropAge = {
   age: TypeAge;
+};
+type AgeFormInput = {
+  age: TypeAge;
+  setInputAge: Function;
+  inputAge: TypeInputAge;
 };
 type TypeStateAge = {
   nextAge: Function;
@@ -33,23 +45,28 @@ class FormatError extends Error {}
 
 function CalendarComponent() {
   const [age, setAge] = useState({ year: 38, month: 3, day: 26 } as TypeAge);
+  //input age servers as the state thats update eveytime the input changes, and when form is submitted & inputAge has passed all tests, inputAge becomes the new age
+  const [inputAge, setInputAge] = useState({
+    year: undefined,
+    month: undefined,
+    day: undefined,
+  } as TypeInputAge);
   const test = { month: 11, year: 11, day: 11 } as TypeAge;
   function nextAge(nextAge: TypeAge) {
     setAge(nextAge);
   }
+  console.log(inputAge)
   return (
     <div className=" mt-20 flex max-w-[340px] flex-col rounded-2xl rounded-br-[4.5em] bg-[#fff] px-6 py-4 shadow-sm lg:max-w-[400px] ">
       <form
         action=""
         onSubmit={(e) => {
           e.preventDefault();
-          const newAge = fixedNewAgeValueDOM();
-          if (!(newAge instanceof Error)) {
-            nextAge(newAge);
-          }
+
+          setAge(getAge(new Date(inputAge.year,inputAge.month-1,inputAge.day)))
         }}
       >
-        <AgeFormInput />
+        <AgeFormInput age={age} setInputAge={setInputAge} inputAge={inputAge} />
         <AgeFormSubmit />
       </form>
 
@@ -57,7 +74,7 @@ function CalendarComponent() {
     </div>
   );
 }
-function AgeFormInput() {
+function AgeFormInput({ age, setInputAge, inputAge }: AgeFormInput) {
   return (
     <>
       <div className="mt-5 flex">
@@ -73,7 +90,11 @@ function AgeFormInput() {
             type="text"
             inputMode="numeric"
             id="day"
-            defaultValue={24}
+            defaultValue={age.day}
+            onChange={(e) => {
+              const nextDay=e.target.value
+              setInputAge({...inputAge,day:nextDay})
+            }}
           />
         </div>
 
@@ -89,7 +110,11 @@ function AgeFormInput() {
             type="text"
             inputMode="numeric"
             id="month"
-            defaultValue={"09"}
+            defaultValue={age.month}
+            onChange={(e) => {
+              const nextMonth=e.target.value
+              setInputAge({...inputAge,month:nextMonth})
+            }}
           />
         </div>
 
@@ -105,7 +130,11 @@ function AgeFormInput() {
             type="text"
             inputMode="numeric"
             id="year"
-            defaultValue={1984}
+            defaultValue={age.year}
+            onChange={(e) => {
+              const nextYear = e.target.value;
+              setInputAge({ ...inputAge, year: nextYear });
+            }}
           />
         </div>
       </div>
@@ -156,7 +185,6 @@ function getAge(birth_date: Date, present: Date = new Date()): TypeAge {
     month: 0,
     day: 0,
   };
-  
 
   if (
     birth_date.getDate() === present.getDate() &&
@@ -203,31 +231,6 @@ function getAge(birth_date: Date, present: Date = new Date()): TypeAge {
 
 const myDOB: Date = new Date("November 22,2003 ");
 
-function fixedNewAgeValueDOM(): TypeAge | Error {
-  const newYear = Number(
-    (document.getElementById("year") as HTMLInputElement)!.value
-  );
-  const newMonth = Number(
-    (document.getElementById("month") as HTMLInputElement)!.value
-  );
-  const newDay = Number(
-    (document.getElementById("day") as HTMLInputElement)!.value
-  );
-
-  if (
-    typeof newDay === "number" &&
-    typeof newMonth === "number" &&
-    typeof newYear === "number"
-  ) {
-    // input has been sanitanized so far but not processed
-
-    const inputTime = new Date(newYear, newMonth - 1, newDay);
-    return getAge(inputTime);
-  }
-
-  throw new FormatError("data must be number");
-}
-
 function testIterator(fn: Function, args: Array<any>, output: Array<any>) {
   if (args.length !== output.length) {
     throw Error("Unmatchings arrs!!!!");
@@ -253,10 +256,10 @@ function testIterator(fn: Function, args: Array<any>, output: Array<any>) {
 }
 
 const testAgeArgs = [
- [new Date(2003, 5 - 1, 24),new Date(2023,5-1,24)],
-[  new Date(2003, 5 - 1, 25), new Date(2023,5-1,24)],
-  [new Date(2003, 6 - 1, 24),new Date(2023,5-1,24)],
-  [myDOB,new Date(2023,5-1,24)],
+  [new Date(2003, 5 - 1, 24), new Date(2023, 5 - 1, 24)],
+  [new Date(2003, 5 - 1, 25), new Date(2023, 5 - 1, 24)],
+  [new Date(2003, 6 - 1, 24), new Date(2023, 5 - 1, 24)],
+  [myDOB, new Date(2023, 5 - 1, 24)],
 ];
 const testAgeOutput: Array<TypeAge> = [
   { year: 20, month: 0, day: 0 },
