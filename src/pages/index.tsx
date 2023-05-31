@@ -51,7 +51,10 @@ function CalendarComponent() {
     month: undefined,
     day: undefined,
   } as TypeInputAge);
-  const test = { month: 11, year: 11, day: 11 } as TypeAge;
+
+
+
+                          const test = { month: 11, year: 11, day: 11 } as TypeAge;
   function nextAge(nextAge: TypeAge) {
     setAge(nextAge);
   }
@@ -99,7 +102,7 @@ function AgeFormInput({ age, setInputAge, inputAge }: AgeFormInput) {
             type="text"
             inputMode="numeric"
             id="day"
-            defaultValue={age.day}
+            defaultValue={inputAge.day}
             onChange={(e) => {
               const nextDay = e.target.value;
               setInputAge({ ...inputAge, day: nextDay });
@@ -119,7 +122,7 @@ function AgeFormInput({ age, setInputAge, inputAge }: AgeFormInput) {
             type="text"
             inputMode="numeric"
             id="month"
-            defaultValue={age.month}
+            defaultValue={inputAge.month}
             onChange={(e) => {
               const nextMonth = e.target.value;
               setInputAge({ ...inputAge, month: nextMonth });
@@ -139,7 +142,7 @@ function AgeFormInput({ age, setInputAge, inputAge }: AgeFormInput) {
             type="text"
             inputMode="numeric"
             id="year"
-            defaultValue={age.year}
+            defaultValue={inputAge.year}
             onChange={(e) => {
               const nextYear = e.target.value;
               setInputAge({ ...inputAge, year: nextYear });
