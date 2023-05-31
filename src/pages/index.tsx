@@ -55,7 +55,6 @@ function CalendarComponent() {
   function nextAge(nextAge: TypeAge) {
     setAge(nextAge);
   }
-  console.log(inputAge)
   return (
     <div className=" mt-20 flex max-w-[340px] flex-col rounded-2xl rounded-br-[4.5em] bg-[#fff] px-6 py-4 shadow-sm lg:max-w-[400px] ">
       <form
@@ -63,7 +62,17 @@ function CalendarComponent() {
         onSubmit={(e) => {
           e.preventDefault();
 
-          setAge(getAge(new Date(inputAge.year,inputAge.month-1,inputAge.day)))
+          const allInputsAreNumbers: boolean = Object.values(inputAge).every(
+            (e) => {
+              return Number(e);
+            }
+          );
+          if (allInputsAreNumbers) {
+            setAge(
+              getAge(new Date(inputAge.year, inputAge.month, inputAge.day))
+            );
+            
+          }
         }}
       >
         <AgeFormInput age={age} setInputAge={setInputAge} inputAge={inputAge} />
@@ -92,8 +101,8 @@ function AgeFormInput({ age, setInputAge, inputAge }: AgeFormInput) {
             id="day"
             defaultValue={age.day}
             onChange={(e) => {
-              const nextDay=e.target.value
-              setInputAge({...inputAge,day:nextDay})
+              const nextDay = e.target.value;
+              setInputAge({ ...inputAge, day: nextDay });
             }}
           />
         </div>
@@ -112,8 +121,8 @@ function AgeFormInput({ age, setInputAge, inputAge }: AgeFormInput) {
             id="month"
             defaultValue={age.month}
             onChange={(e) => {
-              const nextMonth=e.target.value
-              setInputAge({...inputAge,month:nextMonth})
+              const nextMonth = e.target.value;
+              setInputAge({ ...inputAge, month: nextMonth });
             }}
           />
         </div>
