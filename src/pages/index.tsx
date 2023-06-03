@@ -41,7 +41,7 @@ type TypeStateAge = {
   nextAge: Function;
 };
 
-class FormatError extends Error {}
+class FormatError extends Error { }
 
 function CalendarComponent() {
   const [age, setAge] = useState({ year: 38, month: 3, day: 26 } as TypeAge);
@@ -54,7 +54,7 @@ function CalendarComponent() {
 
 
 
-                          const test = { month: 11, year: 11, day: 11 } as TypeAge;
+  const test = { month: 11, year: 11, day: 11 } as TypeAge;
   function nextAge(nextAge: TypeAge) {
     setAge(nextAge);
   }
@@ -74,7 +74,7 @@ function CalendarComponent() {
             setAge(
               getAge(new Date(inputAge.year, inputAge.month, inputAge.day))
             );
-            
+
           }
         }}
       >
@@ -197,20 +197,28 @@ function getAge(birth_date: Date, present: Date = new Date()): TypeAge {
     month: 0,
     day: 0,
   };
-
+  const todayIsBday: boolean = birth_date.getDate() === present.getDate() && birth_date.getMonth() === present.getMonth()
   if (
-    birth_date.getDate() === present.getDate() &&
-    birth_date.getMonth() === present.getMonth()
-  ) {
+    todayIsBday) {
     age.year = present.getFullYear() - birth_date.getFullYear();
     return age;
   }
 
   // check to see if person's bday has passed or not
+  function isBdayInThePast(bday: Date, present: Date): boolean {
+    //a negative mD means has passed, 0 that its same month, >0 that its in future
+    const monthDelta = bday.getMonth() - present.getMonth()
+    if (monthDelta < 0) { return true }
+    if (monthDelta === 0) {
+      //same as mD
+      const dayDelta = bday.getDate() - present.getDate()
+      return dayDelta < 0
+    }
+    return false
+  }
+
   if (
-    birth_date.getMonth() < present.getMonth() ||
-    (birth_date.getMonth() === present.getMonth() &&
-      birth_date.getDate() < present.getDate())
+    isBdayInThePast(birth_date, present)
   ) {
     // code runs only if bday has passed
     const monthDelta = birth_date.getMonth() - present.getMonth();
@@ -241,7 +249,7 @@ function getAge(birth_date: Date, present: Date = new Date()): TypeAge {
   return age;
 }
 
-const myDOB: Date = new Date("November 22,2003 ");
+const myDOB: Date = new Date(2003, 11, 22);
 
 function testIterator(fn: Function, args: Array<any>, output: Array<any>) {
   if (args.length !== output.length) {
@@ -272,12 +280,15 @@ const testAgeArgs = [
   [new Date(2003, 5 - 1, 25), new Date(2023, 5 - 1, 24)],
   [new Date(2003, 6 - 1, 24), new Date(2023, 5 - 1, 24)],
   [myDOB, new Date(2023, 5 - 1, 24)],
+  [myDOB, new Date(2023, 6 - 1, 2)]
 ];
 const testAgeOutput: Array<TypeAge> = [
   { year: 20, month: 0, day: 0 },
   { year: 19, month: 11, day: 30 },
   { year: 19, month: 11, day: 0 },
-  { year: 19, month: 6, day: 2 },
+  { year: 19, month: 5, day: 29 },
+  { year: 19, month: 5, day: 2 },
+
 ];
 
 testIterator(getAge, testAgeArgs, testAgeOutput);
