@@ -4,7 +4,8 @@ import Head from "next/head";
 import next from "next/types";
 import { useState } from "react";
 import { date } from "zod";
-
+import InputError from "../components/InputError";
+import { CalendarInput } from "../components/CalendarInput";
 const Home: NextPage = () => {
   return (
     <>
@@ -25,7 +26,7 @@ type TypeAge = {
   month: number;
   day: number;
 };
-type TypeInputAge = {
+export type TypeInputAge = {
   year: number | undefined;
   month: number | undefined;
   day: number | undefined;
@@ -88,65 +89,21 @@ function AgeFormInput({ age, setInputAge, inputAge }: AgeFormInput) {
   return (
     <>
       <div className="mt-5 flex">
-        <div className="flex w-1/3 flex-col pr-5 ">
-          <label
-            htmlFor="day"
-            className=" text-xs font-light uppercase text-template_smokey_grey"
-          >
-            Day
-          </label>
-          <input
-            className="m-1  ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl mix-blend-darken ring-1       ring-template_ligth_grey hover:ring-template_purple  "
-            type="text"
-            inputMode="numeric"
-            id="day"
-            defaultValue={inputAge.day}
-            onChange={(e) => {
-              const nextDay = e.target.value;
-              setInputAge({ ...inputAge, day: nextDay });
-            }}
-          />
-        </div>
-
-        <div className="flex w-1/3 flex-col pr-5 ">
-          <label
-            htmlFor="month"
-            className=" text-xs font-light uppercase text-template_smokey_grey"
-          >
-            Month
-          </label>
-          <input
-            className="m-1  ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl mix-blend-darken ring-1       ring-template_ligth_grey hover:ring-template_purple  "
-            type="text"
-            inputMode="numeric"
-            id="month"
-            defaultValue={inputAge.month}
-            onChange={(e) => {
-              const nextMonth = e.target.value;
-              setInputAge({ ...inputAge, month: nextMonth });
-            }}
-          />
-        </div>
-
-        <div className="flex w-1/3 flex-col pr-5 ">
-          <label
-            htmlFor="year"
-            className=" text-xs font-light uppercase text-template_smokey_grey"
-          >
-            Year
-          </label>
-          <input
-            className="m-1  ml-[.10rem] cursor-pointer  rounded py-1 pl-3 text-xl mix-blend-darken ring-1       ring-template_ligth_grey hover:ring-template_purple  "
-            type="text"
-            inputMode="numeric"
-            id="year"
-            defaultValue={inputAge.year}
-            onChange={(e) => {
-              const nextYear = e.target.value;
-              setInputAge({ ...inputAge, year: nextYear });
-            }}
-          />
-        </div>
+        <CalendarInput
+          id={"day"}
+          setState={setInputAge}
+          state={inputAge}
+        ></CalendarInput>
+        <CalendarInput
+          id={"month"}
+          setState={setInputAge}
+          state={inputAge}
+        ></CalendarInput>
+        <CalendarInput
+          id={"year"}
+          setState={setInputAge}
+          state={inputAge}
+        ></CalendarInput>
       </div>
     </>
   );
