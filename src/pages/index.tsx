@@ -86,23 +86,51 @@ function CalendarComponent() {
   );
 }
 function AgeFormInput({ age, setInputAge, inputAge }: AgeFormInput) {
+  function determineInputError(
+    arg: Number | undefined,
+    start: Number,
+    end: Number
+  ): Boolean {
+    if (arg === undefined) {
+      return false;
+    }
+    if (arg <= end && arg >= start) {
+      return true;
+    }
+    return false;
+  }
+  const dayError = determineInputError(inputAge.day, 1, 31);
+  const monthError = determineInputError(inputAge.month, 1, 12);
+  const yearError = determineInputError(
+    inputAge.year,
+    0,
+    new Date().getFullYear()
+  );
   return (
     <>
       <div className="mt-5 flex">
         <CalendarInput
           id={"day"}
           setState={setInputAge}
+          isError={dayError}
+          errorMessage={"Must be a valid day"}
           state={inputAge}
         ></CalendarInput>
+
         <CalendarInput
           id={"month"}
           setState={setInputAge}
           state={inputAge}
+          isError={monthError}
+          errorMessage={"Must be a valid month "}
         ></CalendarInput>
+
         <CalendarInput
           id={"year"}
           setState={setInputAge}
           state={inputAge}
+          errorMessage={"Must be in the past"}
+          isError={yearError}
         ></CalendarInput>
       </div>
     </>
