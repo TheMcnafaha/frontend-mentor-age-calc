@@ -202,6 +202,10 @@ function getAge(birth_date: Date, present: Date = new Date()): TypeAge {
   }
   // bday hasnt passed, so the person's ageis one year behind yearD
   age.year = yearDelta - 1;
+  // this condition fixes bug when the bday is in the same month but same future, should be actually fixed by a date check on the setstate errormessage call
+  if (age.year === -1) {
+    age.year = 0;
+  }
   const lastDayOfPresentMonth = getLastDayInMonth(present.getMonth());
 
   //mF is used to account for the months passed from the present and last year
