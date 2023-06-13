@@ -86,34 +86,37 @@ function CalendarComponent() {
   );
 }
 function AgeFormInput({ age, setInputAge, inputAge }: AgeFormInput) {
-  function determineInputError(
-    arg: Number | undefined,
-    start: Number,
-    end: Number
-  ): Boolean {
-    if (arg === undefined) {
-      return false;
+  function isInputError(
+    number: number | undefined,
+    start: number,
+    end: number,
+    message: string
+  ) {
+    console.log("Args are ", number, start, end);
+
+    if (number === undefined || isNaN(number)) {
+      return message;
     }
-    if (arg <= end && arg >= start) {
-      return true;
+    const numTooBig = number > end;
+    const numTooSmall = number < start;
+    if (!numTooBig && !numTooSmall) {
+      return "";
     }
-    return false;
+    return message;
   }
-  const dayError = determineInputError(inputAge.day, 1, 31);
-  const monthError = determineInputError(inputAge.month, 1, 12);
-  const yearError = determineInputError(
-    inputAge.year,
-    0,
-    new Date().getFullYear()
-  );
+
+  const dayError = isInputError(inputAge.day, 1, 31, "Must be a valid day");
+  // const monthError = isInputError(inputAge.month, 1, 12);
+  // const yearError = isInputError(inputAge.year, 0, new Date().getFullYear());
+  console.log(dayError);
+
   return (
     <>
       <div className="mt-5 flex">
         <CalendarInput
           id={"day"}
           setState={setInputAge}
-          isError={dayError}
-          errorMessage={"Must be a valid day"}
+          errorMessage={dayError}
           state={inputAge}
         ></CalendarInput>
 
@@ -121,7 +124,6 @@ function AgeFormInput({ age, setInputAge, inputAge }: AgeFormInput) {
           id={"month"}
           setState={setInputAge}
           state={inputAge}
-          isError={monthError}
           errorMessage={"Must be a valid month "}
         ></CalendarInput>
 
@@ -130,7 +132,6 @@ function AgeFormInput({ age, setInputAge, inputAge }: AgeFormInput) {
           setState={setInputAge}
           state={inputAge}
           errorMessage={"Must be in the past"}
-          isError={yearError}
         ></CalendarInput>
       </div>
     </>

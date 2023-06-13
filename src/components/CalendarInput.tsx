@@ -3,7 +3,6 @@ type CalendarInput = {
   id: "day" | "month" | "year";
   setState: Function;
   state: TypeInputAge;
-  isError: Boolean;
   errorMessage: String;
 };
 type OkInput = {
@@ -17,9 +16,23 @@ type ErrorInput = {
   state: TypeInputAge;
   errorMessage: String;
 };
-export function CalendarInput({ id, setState, state, isError , errorMessage}: CalendarInput) {
-  if (!isError) {
-    return <ErrorInput id={id} setState={setState} state={state} errorMessage={errorMessage}></ErrorInput>;
+export function CalendarInput({
+  id,
+  setState,
+  state,
+  errorMessage,
+}: CalendarInput) {
+  if (errorMessage !== "") {
+    console.log("no error");
+
+    return (
+      <ErrorInput
+        id={id}
+        setState={setState}
+        state={state}
+        errorMessage={errorMessage}
+      ></ErrorInput>
+    );
   }
   return <OkInput id={id} setState={setState} state={state}></OkInput>;
 }
@@ -40,7 +53,7 @@ function OkInput({ id, setState, state }: OkInput) {
         id={id}
         defaultValue={state[id]}
         onChange={(e) => {
-          const nextState = e.target.value;
+          const nextState = parseInt(e.target.value, 10);
           setState({ ...state, [id]: nextState });
         }}
       />
@@ -64,7 +77,7 @@ function ErrorInput({ id, setState, state, errorMessage }: ErrorInput) {
         id={id}
         defaultValue={state[id]}
         onChange={(e) => {
-          const nextState = e.target.value;
+          const nextState = parseInt(e.target.value, 10);
           setState({ ...state, [id]: nextState });
         }}
       />
