@@ -94,7 +94,7 @@ function AgeFormInput({ age, setInputAge, inputAge }: AgeFormInput) {
   ) {
     console.log("Args are ", number, start, end);
 
-    if (number === undefined || isNaN(number)) {
+    if (number === undefined) {
       return message;
     }
     const numTooBig = number > end;
@@ -105,10 +105,38 @@ function AgeFormInput({ age, setInputAge, inputAge }: AgeFormInput) {
     return message;
   }
 
+  function isYearInputError(currentInput: TypeInputAge): String {
+    const undefinedDay = currentInput.day === undefined;
+    const undefinedMonth = currentInput.month === undefined;
+    const undefinedYear = currentInput.year === undefined;
+    if (undefinedDay || undefinedMonth || undefinedYear) {
+      return "";
+    }
+    const isDayNumber = !Number.isNaN(currentInput.day);
+    const isMonthNumber = !Number.isNaN(currentInput.month);
+    const isYearNumber = !Number.isNaN(currentInput.year);
+    let message = "";
+    if (isDayNumber && isMonthNumber && isYearNumber) {
+      const presentEpoch = new Date().getTime();
+      const currentEpoch = new Date(
+        currentInput.year,
+        currentInput.month,
+        currentInput.day
+      ).getTime();
+      if (currentEpoch > presentEpoch) {
+        message = "Must be in the past";
+      }
+    }
+    return message;
+  }
   const dayError = isInputError(inputAge.day, 1, 31, "Must be a valid day");
-  // const monthError = isInputError(inputAge.month, 1, 12);
-  // const yearError = isInputError(inputAge.year, 0, new Date().getFullYear());
-  console.log(dayError);
+  const monthError = isInputError(
+    inputAge.month,
+    1,
+    12,
+    "Must be a valid month"
+  );
+  const yearError = isYearInputError(inputAge);
 
   return (
     <>
@@ -124,14 +152,14 @@ function AgeFormInput({ age, setInputAge, inputAge }: AgeFormInput) {
           id={"month"}
           setState={setInputAge}
           state={inputAge}
-          errorMessage={"Must be a valid month "}
+          errorMessage={monthError}
         ></CalendarInput>
 
         <CalendarInput
           id={"year"}
           setState={setInputAge}
           state={inputAge}
-          errorMessage={"Must be in the past"}
+          errorMessage={yearError}
         ></CalendarInput>
       </div>
     </>
