@@ -37,7 +37,7 @@ export function CalendarInput({
     return (
       <div className="flex w-1/3 flex-col pr-5 ">
         <label
-          htmlFor="month"
+          htmlFor={id}
           className=" text-xs font-light uppercase text-template_smokey_grey"
         >
           {id}
@@ -48,9 +48,10 @@ export function CalendarInput({
           inputMode="numeric"
           id={id}
           defaultValue={state[id]}
-          onChange={(e) => {
-            const nextState = parseInt(e.target.value, 10);
-            setState({ ...state, [id]: nextState });
+          onClick={(e) => {
+            setState({ ...state, [id]: "" });
+
+            console.log("magic");
           }}
         />
       </div>
@@ -75,7 +76,7 @@ function OkInput({ id, setState, state }: OkInput) {
   return (
     <div className="flex w-1/3 flex-col pr-5 ">
       <label
-        htmlFor="month"
+        htmlFor={id}
         className=" text-xs font-light uppercase text-template_smokey_grey"
       >
         {id}
@@ -99,7 +100,7 @@ function ErrorInput({ id, setState, state, errorMessage }: ErrorInput) {
   return (
     <div className="flex w-1/3 flex-col pr-5 ">
       <label
-        htmlFor="month"
+        htmlFor={id}
         className=" text-xs font-light uppercase text-template_smokey_grey"
       >
         {id}
