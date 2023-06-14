@@ -22,14 +22,14 @@ const Home: NextPage = () => {
 };
 
 type TypeAge = {
-  year: number;
-  month: number;
-  day: number;
+  year: number | "--";
+  month: number | "--";
+  day: number | "--";
 };
 export type TypeInputAge = {
-  year: number | undefined;
-  month: number | undefined;
-  day: number | undefined;
+  year: number | undefined | "YYYY";
+  month: number | undefined | "MM";
+  day: number | undefined | "DD";
 };
 type TypePropAge = {
   age: TypeAge;
@@ -46,12 +46,16 @@ type TypeStateAge = {
 class FormatError extends Error {}
 
 function CalendarComponent() {
-  const [age, setAge] = useState({ year: 38, month: 3, day: 26 } as TypeAge);
+  const [age, setAge] = useState({
+    year: "--",
+    month: "--",
+    day: "--",
+  } as TypeAge);
   //input age servers as the state thats update eveytime the input changes, and when form is submitted & inputAge has passed all tests, inputAge becomes the new age
   const [inputAge, setInputAge] = useState({
-    year: undefined,
-    month: undefined,
-    day: undefined,
+    year: "YYYY",
+    month: "MM",
+    day: "DD",
   } as TypeInputAge);
 
   const test = { month: 11, year: 11, day: 11 } as TypeAge;
