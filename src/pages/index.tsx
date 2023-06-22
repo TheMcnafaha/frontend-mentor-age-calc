@@ -256,45 +256,38 @@ function fullYearDifference(date1: Age, date2: Age): boolean {
 }
 
 function getAgeDiffOnFutureOrPresentBday(
-  DOB: Age,
-  present: Age = presentAge()
+  DOB: Age = presentAge(),
+  present: Age
 ): Age {
   const outputDate: Age = {
     year: 0,
     month: 0,
     day: 0,
   };
-  const datesAreIdentical = fullYearDifference(present, DOB);
-  if (datesAreIdentical) {
+  const bdayIsToday = fullYearDifference(present, DOB);
+  if (bdayIsToday) {
     outputDate.year = present.year - DOB.year;
     return outputDate;
   }
   outputDate.year = present.year - DOB.year - 1;
   const perfectMonthDiff = present.day === DOB.day;
-
   const monthsFromYearPassed = 12 - DOB.month;
+  console.log("last months: ", monthsFromYearPassed);
+
   if (perfectMonthDiff) {
-    console.log("pef month");
-
-    console.log(monthsFromYearPassed);
-
     outputDate.month = present.month + monthsFromYearPassed;
     return outputDate;
   }
-  const wholeMonthStepOvershootBday = present.day - DOB.day > 0;
-  const referenceWholeMonthStep = {
-    year: present.year,
-    month: present.month,
-    day: DOB.day,
-  } as Age;
-  if (wholeMonthStepOvershootBday) {
-    console.log(`overshooting!!!`, referenceWholeMonthStep);
-    const dayDelta = present.day - DOB.day;
-    console.log("ddelta", dayDelta);
-
-    outputDate.month = referenceWholeMonthStep.month + monthsFromYearPassed - 1;
-    outputDate.day = dayDelta;
-    return outputDate;
+  const wholeMonthStepIsAheadOfBday = DOB.day < present.day;
+  if (wholeMonthStepIsAheadOfBday) {
+    console.log("triggers");
+    const wholeMonthPivot = {
+      year: present.year,
+      month: present.month,
+      day: DOB.day,
+    };
+    outputDate.month = present.month + monthsFromYearPassed;
+    outputDate.day = present.day - wholeMonthPivot.day;
   }
   return outputDate;
 }
@@ -331,10 +324,7 @@ function testAgeFn(age: Age, present: Age, expectedOutput) {
 console.log(testAgeFn(makeAge(2003, 6, 15), testDate, makeAge(20, 0, 0)));
 // test for a future bday with full month D
 console.log(testAgeFn(makeAge(2003, 7, 15), testDate, makeAge(19, 11, 0)));
-//tests for a future bday where a whole-month-step overshoots bday
+//test for a future bday where a whole-month-step overshoots bday
 console.log(testAgeFn(makeAge(2003, 7, 10), testDate, makeAge(19, 11, 5)));
-console.log(
-  testAgeFn(makeAge(2003, 7, 10), makeAge(2023, 4, 27), makeAge(19, 10, 17))
-);
 
 export default Home;
