@@ -20,8 +20,12 @@ const Home: NextPage = () => {
     </>
   );
 };
-
-type TypeAge = {
+type Age = {
+  year: number;
+  month: number;
+  day: number;
+};
+type DisplayAge = {
   year: number | "--";
   month: number | "--";
   day: number | "--";
@@ -32,10 +36,10 @@ export type TypeInputAge = {
   day: number | undefined | "DD";
 };
 type TypePropAge = {
-  age: TypeAge;
+  age: DisplayAge;
 };
 type AgeFormInput = {
-  age: TypeAge;
+  age: DisplayAge;
   setInputAge: Function;
   inputAge: TypeInputAge;
 };
@@ -50,7 +54,7 @@ function CalendarComponent() {
     year: "--",
     month: "--",
     day: "--",
-  } as TypeAge);
+  } as DisplayAge);
   //input age servers as the state thats update eveytime the input changes, and when form is submitted & inputAge has passed all tests, inputAge becomes the new age
   const [inputAge, setInputAge] = useState({
     year: "YYYY",
@@ -58,8 +62,8 @@ function CalendarComponent() {
     day: "DD",
   } as TypeInputAge);
 
-  const test = { month: 11, year: 11, day: 11 } as TypeAge;
-  function nextAge(nextAge: TypeAge) {
+  const test = { month: 11, year: 11, day: 11 } as DisplayAge;
+  function nextAge(nextAge: DisplayAge) {
     setAge(nextAge);
   }
   return (
@@ -96,8 +100,6 @@ function AgeFormInput({ age, setInputAge, inputAge }: AgeFormInput) {
     end: number,
     message: string
   ) {
-    console.log("Args are ", number, start, end);
-
     if (number === undefined) {
       return message;
     }
@@ -133,6 +135,7 @@ function AgeFormInput({ age, setInputAge, inputAge }: AgeFormInput) {
     }
     return message;
   }
+  function resetToDefault(defaultTrigger: String, defaultValue: String) {}
   const dayError = isInputError(inputAge.day, 1, 31, "Must be a valid day");
   const monthError = isInputError(
     inputAge.month,
@@ -207,72 +210,7 @@ function DisplayResult({ age }: TypePropAge) {
 // however, this approach has "carry over months", meaning a person will often have more months than the year
 // eg: a DOB of 2003-11-22 and a present time of 2023-5-22 would have lived for 19 years and 6 months bc while the present year has 5 months, they lived the one month from nov 22 to dec 22 of 2022
 // 2+3+2+2+2+2+3+2+2+2+3 +(37+11+39+58+19+37+49+55+41+18+5+43)/60
-function getAge(birth_date: Date, present: Date = new Date()): TypeAge {
-  const age: TypeAge = {
-    year: 0,
-    month: 0,
-    day: 0,
-  };
-
-  // all deltas assume <0 to mean that the DOB is behind of present; that 0 means DOB is present; and that >0 means DOB is ahead of present
-  const monthDelta = birth_date.getMonth() - present.getMonth();
-  const dayDelta = birth_date.getDate() - present.getDate();
-  const yearDelta = present.getFullYear() - birth_date.getFullYear();
-  const todayIsBday: boolean = dayDelta === 0 && monthDelta === 0;
-  if (todayIsBday) {
-    age.year = present.getFullYear() - birth_date.getFullYear();
-    return age;
-  }
-
-  const bdayHasPassed: boolean = isBdayInThePast(monthDelta, dayDelta);
-  if (bdayHasPassed) {
-    console.log("bday passed");
-
-    age.year = yearDelta;
-    age.month = monthDelta;
-    age.day = dayDelta;
-    return age;
-  }
-  // bday hasnt passed, so the person's ageis one year behind yearD
-  age.year = yearDelta - 1;
-  // this condition fixes bug when the bday is in the same month but same future, should be actually fixed by a date check on the setstate errormessage call
-  if (age.year === -1) {
-    age.year = 0;
-  }
-  const lastDayOfPresentMonth = getLastDayInMonth(present.getMonth());
-
-  //mF is used to account for the months passed from the present and last year
-  const monthFix = 11 - birth_date.getMonth() + present.getMonth();
-  // dF is used to account for when going a full month into the future would put time ahead of bday
-  // for example, a  dob of 2003-6-25 and  a present time of 2023-6-24 can't be a month away
-  if (dayDelta > 0) {
-    const sameMonth: boolean = present.getMonth() === birth_date.getMonth();
-    if (sameMonth) {
-      // bday is less than a month away
-      age.month = 11;
-      const lastDayOf11thMonth = getLastDayInMonth(birth_date.getMonth());
-      const dayGapBetween11And12Month =
-        lastDayOf11thMonth - birth_date.getDate();
-      age.day = dayGapBetween11And12Month + present.getDate();
-      return age;
-    }
-    age.month = 11 - birth_date.getMonth() + present.getMonth();
-    age.day = birth_date.getDate() - present.getDate();
-    return age;
-  }
-  if (dayDelta === 0) {
-    // bday is a perfect number of months away, so a month is added and days are left at 0 bc there's a full month-worth of days thats "rounded" as another month
-    age.month = monthFix + 1;
-    return age;
-  }
-  // code that runs here has to take into account that bday and present are a fraction of a month  ahead
-  // for example, DOB of 2003-11-22 and present of 2023-5-24 cant be a whole 6 months since that gives 2023-11-24, nor a whole 5 months since that would behind the bday
-  age.month = monthFix;
-  const lastFullMonth = birth_date.getMonth() - present.getMonth() + 1;
-  age.day =
-    getLastDayInMonth(lastFullMonth) - present.getDate() + birth_date.getDate();
-  return age;
-}
+function getAge(birth_date: Date, present: Date = new Date()): DisplayAge {}
 
 // check to see if person's bday has passed or not
 function isBdayInThePast(monthD: number, dayD: number): boolean {
@@ -293,46 +231,110 @@ function getLastDayInMonth(
 
   return lastDay.getDate();
 }
-const myDOB: Date = new Date(2003, 11 - 1, 22);
 
-function testIterator(fn: Function, args: Array<any>, output: Array<any>) {
-  if (args.length !== output.length) {
-    throw Error("Unmatchings arrs!!!!");
+function makeAge(year: number, month: number, day: number): Age {
+  return {
+    year: year,
+    month: month,
+    day: day,
+  };
+}
+function presentAge(): Age {
+  const present = new Date();
+  return {
+    year: present.getFullYear(),
+    month: present.getMonth() + 1,
+    day: present.getDate(),
+  };
+}
+
+function fullYearDifference(date1: Age, date2: Age): boolean {
+  if (date1.month === date2.month && date1.day === date2.day) {
+    return true;
   }
+  return false;
+}
 
-  for (let index = 0; index < args.length; index++) {
-    const elements = args[index];
-    if (JSON.stringify(fn(...elements)) === JSON.stringify(output[index])) {
-      console.log(
-        `Passed: ${JSON.stringify(fn(...elements))} -->== ${JSON.stringify(
-          output[index]
-        )}`
-      );
-    } else {
-      console.log(
-        `Failed: ${JSON.stringify(fn(...elements))} -->!= ${JSON.stringify(
-          output[index]
-        )} \n for: ${args[index]}`
-      );
+function getAgeDiffOnFutureOrPresentBday(
+  DOB: Age,
+  present: Age = presentAge()
+): Age {
+  const outputDate: Age = {
+    year: 0,
+    month: 0,
+    day: 0,
+  };
+  const datesAreIdentical = fullYearDifference(present, DOB);
+  if (datesAreIdentical) {
+    outputDate.year = present.year - DOB.year;
+    return outputDate;
+  }
+  outputDate.year = present.year - DOB.year - 1;
+  const perfectMonthDiff = present.day === DOB.day;
+
+  const monthsFromYearPassed = 12 - DOB.month;
+  if (perfectMonthDiff) {
+    console.log("pef month");
+
+    console.log(monthsFromYearPassed);
+
+    outputDate.month = present.month + monthsFromYearPassed;
+    return outputDate;
+  }
+  const wholeMonthStepOvershootBday = present.day - DOB.day > 0;
+  const referenceWholeMonthStep = {
+    year: present.year,
+    month: present.month,
+    day: DOB.day,
+  } as Age;
+  if (wholeMonthStepOvershootBday) {
+    console.log(`overshooting!!!`, referenceWholeMonthStep);
+    const dayDelta = present.day - DOB.day;
+    console.log("ddelta", dayDelta);
+
+    outputDate.month = referenceWholeMonthStep.month + monthsFromYearPassed - 1;
+    outputDate.day = dayDelta;
+    return outputDate;
+  }
+  return outputDate;
+}
+function getLastDayOfMonth(age: Age): number {
+  const dateOfMonth = new Date(age.year, age.month - 1, 0);
+  return dateOfMonth.getDate();
+}
+const testDate = makeAge(2023, 6, 15);
+const testAgeArgs = [
+  // test a perfect year difference
+  [makeAge(2003, 6, 15), testDate],
+];
+const testAgeOutput: Array<Age> = [];
+const myDOB = makeAge(2003, 11, 22);
+function testAgeFn(age: Age, present: Age, expectedOutput) {
+  const result = getAgeDiffOnFutureOrPresentBday(age, present);
+  let message = `Passed :) \n ${JSON.stringify(age)}  ${JSON.stringify(
+    present
+  )} --> ${JSON.stringify(expectedOutput)}`;
+  for (let index = 0; index < Object.keys(age).length; index++) {
+    const currentKey = Object.keys(age)[index] as keyof object;
+    if (result[currentKey] != expectedOutput[currentKey]) {
+      message = `Failed :O ${JSON.stringify(age)}  ${JSON.stringify(
+        present
+      )}\n  ${JSON.stringify(result)}  -/-> ${JSON.stringify(expectedOutput)}`;
       break;
     }
   }
+  return message;
 }
+// testIterator(getAge, testAgeArgs, testAgeOutput);
 
-const testAgeArgs = [
-  [new Date(2003, 5 - 1, 24), new Date(2023, 5 - 1, 24)],
-  [new Date(2003, 5 - 1, 25), new Date(2023, 5 - 1, 24)],
-  [new Date(2003, 6 - 1, 24), new Date(2023, 5 - 1, 24)],
-  [myDOB, new Date(2023, 5 - 1, 24)],
-  [myDOB, new Date(2023, 6 - 1, 2)],
-];
-const testAgeOutput: Array<TypeAge> = [
-  { year: 20, month: 0, day: 0 },
-  { year: 19, month: 11, day: 29 },
-  { year: 19, month: 11, day: 0 },
-  { year: 19, month: 5, day: 29 },
-  { year: 19, month: 6, day: 20 },
-];
+// test for a full year difference
+console.log(testAgeFn(makeAge(2003, 6, 15), testDate, makeAge(20, 0, 0)));
+// test for a future bday with full month D
+console.log(testAgeFn(makeAge(2003, 7, 15), testDate, makeAge(19, 11, 0)));
+//tests for a future bday where a whole-month-step overshoots bday
+console.log(testAgeFn(makeAge(2003, 7, 10), testDate, makeAge(19, 11, 5)));
+console.log(
+  testAgeFn(makeAge(2003, 7, 10), makeAge(2023, 4, 27), makeAge(19, 10, 17))
+);
 
-testIterator(getAge, testAgeArgs, testAgeOutput);
 export default Home;
