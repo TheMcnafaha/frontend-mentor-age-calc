@@ -259,34 +259,32 @@ function getAgeDiffOnFutureOrPresentBday(
   DOB: Age = presentAge(),
   present: Age
 ): Age {
+  const wholeMonthPivot = {
+    year: present.year,
+    month: present.month,
+    day: DOB.day,
+  };
+
   const outputDate: Age = {
     year: 0,
     month: 0,
     day: 0,
   };
+  outputDate.year = wholeMonthPivot.year - DOB.year;
   const bdayIsToday = fullYearDifference(present, DOB);
   if (bdayIsToday) {
-    outputDate.year = present.year - DOB.year;
     return outputDate;
   }
-  outputDate.year = present.year - DOB.year - 1;
-  const perfectMonthDiff = present.day === DOB.day;
-  const monthsFromYearPassed = 12 - DOB.month;
-  console.log("last months: ", monthsFromYearPassed);
+  outputDate.year = outputDate.year - 1;
+  const passedMonths = 12 - DOB.month;
+  if (present.day === wholeMonthPivot.day) {
+    outputDate.month = passedMonths + present.month;
+    return outputDate;
+  }
+  if (present.day > wholeMonthPivot.day) {
+    console.log("current pM", passedMonths);
 
-  if (perfectMonthDiff) {
-    outputDate.month = present.month + monthsFromYearPassed;
-    return outputDate;
-  }
-  const wholeMonthStepIsAheadOfBday = DOB.day < present.day;
-  if (wholeMonthStepIsAheadOfBday) {
-    console.log("triggers");
-    const wholeMonthPivot = {
-      year: present.year,
-      month: present.month,
-      day: DOB.day,
-    };
-    outputDate.month = present.month + monthsFromYearPassed;
+    outputDate.month = wholeMonthPivot.month + passedMonths;
     outputDate.day = present.day - wholeMonthPivot.day;
   }
   return outputDate;
