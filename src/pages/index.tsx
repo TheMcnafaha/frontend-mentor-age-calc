@@ -281,15 +281,31 @@ function getAgeDiffOnFutureOrPresentBday(
     outputDate.month = passedMonths + present.month;
     return outputDate;
   }
+  outputDate.month = wholeMonthPivot.month + passedMonths;
   if (present.day > wholeMonthPivot.day) {
     console.log("current pM", passedMonths);
-
-    outputDate.month = wholeMonthPivot.month + passedMonths;
     outputDate.day = present.day - wholeMonthPivot.day;
+    return outputDate;
+  }
+  if (present.day < wholeMonthPivot.day) {
+    outputDate.month = outputDate.month - 1;
+    const previousWholeMonthPivot: Age = {
+      year: wholeMonthPivot.year,
+      month: wholeMonthPivot.month - 2,
+      day: wholeMonthPivot.day,
+    };
+    const dayFix =
+      getLastDayOfMonth(previousWholeMonthPivot) - wholeMonthPivot.day;
+    console.log("dF", dayFix, wholeMonthPivot.day);
+    console.log("idk help", getLastDayOfMonth(makeAge(2023, 4, 20)));
+
+    outputDate.day = present.day + dayFix;
+    return outputDate;
   }
   return outputDate;
 }
 function getLastDayOfMonth(age: Age): number {
+  //Minus one since rest of program indexes months at 1 while js indexes months at zero
   const dateOfMonth = new Date(age.year, age.month - 1, 0);
   return dateOfMonth.getDate();
 }
@@ -322,7 +338,8 @@ function testAgeFn(age: Age, present: Age, expectedOutput) {
 console.log(testAgeFn(makeAge(2003, 6, 15), testDate, makeAge(20, 0, 0)));
 // test for a future bday with full month D
 console.log(testAgeFn(makeAge(2003, 7, 15), testDate, makeAge(19, 11, 0)));
-//test for a future bday where a whole-month-step overshoots bday
+//test for a future where a WMP is behind present
 console.log(testAgeFn(makeAge(2003, 7, 10), testDate, makeAge(19, 11, 5)));
-
+// test for a bday where WMP is ahead of present
+console.log(testAgeFn(makeAge(2003, 9, 27), testDate, makeAge(19, 8, 19)));
 export default Home;
