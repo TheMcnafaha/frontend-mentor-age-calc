@@ -79,9 +79,13 @@ function CalendarComponent() {
             }
           );
           if (allInputsAreNumbers) {
-            setAge(
-              getAge(new Date(inputAge.year, inputAge.month - 1, inputAge.day))
-            );
+            const formatedInputAge: Age = {
+              year: inputAge.year,
+              month: inputAge.month,
+              day: inputAge.day,
+            };
+
+            setAge(getAgeDiff(formatedInputAge));
           }
         }}
       >
