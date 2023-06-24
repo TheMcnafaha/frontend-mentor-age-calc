@@ -254,11 +254,16 @@ function fullYearDifference(date1: Age, date2: Age): boolean {
   }
   return false;
 }
-
-function getAgeDiffOnFutureOrPresentBday(
-  DOB: Age = presentAge(),
-  present: Age
-): Age {
+function hasBdayPassed(bday: Age, referenceAge: Age): boolean {
+  if (bday.month < referenceAge.month) {
+    return true;
+  }
+  if (bday.month === referenceAge.month) {
+    return bday.day < referenceAge.day;
+  }
+  return false;
+}
+function getAgeDiff(DOB: Age, present: Age = presentAge()): Age {
   const wholeMonthPivot = {
     year: present.year,
     month: present.month,
@@ -273,6 +278,31 @@ function getAgeDiffOnFutureOrPresentBday(
   outputDate.year = wholeMonthPivot.year - DOB.year;
   const bdayIsToday = fullYearDifference(present, DOB);
   if (bdayIsToday) {
+    return outputDate;
+  }
+  const bdayHasPassed = hasBdayPassed(DOB, present);
+  console.log("bday passed xdddd", bdayHasPassed);
+  if (bdayHasPassed) {
+    outputDate.month = present.month - DOB.month;
+    if (present.day === wholeMonthPivot.day) {
+      return outputDate;
+    }
+    if (present.day > wholeMonthPivot.day) {
+      outputDate.day = present.day - wholeMonthPivot.day;
+      return outputDate;
+    }
+    if (present.day < wholeMonthPivot.day) {
+      outputDate.month--;
+      const previousWholeMonthPivot: Age = {
+        year: wholeMonthPivot.year,
+        month: wholeMonthPivot.month - 2,
+        day: wholeMonthPivot.day,
+      };
+      const dayFix =
+        getLastDayOfMonth(previousWholeMonthPivot) - wholeMonthPivot.day;
+      outputDate.day = present.day + dayFix;
+      return outputDate;
+    }
     return outputDate;
   }
   outputDate.year = outputDate.year - 1;
@@ -316,30 +346,101 @@ const testAgeArgs = [
 ];
 const testAgeOutput: Array<Age> = [];
 const myDOB = makeAge(2003, 11, 22);
-function testAgeFn(age: Age, present: Age, expectedOutput) {
-  const result = getAgeDiffOnFutureOrPresentBday(age, present);
-  let message = `Passed :) \n ${JSON.stringify(age)}  ${JSON.stringify(
-    present
-  )} --> ${JSON.stringify(expectedOutput)}`;
+function testAgeFn(
+  age: Age,
+  present: Age,
+  expectedOutput: Age,
+  desc: string
+): testObj {
+  const result = getAgeDiff(age, present);
+  const output: testObj = {
+    success: true,
+    message: `${JSON.stringify(age)}  ${JSON.stringify(
+      present
+    )} --> ${JSON.stringify(expectedOutput)}`,
+    desc: desc,
+  };
   for (let index = 0; index < Object.keys(age).length; index++) {
     const currentKey = Object.keys(age)[index] as keyof object;
     if (result[currentKey] != expectedOutput[currentKey]) {
-      message = `Failed :O ${JSON.stringify(age)}  ${JSON.stringify(
+      output.message = `${JSON.stringify(age)}  ${JSON.stringify(
         present
       )}\n  ${JSON.stringify(result)}  -/-> ${JSON.stringify(expectedOutput)}`;
+      output.success = false;
       break;
     }
   }
-  return message;
+  return output;
 }
 // testIterator(getAge, testAgeArgs, testAgeOutput);
+type testObj = {
+  success: boolean;
+  message: string;
+  desc: string;
+};
+function evaluteTest(results: testObj[]): void {
+  results.forEach((e) => {
+    if (e.success) {
+      console.log("Passed!!! \n", e.message);
+    } else {
+      console.log("failed :( \n", e.message);
+    }
+  });
+  console.log(
+    results.some((result) => result.success === false)
+      ? "Summary: did not pass all tests :( "
+      : "Passed all test wohoooo"
+  );
+}
 
-// test for a full year difference
-console.log(testAgeFn(makeAge(2003, 6, 15), testDate, makeAge(20, 0, 0)));
-// test for a future bday with full month D
-console.log(testAgeFn(makeAge(2003, 7, 15), testDate, makeAge(19, 11, 0)));
-//test for a future where a WMP is behind present
-console.log(testAgeFn(makeAge(2003, 7, 10), testDate, makeAge(19, 11, 5)));
-// test for a bday where WMP is ahead of present
-console.log(testAgeFn(makeAge(2003, 9, 27), testDate, makeAge(19, 8, 19)));
+evaluteTest([
+  testAgeFn(
+    makeAge(2003, 1, 23),
+    testDate,
+    makeAge(20, 4, 23),
+    "test for a bday that has passed and WMP is ahead of present"
+  ),
+  testAgeFn(
+    makeAge(2003, 5, 4),
+    testDate,
+    makeAge(20, 1, 11),
+    "test for a bday that has passed and WMP is behind of present"
+  ),
+  testAgeFn(
+    makeAge(2003, 3, 15),
+    testDate,
+    makeAge(20, 3, 0),
+    "test for a bday that has passed with full month D"
+  ),
+  testAgeFn(
+    makeAge(2003, 9, 27),
+    testDate,
+    makeAge(19, 8, 19),
+    "test for a bday where WMP is ahead of present"
+  ),
+  testAgeFn(
+    makeAge(2003, 7, 10),
+    testDate,
+    makeAge(19, 11, 5),
+    "test for a future where a WMP is behind present"
+  ),
+  testAgeFn(
+    makeAge(2003, 7, 10),
+    testDate,
+    makeAge(19, 11, 5),
+    "test for a future where a WMP is behind present"
+  ),
+  testAgeFn(
+    makeAge(2003, 7, 15),
+    testDate,
+    makeAge(19, 11, 0),
+    "test for a future bday with full month D"
+  ),
+  testAgeFn(
+    makeAge(2003, 6, 15),
+    testDate,
+    makeAge(20, 0, 0),
+    "test for a full year difference"
+  ),
+]);
 export default Home;
