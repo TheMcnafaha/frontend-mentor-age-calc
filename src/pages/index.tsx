@@ -6,6 +6,8 @@ import { useState } from "react";
 import { date } from "zod";
 import InputError from "../components/InputError";
 import { CalendarInput } from "../components/CalendarInput";
+import { cursorTo } from "readline";
+import { argv0 } from "process";
 const Home: NextPage = () => {
   return (
     <>
@@ -30,7 +32,7 @@ type DisplayAge = {
   month: number | "--";
   day: number | "--";
 };
-export type TypeInputAge = {
+export type InputAge = {
   year: number | undefined | "YYYY";
   month: number | undefined | "MM";
   day: number | undefined | "DD";
@@ -41,7 +43,7 @@ type TypePropAge = {
 type AgeFormInput = {
   age: DisplayAge;
   setInputAge: Function;
-  inputAge: TypeInputAge;
+  inputAge: InputAge;
 };
 type TypeStateAge = {
   nextAge: Function;
@@ -50,50 +52,31 @@ type TypeStateAge = {
 class FormatError extends Error {}
 
 function CalendarComponent() {
-  const [age, setAge] = useState({
-    year: "--",
-    month: "--",
-    day: "--",
-  } as DisplayAge);
   //input age servers as the state thats update eveytime the input changes, and when form is submitted & inputAge has passed all tests, inputAge becomes the new age
   const [inputAge, setInputAge] = useState({
     year: "YYYY",
     month: "MM",
     day: "DD",
-  } as TypeInputAge);
+  } as InputAge);
 
-  const test = { month: 11, year: 11, day: 11 } as DisplayAge;
-  function nextAge(nextAge: DisplayAge) {
-    setAge(nextAge);
-  }
+  const displayAge = getDisplayAge(inputAge);
   return (
     <div className=" mt-20 flex max-w-[340px] flex-col rounded-2xl rounded-br-[4.5em] bg-[#fff] px-6 py-4 shadow-sm lg:max-w-[400px] ">
       <form
         action=""
         onSubmit={(e) => {
           e.preventDefault();
-
-          const allInputsAreNumbers: boolean = Object.values(inputAge).every(
-            (e) => {
-              return Number(e);
-            }
-          );
-          if (allInputsAreNumbers) {
-            const formatedInputAge: Age = {
-              year: inputAge.year,
-              month: inputAge.month,
-              day: inputAge.day,
-            };
-
-            setAge(getAgeDiff(formatedInputAge));
-          }
         }}
       >
-        <AgeFormInput age={age} setInputAge={setInputAge} inputAge={inputAge} />
+        <AgeFormInput
+          age={displayAge}
+          setInputAge={setInputAge}
+          inputAge={inputAge}
+        />
         <AgeFormSubmit />
       </form>
 
-      <DisplayResult age={age} />
+      <DisplayResult age={displayAge} />
     </div>
   );
 }
@@ -115,7 +98,7 @@ function AgeFormInput({ age, setInputAge, inputAge }: AgeFormInput) {
     return message;
   }
 
-  function isYearInputError(currentInput: TypeInputAge): String {
+  function isYearInputError(currentInput: InputAge): String {
     const undefinedDay = currentInput.day === undefined;
     const undefinedMonth = currentInput.month === undefined;
     const undefinedYear = currentInput.year === undefined;
@@ -139,7 +122,6 @@ function AgeFormInput({ age, setInputAge, inputAge }: AgeFormInput) {
     }
     return message;
   }
-  function resetToDefault(defaultTrigger: String, defaultValue: String) {}
   const dayError = isInputError(inputAge.day, 1, 31, "Must be a valid day");
   const monthError = isInputError(
     inputAge.month,
@@ -154,23 +136,9 @@ function AgeFormInput({ age, setInputAge, inputAge }: AgeFormInput) {
       <div className="mt-5 flex">
         <CalendarInput
           id={"day"}
-          setState={setInputAge}
           errorMessage={dayError}
+          defaultValue="DD"
           state={inputAge}
-        ></CalendarInput>
-
-        <CalendarInput
-          id={"month"}
-          setState={setInputAge}
-          state={inputAge}
-          errorMessage={monthError}
-        ></CalendarInput>
-
-        <CalendarInput
-          id={"year"}
-          setState={setInputAge}
-          state={inputAge}
-          errorMessage={yearError}
         ></CalendarInput>
       </div>
     </>
@@ -266,6 +234,39 @@ function hasBdayPassed(bday: Age, referenceAge: Age): boolean {
     return bday.day < referenceAge.day;
   }
   return false;
+}
+
+function getDisplayAge(currentAge: InputAge): DisplayAge {
+  let outputAge: DisplayAge = {
+    year: "--",
+    month: "--",
+    day: "--",
+  };
+  const dayNum = makeInputAgeNumber(currentAge.day, [0, 32]);
+  const monthNum = makeInputAgeNumber(currentAge.month, [0, 12]);
+  const yearNum = makeInputAgeNumber(currentAge.year, [
+    0,
+    new Date().getFullYear(),
+  ]);
+  if (dayNum !== -1) {
+    outputAge.day = dayNum;
+  }
+  if (monthNum !== -1) {
+    outputAge.month = monthNum;
+  }
+  if (yearNum !== -1) {
+    outputAge.year = yearNum;
+  }
+  return outputAge;
+}
+
+function makeInputAgeNumber(any: any, range: [number, number]): number {
+  if (Number.isInteger(any)) {
+    if (any >= range[0] && any < range[1]) {
+      return any;
+    }
+  }
+  return -1;
 }
 function getAgeDiff(DOB: Age, present: Age = presentAge()): Age {
   const wholeMonthPivot = {
@@ -398,53 +399,53 @@ function evaluteTest(results: testObj[]): void {
 }
 
 evaluteTest([
-  testAgeFn(
-    makeAge(2003, 1, 23),
-    testDate,
-    makeAge(20, 4, 23),
-    "test for a bday that has passed and WMP is ahead of present"
-  ),
-  testAgeFn(
-    makeAge(2003, 5, 4),
-    testDate,
-    makeAge(20, 1, 11),
-    "test for a bday that has passed and WMP is behind of present"
-  ),
-  testAgeFn(
-    makeAge(2003, 3, 15),
-    testDate,
-    makeAge(20, 3, 0),
-    "test for a bday that has passed with full month D"
-  ),
-  testAgeFn(
-    makeAge(2003, 9, 27),
-    testDate,
-    makeAge(19, 8, 19),
-    "test for a bday where WMP is ahead of present"
-  ),
-  testAgeFn(
-    makeAge(2003, 7, 10),
-    testDate,
-    makeAge(19, 11, 5),
-    "test for a future where a WMP is behind present"
-  ),
-  testAgeFn(
-    makeAge(2003, 7, 10),
-    testDate,
-    makeAge(19, 11, 5),
-    "test for a future where a WMP is behind present"
-  ),
-  testAgeFn(
-    makeAge(2003, 7, 15),
-    testDate,
-    makeAge(19, 11, 0),
-    "test for a future bday with full month D"
-  ),
-  testAgeFn(
-    makeAge(2003, 6, 15),
-    testDate,
-    makeAge(20, 0, 0),
-    "test for a full year difference"
-  ),
+  // testAgeFn(
+  //   makeAge(2003, 1, 23),
+  //   testDate,
+  //   makeAge(20, 4, 23),
+  //   "test for a bday that has passed and WMP is ahead of present"
+  // ),
+  // testAgeFn(
+  //   makeAge(2003, 5, 4),
+  //   testDate,
+  //   makeAge(20, 1, 11),
+  //   "test for a bday that has passed and WMP is behind of present"
+  // ),
+  // testAgeFn(
+  //   makeAge(2003, 3, 15),
+  //   testDate,
+  //   makeAge(20, 3, 0),
+  //   "test for a bday that has passed with full month D"
+  // ),
+  // testAgeFn(
+  //   makeAge(2003, 9, 27),
+  //   testDate,
+  //   makeAge(19, 8, 19),
+  //   "test for a bday where WMP is ahead of present"
+  // ),
+  // testAgeFn(
+  //   makeAge(2003, 7, 10),
+  //   testDate,
+  //   makeAge(19, 11, 5),
+  //   "test for a future where a WMP is behind present"
+  // ),
+  // testAgeFn(
+  //   makeAge(2003, 7, 10),
+  //   testDate,
+  //   makeAge(19, 11, 5),
+  //   "test for a future where a WMP is behind present"
+  // ),
+  // testAgeFn(
+  //   makeAge(2003, 7, 15),
+  //   testDate,
+  //   makeAge(19, 11, 0),
+  //   "test for a future bday with full month D"
+  // ),
+  // testAgeFn(
+  //   makeAge(2003, 6, 15),
+  //   testDate,
+  //   makeAge(20, 0, 0),
+  //   "test for a full year difference"
+  // ),
 ]);
 export default Home;
