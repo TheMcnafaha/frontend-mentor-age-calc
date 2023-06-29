@@ -141,6 +141,20 @@ function AgeFormInput({ age, setInputAge, inputAge }: AgeFormInput) {
           defaultValue="DD"
           errorRange={[1, 32]}
         ></CalendarInput>
+        <CalendarInput
+          maxInputLength={2}
+          id={"month"}
+          errorMessage={"Must be a valid month"}
+          defaultValue="MM"
+          errorRange={[1, 13]}
+        ></CalendarInput>
+        <CalendarInput
+          maxInputLength={4}
+          id={"year"}
+          errorMessage={"Must be in the past"}
+          defaultValue="YYYY"
+          errorRange={[1, new Date().getFullYear()]}
+        ></CalendarInput>
       </div>
     </>
   );

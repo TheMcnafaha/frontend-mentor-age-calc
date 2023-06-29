@@ -30,20 +30,20 @@ export function CalendarInput({
   const hasAnyDefaultValue = textInput === defaultValue;
   const isError = isErrorCheck(textInput, errorRange);
   console.log("le textInput le is me ", textInput);
-  let classText =
+  let className =
     "m-1  ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl mix-blend-darken ring-1       ring-template_ligth_grey hover:ring-template_purple  ";
   let appliedErrorMessage=""
 // else statement must be used because all default  values are also error values, but very much so not the other way around
   if (hasAnyDefaultValue|| textInput==="") {
     console.log("We got a default");
     
-    classText =
-      "m-1  ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl text-template_smokey_grey  mix-blend-darken ring-1     ring-template_ligth_grey hover:ring-template_purple  ";
+    className =
+      "m-1   ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl text-template_smokey_grey  mix-blend-darken ring-1     ring-template_ligth_grey hover:ring-template_purple  w-[3.75em] ";
   }
   else if (isError) {
     console.log("we got an error");
    appliedErrorMessage=errorMessage 
-    classText =
+    className =
       "m-1  ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl mix-blend-darken ring-1       ring-template_ligth_grey hover:ring-template_purple  ";
   }
   return (
@@ -55,7 +55,7 @@ export function CalendarInput({
         {id}
       </label>
       <input
-        className={classText}
+        className={className}
         type="text"
         inputMode="numeric"
         id={id}
@@ -162,7 +162,7 @@ function ErrorInput({ id, textInput, errorMessage }: ErrorInput) {
         }}
       />
 
-      <div className="text-xs italic text-template_red">{errorMessage}</div>
+      <div className="text-xs w-3 italic text-template_red">{errorMessage}</div>
     </div>
   );
 }
