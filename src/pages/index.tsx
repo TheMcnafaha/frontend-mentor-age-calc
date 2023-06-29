@@ -135,10 +135,11 @@ function AgeFormInput({ age, setInputAge, inputAge }: AgeFormInput) {
     <>
       <div className="mt-5 flex">
         <CalendarInput
+          maxInputLength={2}
           id={"day"}
-          errorMessage={dayError}
+          errorMessage={"Must be a valid day"}
           defaultValue="DD"
-          state={inputAge}
+          errorRange={[1, 32]}
         ></CalendarInput>
       </div>
     </>
