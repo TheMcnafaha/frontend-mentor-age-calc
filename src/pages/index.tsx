@@ -1,13 +1,7 @@
-import { log } from "console";
 import { type NextPage } from "next";
 import Head from "next/head";
-import next from "next/types";
 import { useState } from "react";
-import { date } from "zod";
-import InputError from "../components/InputError";
 import { CalendarInput } from "../components/CalendarInput";
-import { cursorTo } from "readline";
-import { argv0 } from "process";
 const Home: NextPage = () => {
   return (
     <>
@@ -45,11 +39,6 @@ type AgeFormInput = {
   setInputAge: Function;
   inputAge: InputAge;
 };
-type TypeStateAge = {
-  nextAge: Function;
-};
-
-class FormatError extends Error {}
 
 function CalendarComponent() {
   //input age servers as the state thats update eveytime the input changes, and when form is submitted & inputAge has passed all tests, inputAge becomes the new age
@@ -129,8 +118,9 @@ function AgeFormInput({ age, setInputAge, inputAge }: AgeFormInput) {
     12,
     "Must be a valid month"
   );
-  const yearError = isYearInputError(inputAge);
-
+  const [dayInput, setDayInput] = useState("DD");
+  const [monthInput, setmonthInput] = useState("MM");
+  const [yearInput, setyearInput] = useState("YYYY");
   return (
     <>
       <div className="mt-5 flex">
@@ -140,6 +130,8 @@ function AgeFormInput({ age, setInputAge, inputAge }: AgeFormInput) {
           errorMessage={"Must be a valid day"}
           defaultValue="DD"
           errorRange={[1, 32]}
+          textInput={dayInput}
+          setTextInput={setDayInput}
         ></CalendarInput>
         <CalendarInput
           maxInputLength={2}
@@ -147,13 +139,17 @@ function AgeFormInput({ age, setInputAge, inputAge }: AgeFormInput) {
           errorMessage={"Must be a valid month"}
           defaultValue="MM"
           errorRange={[1, 13]}
+          textInput={monthInput}
+          setTextInput={setmonthInput}
         ></CalendarInput>
         <CalendarInput
           maxInputLength={4}
           id={"year"}
           errorMessage={"Must be in the past"}
           defaultValue="YYYY"
-          errorRange={[1, new Date().getFullYear()]}
+          errorRange={[1, new Date().getFullYear() + 1]}
+          textInput={yearInput}
+          setTextInput={setyearInput}
         ></CalendarInput>
       </div>
     </>

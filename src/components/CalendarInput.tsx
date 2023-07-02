@@ -6,7 +6,9 @@ type CalendarInput = {
   defaultValue: string;
   errorRange: [number, number];
   errorMessage: string;
-  maxInputLength:number
+  maxInputLength: number;
+  textInput: string | number;
+  setTextInput: Function;
 };
 type OkInput = {
   id: "day" | "month" | "year";
@@ -25,24 +27,24 @@ export function CalendarInput({
   errorRange,
   errorMessage,
   maxInputLength,
+  textInput,
+  setTextInput,
 }: CalendarInput) {
-  const [textInput, setTextInput] =  React.useState<number|string>(defaultValue)
   const hasAnyDefaultValue = textInput === defaultValue;
   const isError = isErrorCheck(textInput, errorRange);
   console.log("le textInput le is me ", textInput);
   let className =
     "m-1  ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl mix-blend-darken ring-1       ring-template_ligth_grey hover:ring-template_purple  ";
-  let appliedErrorMessage=""
-// else statement must be used because all default  values are also error values, but very much so not the other way around
-  if (hasAnyDefaultValue|| textInput==="") {
+  let appliedErrorMessage = "";
+  // else statement must be used because all default  values are also error values, but very much so not the other way around
+  if (hasAnyDefaultValue || textInput === "") {
     console.log("We got a default");
-    
+
     className =
       "m-1   ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl text-template_smokey_grey  mix-blend-darken ring-1     ring-template_ligth_grey hover:ring-template_purple  w-[3.75em] ";
-  }
-  else if (isError) {
+  } else if (isError) {
     console.log("we got an error");
-   appliedErrorMessage=errorMessage 
+    appliedErrorMessage = errorMessage;
     className =
       "m-1  ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl mix-blend-darken ring-1       ring-template_ligth_grey hover:ring-template_purple  ";
   }
@@ -62,13 +64,21 @@ export function CalendarInput({
         defaultValue={textInput}
         key={"sure"}
         maxLength={maxInputLength}
-        onFocus={hasAnyDefaultValue?()=>{setTextInput("")}:undefined}
+        onFocus={
+          hasAnyDefaultValue
+            ? () => {
+                setTextInput("");
+              }
+            : undefined
+        }
         onChange={(e) => {
-          const input = e.target.value
-         setTextInput(input) 
+          const input = e.target.value;
+          setTextInput(input);
         }}
       />
-      <div className="text-xs italic text-template_red">{appliedErrorMessage}</div>
+      <div className="text-xs italic text-template_red">
+        {appliedErrorMessage}
+      </div>
     </div>
   );
 }
@@ -162,7 +172,7 @@ function ErrorInput({ id, textInput, errorMessage }: ErrorInput) {
         }}
       />
 
-      <div className="text-xs w-3 italic text-template_red">{errorMessage}</div>
+      <div className="w-3 text-xs italic text-template_red">{errorMessage}</div>
     </div>
   );
 }
@@ -177,9 +187,9 @@ function resetInputValueIfNotDefaultValue(
 }
 function isErrorCheck(input: any, errRange: [number, number]): boolean {
   if (checkForLetters(input)) {
-   return true 
+    return true;
   }
-  const parsed=parseInt(input,10)
+  const parsed = parseInt(input, 10);
   if (!Number.isInteger(parsed)) {
     return true;
   }
@@ -188,9 +198,7 @@ function isErrorCheck(input: any, errRange: [number, number]): boolean {
   }
   return true;
 }
-function checkForLetters (input :string):boolean  {
- const hasAnyLetters=/\p{L}/u.test(input)
-  return hasAnyLetters
+function checkForLetters(input: string): boolean {
+  const hasAnyLetters = /\p{L}/u.test(input);
+  return hasAnyLetters;
 }
-
-
