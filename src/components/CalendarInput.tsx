@@ -1,6 +1,10 @@
 import { TypeInputAge } from "../pages/index";
 import { useState } from "react";
 import React from "react";
+type errorObj = {
+  isError: boolean;
+  errorMessage: string;
+};
 type CalendarInput = {
   id: "day" | "month" | "year";
   defaultValue: string;
@@ -9,6 +13,7 @@ type CalendarInput = {
   maxInputLength: number;
   textInput: string | number;
   setTextInput: Function;
+  customError: errorObj | false;
 };
 type OkInput = {
   id: "day" | "month" | "year";
@@ -29,22 +34,25 @@ export function CalendarInput({
   maxInputLength,
   textInput,
   setTextInput,
+  customError,
 }: CalendarInput) {
   const hasAnyDefaultValue = textInput === defaultValue;
   const isError = isErrorCheck(textInput, errorRange);
-  console.log("le textInput le is me ", textInput);
   let className =
     "m-1  ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl mix-blend-darken ring-1       ring-template_ligth_grey hover:ring-template_purple  ";
   let appliedErrorMessage = "";
   // else statement must be used because all default  values are also error values, but very much so not the other way around
   if (hasAnyDefaultValue || textInput === "") {
-    console.log("We got a default");
-
     className =
       "m-1   ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl text-template_smokey_grey  mix-blend-darken ring-1     ring-template_ligth_grey hover:ring-template_purple  w-[3.75em] ";
   } else if (isError) {
-    console.log("we got an error");
     appliedErrorMessage = errorMessage;
+    className =
+      "m-1  ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl mix-blend-darken ring-1       ring-template_ligth_grey hover:ring-template_purple  ";
+  }
+  // custom error has less precedence than the non-custom error, thus else-if-ed last
+  else if (customError != false && customError.isError) {
+    appliedErrorMessage = customError.errorMessage;
     className =
       "m-1  ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl mix-blend-darken ring-1       ring-template_ligth_grey hover:ring-template_purple  ";
   }
@@ -99,7 +107,6 @@ function DefaultInput({ id, textInput, setState }: DefaultInput) {
         defaultValue={textInput}
         key={"sure"}
         onChange={(e) => {
-          console.log("halp");
           setState("");
         }}
       />

@@ -132,6 +132,7 @@ function AgeFormInput({ age, setInputAge, inputAge }: AgeFormInput) {
           errorRange={[1, 32]}
           textInput={dayInput}
           setTextInput={setDayInput}
+          customError={false}
         ></CalendarInput>
         <CalendarInput
           maxInputLength={2}
@@ -141,6 +142,7 @@ function AgeFormInput({ age, setInputAge, inputAge }: AgeFormInput) {
           errorRange={[1, 13]}
           textInput={monthInput}
           setTextInput={setmonthInput}
+          customError={false}
         ></CalendarInput>
         <CalendarInput
           maxInputLength={4}
@@ -150,6 +152,7 @@ function AgeFormInput({ age, setInputAge, inputAge }: AgeFormInput) {
           errorRange={[1, new Date().getFullYear() + 1]}
           textInput={yearInput}
           setTextInput={setyearInput}
+          customError={{ isError: true, errorMessage: "test123" }}
         ></CalendarInput>
       </div>
     </>
@@ -297,7 +300,6 @@ function getAgeDiff(DOB: Age, present: Age = presentAge()): Age {
     return outputDate;
   }
   const bdayHasPassed = hasBdayPassed(DOB, present);
-  console.log("bday passed xdddd", bdayHasPassed);
   if (bdayHasPassed) {
     outputDate.month = present.month - DOB.month;
     if (present.day === wholeMonthPivot.day) {
@@ -329,7 +331,6 @@ function getAgeDiff(DOB: Age, present: Age = presentAge()): Age {
   }
   outputDate.month = wholeMonthPivot.month + passedMonths;
   if (present.day > wholeMonthPivot.day) {
-    console.log("current pM", passedMonths);
     outputDate.day = present.day - wholeMonthPivot.day;
     return outputDate;
   }
@@ -342,8 +343,6 @@ function getAgeDiff(DOB: Age, present: Age = presentAge()): Age {
     };
     const dayFix =
       getLastDayOfMonth(previousWholeMonthPivot) - wholeMonthPivot.day;
-    console.log("dF", dayFix, wholeMonthPivot.day);
-    console.log("idk help", getLastDayOfMonth(makeAge(2023, 4, 20)));
 
     outputDate.day = present.day + dayFix;
     return outputDate;
