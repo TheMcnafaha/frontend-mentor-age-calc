@@ -2,6 +2,7 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import { useState } from "react";
 import { CalendarInput } from "../components/CalendarInput";
+import { ErrorObj } from "../components/CalendarInput";
 const Home: NextPage = () => {
   return (
     <>
@@ -86,8 +87,7 @@ function AgeFormInput({ age, setInputAge, inputAge }: AgeFormInput) {
     }
     return message;
   }
-
-  function isYearInputError(currentInput: InputAge): String {
+  function isYearInputError(currentInput: PossibleAge): String {
     const undefinedDay = currentInput.day === undefined;
     const undefinedMonth = currentInput.month === undefined;
     const undefinedYear = currentInput.year === undefined;
@@ -119,8 +119,14 @@ function AgeFormInput({ age, setInputAge, inputAge }: AgeFormInput) {
     "Must be a valid month"
   );
   const [dayInput, setDayInput] = useState("DD");
+
   const [monthInput, setmonthInput] = useState("MM");
   const [yearInput, setyearInput] = useState("YYYY");
+  const isYearError = checkForYearError({
+    year: yearInput,
+    month: monthInput,
+    day: dayInput,
+  });
   return (
     <>
       <div className="mt-5 flex">
@@ -152,13 +158,44 @@ function AgeFormInput({ age, setInputAge, inputAge }: AgeFormInput) {
           errorRange={[1, new Date().getFullYear() + 1]}
           textInput={yearInput}
           setTextInput={setyearInput}
-          customError={{ isError: true, errorMessage: "test123" }}
+          customError={isYearError}
         ></CalendarInput>
       </div>
     </>
   );
 }
 
+type PossibleAge = {
+  year: string | number | string;
+  month: string | number | string;
+  day: string | number | string;
+};
+const testAge = makeAge(2023, 3, 4);
+console.log("test pls magic god ", checkForYearError(testAge));
+
+function checkForYearError(possibeAge: PossibleAge): false | ErrorObj {
+  const isDay = Number.isInteger(possibeAge.day);
+  const isMonth = Number.isInteger(possibeAge.month);
+  const isYear = Number.isInteger(possibeAge.year);
+  if (isDay && isMonth && isYear) {
+    const presentEpoch = new Date().getTime();
+    const inputEpoch = new Date(
+      makeTS_ReturnNumber(possibeAge.year),
+      makeTS_ReturnNumber(possibeAge.month),
+      makeTS_ReturnNumber(possibeAge.day)
+    ).getTime();
+    if (inputEpoch > presentEpoch) {
+      return { isError: true, errorMessage: "Must be in the past" };
+    }
+  }
+  return false;
+}
+function makeTS_ReturnNumber(friendlyNumber: any): number {
+  if (Number.isInteger(friendlyNumber)) {
+    return friendlyNumber;
+  }
+  return -1;
+}
 function AgeFormSubmit() {
   return (
     <>

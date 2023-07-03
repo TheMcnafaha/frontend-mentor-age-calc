@@ -1,7 +1,7 @@
 import { TypeInputAge } from "../pages/index";
 import { useState } from "react";
 import React from "react";
-type errorObj = {
+export type ErrorObj = {
   isError: boolean;
   errorMessage: string;
 };
@@ -13,7 +13,7 @@ type CalendarInput = {
   maxInputLength: number;
   textInput: string | number;
   setTextInput: Function;
-  customError: errorObj | false;
+  customError: ErrorObj | false;
 };
 type OkInput = {
   id: "day" | "month" | "year";
