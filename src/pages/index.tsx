@@ -52,25 +52,16 @@ function CalendarComponent() {
   const displayAge = getDisplayAge(inputAge);
   return (
     <div className=" mt-20 flex max-w-[340px] flex-col rounded-2xl rounded-br-[4.5em] bg-[#fff] px-6 py-4 shadow-sm lg:max-w-[400px] ">
-      <form
-        action=""
-        onSubmit={(e) => {
-          e.preventDefault();
-        }}
-      >
-        <AgeFormInput
-          age={displayAge}
-          setInputAge={setInputAge}
-          inputAge={inputAge}
-        />
-        <AgeFormSubmit />
-      </form>
-
+      <AgeForm
+        age={displayAge}
+        setInputAge={setInputAge}
+        inputAge={inputAge}
+      ></AgeForm>
       <DisplayResult age={displayAge} />
     </div>
   );
 }
-function AgeFormInput({ age, setInputAge, inputAge }: AgeFormInput) {
+function AgeForm({ age, setInputAge, inputAge }: AgeFormInput) {
   function isInputError(
     number: number | undefined,
     start: number,
@@ -129,38 +120,47 @@ function AgeFormInput({ age, setInputAge, inputAge }: AgeFormInput) {
   });
   return (
     <>
-      <div className="mt-5 flex">
-        <CalendarInput
-          maxInputLength={2}
-          id={"day"}
-          errorMessage={"Must be a valid day"}
-          defaultValue="DD"
-          errorRange={[1, 32]}
-          textInput={dayInput}
-          setTextInput={setDayInput}
-          customError={false}
-        ></CalendarInput>
-        <CalendarInput
-          maxInputLength={2}
-          id={"month"}
-          errorMessage={"Must be a valid month"}
-          defaultValue="MM"
-          errorRange={[1, 13]}
-          textInput={monthInput}
-          setTextInput={setmonthInput}
-          customError={false}
-        ></CalendarInput>
-        <CalendarInput
-          maxInputLength={4}
-          id={"year"}
-          errorMessage={"Must be in the past"}
-          defaultValue="YYYY"
-          errorRange={[1, new Date().getFullYear() + 1]}
-          textInput={yearInput}
-          setTextInput={setyearInput}
-          customError={isYearError}
-        ></CalendarInput>
-      </div>
+      <form
+        action=""
+        onSubmit={(e) => {
+          e.preventDefault();
+          console.log("lols");
+        }}
+      >
+        <div className="mt-5 flex">
+          <CalendarInput
+            maxInputLength={2}
+            id={"day"}
+            errorMessage={"Must be a valid day"}
+            defaultValue="DD"
+            errorRange={[1, 32]}
+            textInput={dayInput}
+            setTextInput={setDayInput}
+            customError={false}
+          ></CalendarInput>
+          <CalendarInput
+            maxInputLength={2}
+            id={"month"}
+            errorMessage={"Must be a valid month"}
+            defaultValue="MM"
+            errorRange={[1, 13]}
+            textInput={monthInput}
+            setTextInput={setmonthInput}
+            customError={false}
+          ></CalendarInput>
+          <CalendarInput
+            maxInputLength={4}
+            id={"year"}
+            errorMessage={"Must be in the past"}
+            defaultValue="YYYY"
+            errorRange={[1, new Date().getFullYear() + 1]}
+            textInput={yearInput}
+            setTextInput={setyearInput}
+            customError={isYearError}
+          ></CalendarInput>
+        </div>
+        <AgeFormSubmit />
+      </form>
     </>
   );
 }
