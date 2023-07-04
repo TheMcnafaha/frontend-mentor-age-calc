@@ -93,7 +93,8 @@ function AgeForm({ age, setInputAge, inputAge }: AgeFormInput) {
       const presentEpoch = new Date().getTime();
       const currentEpoch = new Date(
         currentInput.year,
-        currentInput.month,
+        // js months are weird xddddddd
+        currentInput.month - 1,
         currentInput.day
       ).getTime();
       if (currentEpoch > presentEpoch) {
@@ -125,13 +126,10 @@ function AgeForm({ age, setInputAge, inputAge }: AgeFormInput) {
         action=""
         onSubmit={(e) => {
           e.preventDefault();
-          console.log("lols", dayInput);
           if (isInputAgeSound(currentAge)) {
-            console.log("is me working");
             const nextAge = getAgeDiff(currentAge);
             setInputAge(nextAge);
           } else {
-            console.log("no work");
           }
         }}
       >
@@ -161,7 +159,7 @@ function AgeForm({ age, setInputAge, inputAge }: AgeFormInput) {
             id={"year"}
             errorMessage={"Must be in the past"}
             defaultValue="YYYY"
-            errorRange={[1, new Date().getFullYear() + 1]}
+            errorRange={[-Infinity, new Date().getFullYear() + 1]}
             textInput={yearInput}
             setTextInput={setyearInput}
             customError={isYearError}
@@ -178,12 +176,8 @@ type PossibleAge = {
   month: string | number | string;
   day: string | number | string;
 };
-const testAge = makeAge(2023, 3, 4);
-console.log("test pls magic god ", checkForYearError(testAge));
 
 function isInputAgeSound(possibleAge: InputAge): boolean {
-  console.log(possibleAge);
-
   const isDay = Number.isInteger(possibleAge.day);
   const isMonth = Number.isInteger(possibleAge.month);
   const isYear = Number.isInteger(possibleAge.year);
@@ -196,6 +190,11 @@ function checkForYearError(possibeAge: PossibleAge): false | ErrorObj {
   const isDay = Number.isInteger(possibeAge.day);
   const isMonth = Number.isInteger(possibeAge.month);
   const isYear = Number.isInteger(possibeAge.year);
+  console.log("xdddddddd ", makeTS_ReturnNumber(possibeAge.year));
+
+  if (makeTS_ReturnNumber(possibeAge.year) <= 0) {
+    return { isError: true, errorMessage: "Date must be older than 0 CE" };
+  }
   if (isDay && isMonth && isYear) {
     const presentEpoch = new Date().getTime();
     const inputEpoch = new Date(
@@ -231,9 +230,7 @@ function AgeFormSubmit() {
     </>
   );
 }
-
 function DisplayResult({ age }: TypePropAge) {
-  const myTime: Date = new Date();
   return (
     <>
       <h1 className="mb-6 text-5xl font-extrabold italic">
@@ -463,6 +460,7 @@ function evaluteTest(results: testObj[]): void {
       : "Passed all test wohoooo"
   );
 }
+const secondTestDate = makeAge(2023, 7, 2);
 
 evaluteTest([
   // testAgeFn(
@@ -512,6 +510,12 @@ evaluteTest([
   //   testDate,
   //   makeAge(20, 0, 0),
   //   "test for a full year difference"
+  // ),
+  // testAgeFn(
+  //   makeAge(2003, 7, 3),
+  //   secondTestDate,
+  //   makeAge(19, 11, 29),
+  //   "test for weird bug where date is passed wrong"
   // ),
 ]);
 export default Home;
