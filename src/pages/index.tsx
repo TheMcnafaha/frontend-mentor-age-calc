@@ -315,15 +315,15 @@ function getDisplayAge(currentAge: InputAge): DisplayAge {
     0,
     new Date().getFullYear(),
   ]);
-  if (dayNum !== -1) {
-    outputAge.day = dayNum;
+  const isNotValidDay = dayNum === -1;
+  const isNotValidMonth = monthNum === -1;
+  const isNotValidYear = yearNum === -1;
+  if (isNotValidDay || isNotValidMonth || isNotValidYear) {
+    return outputAge;
   }
-  if (monthNum !== -1) {
-    outputAge.month = monthNum;
-  }
-  if (yearNum !== -1) {
-    outputAge.year = yearNum;
-  }
+  outputAge.day = dayNum;
+  outputAge.month = monthNum;
+  outputAge.year = yearNum;
   return outputAge;
 }
 
