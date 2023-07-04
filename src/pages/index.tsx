@@ -61,55 +61,7 @@ function CalendarComponent() {
     </div>
   );
 }
-function AgeForm({ age, setInputAge, inputAge }: AgeFormInput) {
-  function isInputError(
-    number: number | undefined,
-    start: number,
-    end: number,
-    message: string
-  ) {
-    if (number === undefined) {
-      return message;
-    }
-    const numTooBig = number > end;
-    const numTooSmall = number < start;
-    if (!numTooBig && !numTooSmall) {
-      return "";
-    }
-    return message;
-  }
-  function isYearInputError(currentInput: PossibleAge): String {
-    const undefinedDay = currentInput.day === undefined;
-    const undefinedMonth = currentInput.month === undefined;
-    const undefinedYear = currentInput.year === undefined;
-    if (undefinedDay || undefinedMonth || undefinedYear) {
-      return "";
-    }
-    const isDayNumber = !Number.isNaN(currentInput.day);
-    const isMonthNumber = !Number.isNaN(currentInput.month);
-    const isYearNumber = !Number.isNaN(currentInput.year);
-    let message = "";
-    if (isDayNumber && isMonthNumber && isYearNumber) {
-      const presentEpoch = new Date().getTime();
-      const currentEpoch = new Date(
-        currentInput.year,
-        // js months are weird xddddddd
-        currentInput.month - 1,
-        currentInput.day
-      ).getTime();
-      if (currentEpoch > presentEpoch) {
-        message = "Must be in the past";
-      }
-    }
-    return message;
-  }
-  const dayError = isInputError(inputAge.day, 1, 31, "Must be a valid day");
-  const monthError = isInputError(
-    inputAge.month,
-    1,
-    12,
-    "Must be a valid month"
-  );
+function AgeForm({ setInputAge }: AgeFormInput) {
   const [dayInput, setDayInput] = useState("DD");
 
   const [monthInput, setmonthInput] = useState("MM");
@@ -249,27 +201,8 @@ function DisplayResult({ age }: TypePropAge) {
 // however, this approach has "carry over months", meaning a person will often have more months than the year
 // eg: a DOB of 2003-11-22 and a present time of 2023-5-22 would have lived for 19 years and 6 months bc while the present year has 5 months, they lived the one month from nov 22 to dec 22 of 2022
 // 2+3+2+2+2+2+3+2+2+2+3 +(37+11+39+58+19+37+49+55+41+18+5+43)/60
-function getAge(birth_date: Date, present: Date = new Date()): DisplayAge {}
 
 // check to see if person's bday has passed or not
-function isBdayInThePast(monthD: number, dayD: number): boolean {
-  if (monthD < 0) {
-    return true;
-  }
-  if (monthD === 0 && dayD < 0) {
-    return true;
-  }
-  return false;
-}
-
-function getLastDayInMonth(
-  month: number,
-  year: number = new Date().getFullYear()
-): number {
-  const lastDay = new Date(year, month, 0);
-
-  return lastDay.getDate();
-}
 
 function makeAge(year: number, month: number, day: number): Age {
   return {
@@ -408,11 +341,6 @@ function getLastDayOfMonth(age: Age): number {
   return dateOfMonth.getDate();
 }
 const testDate = makeAge(2023, 6, 15);
-const testAgeArgs = [
-  // test a perfect year difference
-  [makeAge(2003, 6, 15), testDate],
-];
-const testAgeOutput: Array<Age> = [];
 const myDOB = makeAge(2003, 11, 22);
 function testAgeFn(
   age: Age,
