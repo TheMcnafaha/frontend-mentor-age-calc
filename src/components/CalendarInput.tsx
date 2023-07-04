@@ -39,22 +39,22 @@ export function CalendarInput({
   const hasAnyDefaultValue = textInput === defaultValue;
   const isError = isErrorCheck(textInput, errorRange);
   let className =
-    "m-1  ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl mix-blend-darken ring-1       ring-template_ligth_grey hover:ring-template_purple  ";
+    "m-1  ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl mix-blend-darken ring-1       ring-template_ligth_grey hover:ring-template_purple hover:ring-2 ";
   let appliedErrorMessage = "";
   // else statement must be used because all default  values are also error values, but very much so not the other way around
   if (hasAnyDefaultValue || textInput === "") {
     className =
-      "m-1   ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl text-template_smokey_grey  mix-blend-darken ring-1     ring-template_ligth_grey hover:ring-template_purple  w-[3.75em] ";
+      "m-1   ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl text-template_smokey_grey  mix-blend-darken ring-1     ring-template_ligth_grey hover:ring-template_purple  w-[3.75em] hover:ring-2 ";
   } else if (isError) {
     appliedErrorMessage = errorMessage;
     className =
-      "m-1  ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl mix-blend-darken ring-1       ring-template_ligth_grey hover:ring-template_purple  ";
+      "m-1  ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl mix-blend-darken ring-1       ring-template_ligth_grey hover:ring-template_purple hover:ring-2 ";
   }
   // custom error has less precedence than the non-custom error, thus else-if-ed last
   else if (customError != false && customError.isError) {
     appliedErrorMessage = customError.errorMessage;
     className =
-      "m-1  ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl mix-blend-darken ring-1       ring-template_ligth_grey hover:ring-template_purple  ";
+      "m-1  ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl mix-blend-darken ring-1       ring-template_ligth_grey hover:ring-template_purple hover:ring-2 ";
   }
   return (
     <div className="flex w-1/3 flex-col pr-5 ">
