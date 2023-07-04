@@ -1,8 +1,9 @@
-import { type NextPage } from "next";
+import type { NextPage } from "next";
+import type { Dispatch, SetStateAction } from "react";
 import Head from "next/head";
 import { useState } from "react";
 import { CalendarInput } from "../components/CalendarInput";
-import { ErrorObj } from "../components/CalendarInput";
+import type { ErrorObj } from "../components/CalendarInput";
 const Home: NextPage = () => {
   return (
     <>
@@ -37,9 +38,10 @@ type TypePropAge = {
 };
 type AgeFormInput = {
   age: DisplayAge;
-  setInputAge: Function;
+  setInputAge: StateInputAgeFn;
   inputAge: InputAge;
 };
+type StateInputAgeFn = Dispatch<SetStateAction<InputAge>>;
 
 function CalendarComponent() {
   //input age servers as the state thats update eveytime the input changes, and when form is submitted & inputAge has passed all tests, inputAge becomes the new age
@@ -160,9 +162,12 @@ function checkForYearError(possibeAge: PossibleAge): false | ErrorObj {
   }
   return false;
 }
-function makeTS_ReturnNumber(friendlyNumber: any): number {
-  if (Number.isInteger(friendlyNumber)) {
-    return friendlyNumber;
+function makeTS_ReturnNumber(friendlyNumber: string | number): number {
+  const isString = typeof friendlyNumber === "string";
+  const argToPass = isString ? parseInt(friendlyNumber, 10) : friendlyNumber;
+  const isNumber = Number.isInteger(argToPass);
+  if (isNumber) {
+    return argToPass;
   }
   return -1;
 }
@@ -204,13 +209,6 @@ function DisplayResult({ age }: TypePropAge) {
 
 // check to see if person's bday has passed or not
 
-function makeAge(year: number, month: number, day: number): Age {
-  return {
-    year: year,
-    month: month,
-    day: day,
-  };
-}
 function presentAge(): Age {
   const present = new Date();
   return {
@@ -237,7 +235,7 @@ function hasBdayPassed(bday: Age, referenceAge: Age): boolean {
 }
 
 function getDisplayAge(currentAge: InputAge): DisplayAge {
-  let outputAge: DisplayAge = {
+  const outputAge: DisplayAge = {
     year: "--",
     month: "--",
     day: "--",
@@ -260,10 +258,19 @@ function getDisplayAge(currentAge: InputAge): DisplayAge {
   return outputAge;
 }
 
-function makeInputAgeNumber(any: any, range: [number, number]): number {
-  if (Number.isInteger(any)) {
-    if (any >= range[0] && any < range[1]) {
-      return any;
+function makeInputAgeNumber(
+  arg: string | number | undefined,
+  range: [number, number]
+): number {
+  if (arg === undefined) {
+    return -1;
+  }
+  const isString = typeof arg === "string";
+  const argToPass = isString ? parseInt(arg, 10) : arg;
+  const isNumber = Number.isInteger(argToPass);
+  if (isNumber) {
+    if (argToPass >= range[0] && argToPass < range[1]) {
+      return argToPass;
     }
   }
   return -1;
@@ -340,6 +347,10 @@ function getLastDayOfMonth(age: Age): number {
   const dateOfMonth = new Date(age.year, age.month - 1, 0);
   return dateOfMonth.getDate();
 }
+export default Home;
+// pro testing
+/*
+ 
 const testDate = makeAge(2023, 6, 15);
 const myDOB = makeAge(2003, 11, 22);
 function testAgeFn(
@@ -446,4 +457,5 @@ evaluteTest([
   //   "test for weird bug where date is passed wrong"
   // ),
 ]);
-export default Home;
+ 
+  */

@@ -1,8 +1,10 @@
 import React from "react";
+import type { Dispatch, SetStateAction } from "react";
 export type ErrorObj = {
   isError: boolean;
   errorMessage: string;
 };
+export type stateFn = Dispatch<SetStateAction<string>>;
 type CalendarInput = {
   id: "day" | "month" | "year";
   defaultValue: string;
@@ -10,7 +12,7 @@ type CalendarInput = {
   errorMessage: string;
   maxInputLength: number;
   textInput: string | number;
-  setTextInput: Function;
+  setTextInput: stateFn;
   customError: ErrorObj | false;
 };
 export function CalendarInput({
@@ -78,20 +80,25 @@ export function CalendarInput({
   );
 }
 
-function isErrorCheck(input: any, errRange: [number, number]): boolean {
-  if (checkForLetters(input)) {
+function isErrorCheck(
+  input: string | number,
+  errRange: [number, number]
+): boolean {
+  const isString = typeof input === "string";
+  if (isString && checkForLetters(input)) {
     return true;
   }
-  const parsed = parseInt(input, 10);
+  const parsed = isString ? parseInt(input, 10) : input;
   if (!Number.isInteger(parsed)) {
     return true;
   }
-  if (input >= errRange[0] && input < errRange[1]) {
+  if (parsed >= errRange[0] && parsed < errRange[1]) {
     return false;
   }
   return true;
 }
 function checkForLetters(input: string): boolean {
+  // lord forgive thee for I have regexed
   const hasAnyLetters = /\p{L}/u.test(input);
   return hasAnyLetters;
 }
