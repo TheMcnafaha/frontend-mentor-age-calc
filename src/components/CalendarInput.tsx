@@ -1,5 +1,3 @@
-import { TypeInputAge } from "../pages/index";
-import { useState } from "react";
 import React from "react";
 export type ErrorObj = {
   isError: boolean;
@@ -14,17 +12,6 @@ type CalendarInput = {
   textInput: string | number;
   setTextInput: Function;
   customError: ErrorObj | false;
-};
-type OkInput = {
-  id: "day" | "month" | "year";
-  textInput: number;
-  isStart: boolean;
-  nextState: Function;
-};
-type DefaultInput = {
-  id: "day" | "month" | "year";
-  textInput: "DD" | "MM" | "YYY";
-  setState: Function;
 };
 export function CalendarInput({
   id,
@@ -90,108 +77,7 @@ export function CalendarInput({
     </div>
   );
 }
-function DefaultInput({ id, textInput, setState }: DefaultInput) {
-  return (
-    <div className="flex w-1/3 flex-col pr-5 ">
-      <label
-        htmlFor={id}
-        className=" text-xs font-light uppercase text-template_smokey_grey"
-      >
-        {id}
-      </label>
-      <input
-        className="m-1  ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl text-template_smokey_grey  mix-blend-darken ring-1     ring-template_ligth_grey hover:ring-template_purple  "
-        type="text"
-        inputMode="numeric"
-        id={id}
-        defaultValue={textInput}
-        key={"sure"}
-        onChange={(e) => {
-          setState("");
-        }}
-      />
-    </div>
-  );
-}
-function OkInput({ id, textInput, isStart, nextState }: OkInput) {
-  if (isStart) {
-    return (
-      <div className="flex w-1/3 flex-col pr-5 ">
-        <label
-          htmlFor={id}
-          className=" text-xs font-light uppercase text-template_smokey_grey"
-        >
-          {id}
-        </label>
-        <input
-          className="m-1  ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl mix-blend-darken ring-1       ring-template_ligth_grey hover:ring-template_purple  "
-          type="text"
-          inputMode="numeric"
-          id={id}
-          defaultValue=""
-          key={"sure"}
-          onChange={(e) => {
-            const nextState = parseInt(e.target.value, 10);
-          }}
-        />
-      </div>
-    );
-  }
-  return (
-    <div className="flex w-1/3 flex-col pr-5 ">
-      <label
-        htmlFor={id}
-        className=" text-xs font-light uppercase text-template_smokey_grey"
-      >
-        {id}
-      </label>
-      <input
-        className="m-1  ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl mix-blend-darken ring-1       ring-template_ligth_grey hover:ring-template_purple  "
-        type="text"
-        inputMode="numeric"
-        id={id}
-        defaultValue={textInput}
-        onChange={(e) => {
-          const nextState = parseInt(e.target.value, 10);
-        }}
-      />
-    </div>
-  );
-}
 
-function ErrorInput({ id, textInput, errorMessage }: ErrorInput) {
-  return (
-    <div className="flex w-1/3 flex-col pr-5 ">
-      <label
-        htmlFor={id}
-        className=" text-xs font-light uppercase text-template_smokey_grey"
-      >
-        {id}
-      </label>
-      <input
-        className="m-1  ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl mix-blend-darken ring-1       ring-template_ligth_grey hover:ring-template_purple  "
-        type="text"
-        inputMode="numeric"
-        id={id}
-        defaultValue={textInput[id]}
-        onChange={(e) => {
-          const nextState = parseInt(e.target.value, 10);
-        }}
-      />
-
-      <div className="w-3 text-xs italic text-template_red">{errorMessage}</div>
-    </div>
-  );
-}
-function resetInputValueIfNotDefaultValue(
-  input: string,
-  defaultValue: string
-): string {
-  if (input === defaultValue) {
-    return "";
-  }
-  return input;
-}
 function isErrorCheck(input: any, errRange: [number, number]): boolean {
   if (checkForLetters(input)) {
     return true;
