@@ -113,18 +113,26 @@ function AgeForm({ age, setInputAge, inputAge }: AgeFormInput) {
 
   const [monthInput, setmonthInput] = useState("MM");
   const [yearInput, setyearInput] = useState("YYYY");
-  const isYearError = checkForYearError({
-    year: yearInput,
-    month: monthInput,
-    day: dayInput,
-  });
+  const currentAge = {
+    year: parseInt(yearInput, 10),
+    month: parseInt(monthInput, 10),
+    day: parseInt(dayInput, 10),
+  };
+  const isYearError = checkForYearError(currentAge);
   return (
     <>
       <form
         action=""
         onSubmit={(e) => {
           e.preventDefault();
-          console.log("lols");
+          console.log("lols", dayInput);
+          if (isInputAgeSound(currentAge)) {
+            console.log("is me working");
+            const nextAge = getAgeDiff(currentAge);
+            setInputAge(nextAge);
+          } else {
+            console.log("no work");
+          }
         }}
       >
         <div className="mt-5 flex">
@@ -173,6 +181,17 @@ type PossibleAge = {
 const testAge = makeAge(2023, 3, 4);
 console.log("test pls magic god ", checkForYearError(testAge));
 
+function isInputAgeSound(possibleAge: InputAge): boolean {
+  console.log(possibleAge);
+
+  const isDay = Number.isInteger(possibleAge.day);
+  const isMonth = Number.isInteger(possibleAge.month);
+  const isYear = Number.isInteger(possibleAge.year);
+  if (isDay && isMonth && isYear) {
+    return true;
+  }
+  return false;
+}
 function checkForYearError(possibeAge: PossibleAge): false | ErrorObj {
   const isDay = Number.isInteger(possibeAge.day);
   const isMonth = Number.isInteger(possibeAge.month);
