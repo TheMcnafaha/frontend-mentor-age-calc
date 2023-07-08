@@ -275,7 +275,7 @@ function makeInputAgeNumber(
   }
   return -1;
 }
-function getAgeDiff(DOB: Age, present: Age = presentAge()): Age {
+export function getAgeDiff(DOB: Age, present: Age = presentAge()): Age {
   const wholeMonthPivot = {
     year: present.year,
     month: present.month,
