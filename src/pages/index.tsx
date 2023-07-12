@@ -13,6 +13,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/calculator-svgrepo-com.svg" />
       </Head>
       <main className="flex  min-h-screen flex-col  items-center  bg-template_off_white font-['Poppins']">
+        <h1>Hi Camila!!!!!!c</h1>
         <CalendarComponent />
       </main>
     </>
