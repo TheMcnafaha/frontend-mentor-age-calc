@@ -1,6 +1,7 @@
 // you run the test by typing "npm test" on srs dir
 import "@testing-library/jest-dom";
-import { getAgeDiff } from "../pages/index";
+import { getAgeDiff, checkForYearError } from "../pages/index";
+import { checkForDayError } from "../pages/index";
 function makeAge(year, month, day) {
   return {
     year: year,
@@ -8,7 +9,7 @@ function makeAge(year, month, day) {
     day: day,
   };
 }
-
+// This test relate solely to the agediff fn
 const secondTestDate = makeAge(2023, 7, 2);
 const testDate = makeAge(2023, 6, 15);
 test("make age fn works", () => {
@@ -59,4 +60,30 @@ test(" test for weird bug where date is passed wrong", () => {
   expect(getAgeDiff(makeAge(2003, 7, 3), secondTestDate)).toStrictEqual(
     makeAge(19, 11, 29)
   );
+});
+// this test relate soley to the year errors
+const futureDate = makeAge(3023, 1, 1);
+const reallyPastDate = makeAge(-420, 6, 9);
+test("only dates from the past should be allowed", () => {
+  expect(checkForYearError(futureDate)).toStrictEqual({
+    isError: true,
+    errorMessage: "Must be in the past",
+  });
+});
+test("dates too past should error out", () => {
+  expect(checkForYearError(reallyPastDate)).toStrictEqual({
+    isError: true,
+    errorMessage: "Date must be older than 0 CE",
+  });
+});
+// tests solely for day errors
+test("days should never be bigger than last day of month", () => {
+  expect(checkForDayError(makeAge(2023, 2, 30))).toStrictEqual({
+    isError: true,
+    errorMessage:
+      "Day is out of bounds. The last day of February 2023 is the 28",
+  });
+});
+test("days should account for leap years", () => {
+  expect(checkForDayError(makeAge(2020, 2, 29))).toStrictEqual(false);
 });

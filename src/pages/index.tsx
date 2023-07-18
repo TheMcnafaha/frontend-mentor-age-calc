@@ -141,11 +141,38 @@ function isInputAgeSound(possibleAge: InputAge): boolean {
   }
   return false;
 }
-function checkForYearError(possibeAge: PossibleAge): false | ErrorObj {
+export function checkForDayError(possibleAge: PossibleAge): false | ErrorObj {
+  const isDay = Number.isInteger(possibleAge.day);
+  const isMonth = Number.isInteger(possibleAge.month);
+  const isYear = Number.isInteger(possibleAge.year);
+
+  if (isDay && isMonth && isYear) {
+    const shouldBeAge: Age = {
+      year: makeTS_ReturnNumber(possibleAge.year),
+      month: makeTS_ReturnNumber(possibleAge.month),
+      day: makeTS_ReturnNumber(possibleAge.day),
+    };
+    const lastPossibleDay = actualLastDayOfMonth(shouldBeAge);
+    const monthName = new Date(
+      shouldBeAge.year,
+      shouldBeAge.month - 1,
+      1
+    ).toLocaleString("default", { month: "long" });
+
+    if (shouldBeAge.day > lastPossibleDay) {
+      return {
+        isError: true,
+        errorMessage: `Day is out of bounds. The last day of ${monthName} ${shouldBeAge.year} is the ${lastPossibleDay}`,
+      } as ErrorObj;
+    }
+    return false;
+  }
+  return false;
+}
+export function checkForYearError(possibeAge: PossibleAge): false | ErrorObj {
   const isDay = Number.isInteger(possibeAge.day);
   const isMonth = Number.isInteger(possibeAge.month);
   const isYear = Number.isInteger(possibeAge.year);
-  console.log("xdddddddd ", makeTS_ReturnNumber(possibeAge.year));
 
   if (makeTS_ReturnNumber(possibeAge.year) <= 0) {
     return { isError: true, errorMessage: "Date must be older than 0 CE" };
@@ -343,9 +370,15 @@ export function getAgeDiff(DOB: Age, present: Age = presentAge()): Age {
   }
   return outputDate;
 }
+// this fn doesnt do what the name implies but the bug it has has been made part of the agediff fn by this point
+// see actualLastDayOfMonth for correct fn
 function getLastDayOfMonth(age: Age): number {
   //Minus one since rest of program indexes months at 1 while js indexes months at zero
   const dateOfMonth = new Date(age.year, age.month - 1, 0);
+  return dateOfMonth.getDate();
+}
+function actualLastDayOfMonth(age: Age): number {
+  const dateOfMonth = new Date(age.year, age.month, 0);
   return dateOfMonth.getDate();
 }
 export default Home;
