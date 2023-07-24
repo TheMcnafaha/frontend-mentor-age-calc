@@ -41,6 +41,7 @@ type AgeFormInput = {
   setInputAge: StateInputAgeFn;
   inputAge: InputAge;
 };
+type NewErrorObj = false | string;
 type StateInputAgeFn = Dispatch<SetStateAction<InputAge>>;
 
 function CalendarComponent() {
@@ -51,10 +52,7 @@ function CalendarComponent() {
     day: "DD",
   } as InputAge);
 
-  const [displayAge, displayError] = [
-    getDisplayAge(inputAge),
-    getDisplayError(inputAge),
-  ];
+  const [displayAge, displayError] = getDisplay(inputAge);
   return (
     <div className=" mt-20 flex max-w-[340px] flex-col rounded-2xl rounded-br-[4.5em] bg-[#fff] px-6 py-4 shadow-sm lg:max-w-[400px] ">
       <AgeForm
@@ -311,8 +309,11 @@ function getDisplayAge(
   return outputAge;
 }
 
-function getDisplayError(currentAge: InputAge) {
-  return "test 1234";
+function getDisplayError(currentAge: InputAge): NewErrorObj {
+  return "test 12345";
+}
+function getDisplay(currentAge: InputAge): [DisplayAge, NewErrorObj] {
+  return [getDisplayAge(currentAge), getDisplayError(currentAge)];
 }
 function makeInputAgeNumber(
   arg: string | number | undefined,
