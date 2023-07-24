@@ -80,8 +80,7 @@ test("dates too past should error out", () => {
 test("days should never be bigger than last day of month", () => {
   expect(checkForDayError(makeAge(2023, 2, 30))).toStrictEqual({
     isError: true,
-    errorMessage:
-      "Day is out of bounds. The last day of February 2023 is the 28",
+    errorMessage: "The last day of February 2023 is the 28th",
   });
 });
 test("days should account for leap years", () => {

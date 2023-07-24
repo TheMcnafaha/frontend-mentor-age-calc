@@ -13,7 +13,6 @@ const Home: NextPage = () => {
         <link rel="icon" href="/calculator-svgrepo-com.svg" />
       </Head>
       <main className="flex  min-h-screen flex-col  items-center  bg-template_off_white font-['Poppins']">
-        <h1>Hi Camila!!!!!!c</h1>
         <CalendarComponent />
       </main>
     </>
@@ -75,6 +74,7 @@ function AgeForm({ setInputAge }: AgeFormInput) {
     day: parseInt(dayInput, 10),
   };
   const isYearError = checkForYearError(currentAge);
+  const isDayError = checkForDayError(currentAge);
   return (
     <>
       <form
@@ -97,7 +97,7 @@ function AgeForm({ setInputAge }: AgeFormInput) {
             errorRange={[1, 32]}
             textInput={dayInput}
             setTextInput={setDayInput}
-            customError={false}
+            customError={isDayError}
           ></CalendarInput>
           <CalendarInput
             maxInputLength={2}
@@ -162,7 +162,7 @@ export function checkForDayError(possibleAge: PossibleAge): false | ErrorObj {
     if (shouldBeAge.day > lastPossibleDay) {
       return {
         isError: true,
-        errorMessage: `Day is out of bounds. The last day of ${monthName} ${shouldBeAge.year} is the ${lastPossibleDay}`,
+        errorMessage: `The last day of ${monthName} ${shouldBeAge.year} is the ${lastPossibleDay}th`,
       } as ErrorObj;
     }
     return false;
@@ -190,7 +190,12 @@ export function checkForYearError(possibeAge: PossibleAge): false | ErrorObj {
   }
   return false;
 }
-function makeTS_ReturnNumber(friendlyNumber: string | number): number {
+function makeTS_ReturnNumber(
+  friendlyNumber: string | number | undefined
+): number {
+  if (friendlyNumber === undefined) {
+    return -1;
+  }
   const isString = typeof friendlyNumber === "string";
   const argToPass = isString ? parseInt(friendlyNumber, 10) : friendlyNumber;
   const isNumber = Number.isInteger(argToPass);
@@ -262,17 +267,30 @@ function hasBdayPassed(bday: Age, referenceAge: Age): boolean {
   return false;
 }
 
-function getDisplayAge(currentAge: InputAge): DisplayAge {
+function getDisplayAge(
+  currentAge: InputAge,
+  hasErrors: boolean = false
+): DisplayAge {
   const outputAge: DisplayAge = {
     year: "--",
     month: "--",
     day: "--",
   };
-  const dayNum = makeInputAgeNumber(currentAge.day, [0, 32]);
+  if (hasErrors) {
+    return outputAge;
+  }
   const monthNum = makeInputAgeNumber(currentAge.month, [0, 12]);
   const yearNum = makeInputAgeNumber(currentAge.year, [
     0,
     new Date().getFullYear(),
+  ]);
+  const dayNum = makeInputAgeNumber(currentAge.day, [
+    0,
+    actualLastDayOfMonth({
+      year: yearNum,
+      month: monthNum,
+      day: makeTS_ReturnNumber(currentAge.day),
+    }),
   ]);
   const isNotValidDay = dayNum === -1;
   const isNotValidMonth = monthNum === -1;
