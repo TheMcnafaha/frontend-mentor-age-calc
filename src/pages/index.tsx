@@ -51,19 +51,23 @@ function CalendarComponent() {
     day: "DD",
   } as InputAge);
 
-  const displayAge = getDisplayAge(inputAge);
+  const [displayAge, displayError] = [
+    getDisplayAge(inputAge),
+    getDisplayError(inputAge),
+  ];
   return (
     <div className=" mt-20 flex max-w-[340px] flex-col rounded-2xl rounded-br-[4.5em] bg-[#fff] px-6 py-4 shadow-sm lg:max-w-[400px] ">
       <AgeForm
         age={displayAge}
         setInputAge={setInputAge}
         inputAge={inputAge}
+        displayError={displayError}
       ></AgeForm>
       <DisplayResult age={displayAge} />
     </div>
   );
 }
-function AgeForm({ setInputAge }: AgeFormInput) {
+function AgeForm({ setInputAge, displayError }: AgeFormInput) {
   const [dayInput, setDayInput] = useState("DD");
 
   const [monthInput, setmonthInput] = useState("MM");
@@ -120,6 +124,9 @@ function AgeForm({ setInputAge }: AgeFormInput) {
             customError={isYearError}
           ></CalendarInput>
         </div>
+        <p className=" text-center text-base italic text-template_red">
+          {displayError}
+        </p>
         <AgeFormSubmit />
       </form>
     </>
@@ -304,6 +311,9 @@ function getDisplayAge(
   return outputAge;
 }
 
+function getDisplayError(currentAge: InputAge) {
+  return "test 1234";
+}
 function makeInputAgeNumber(
   arg: string | number | undefined,
   range: [number, number]
