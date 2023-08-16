@@ -34,12 +34,18 @@ export type InputAge = {
   day: number | undefined | "DD";
 };
 type TypePropAge = {
-  age: DisplayAge;
+  display: Display;
 };
 type AgeFormInput = {
   age: DisplayAge;
   setInputAge: StateInputAgeFn;
   inputAge: InputAge;
+  display: Display;
+};
+
+type Display = {
+  age: DisplayAge;
+  error: string;
 };
 type NewErrorObj = false | string;
 type StateInputAgeFn = Dispatch<SetStateAction<InputAge>>;
@@ -52,20 +58,21 @@ function CalendarComponent() {
     day: "DD",
   } as InputAge);
 
-  const [displayAge, displayError] = getDisplay(inputAge);
+  const display: Display = getNewDisplayAge(inputAge);
+  // const display: Display = { age: { year: 1, month: 1, day: 1 }, error: "lol" };
   return (
     <div className=" mt-20 flex max-w-[340px] flex-col rounded-2xl rounded-br-[4.5em] bg-[#fff] px-6 py-4 shadow-sm lg:max-w-[400px] ">
       <AgeForm
-        age={displayAge}
+        age={display.age}
         setInputAge={setInputAge}
         inputAge={inputAge}
-        displayError={displayError}
+        display={display}
       ></AgeForm>
-      <DisplayResult age={displayAge} />
+      <DisplayResult display={display} />
     </div>
   );
 }
-function AgeForm({ setInputAge, displayError }: AgeFormInput) {
+function AgeForm({ setInputAge, display }: AgeFormInput) {
   const [dayInput, setDayInput] = useState("DD");
 
   const [monthInput, setmonthInput] = useState("MM");
@@ -123,7 +130,7 @@ function AgeForm({ setInputAge, displayError }: AgeFormInput) {
           ></CalendarInput>
         </div>
         <p className=" text-center text-base italic text-template_red">
-          {displayError}
+          {display.error}
         </p>
         <AgeFormSubmit />
       </form>
@@ -225,15 +232,16 @@ function AgeFormSubmit() {
     </>
   );
 }
-function DisplayResult({ age }: TypePropAge) {
+function DisplayResult({ display }: TypePropAge) {
   return (
     <>
       <h1 className="mb-6 text-5xl font-extrabold italic">
-        <span className=" text-template_purple">{age.year}</span> years
+        <span className=" text-template_purple">{display.age.year}</span> years
         <br></br>
-        <span className=" text-template_purple">{age.month}</span> months
+        <span className=" text-template_purple">{display.age.month}</span>{" "}
+        months
         <br></br>
-        <span className=" text-template_purple">{age.day}</span> days
+        <span className=" text-template_purple">{display.age.day}</span> days
       </h1>
     </>
   );
@@ -307,6 +315,42 @@ function getDisplayAge(
   outputAge.month = monthNum;
   outputAge.year = yearNum;
   return outputAge;
+}
+
+function getNewDisplayAge(currentAge: InputAge): Display {
+  const outputAge: DisplayAge = {
+    year: "--",
+    month: "--",
+    day: "--",
+  };
+  // if (currentDisplay.error != "") {
+  //   return { age: outputAge, error: currentDisplay.error };
+  // }
+  const monthNum = makeInputAgeNumber(currentAge.month, [0, 12]);
+  const yearNum = makeInputAgeNumber(currentAge.year, [
+    0,
+    new Date().getFullYear(),
+  ]);
+  const dayNum = makeInputAgeNumber(currentAge.day, [
+    0,
+    actualLastDayOfMonth({
+      year: yearNum,
+      month: monthNum,
+      day: makeTS_ReturnNumber(currentAge.day),
+    }),
+  ]);
+  const isNotValidDay = dayNum === -1;
+  const isNotValidMonth = monthNum === -1;
+  const isNotValidYear = yearNum === -1;
+  if (isNotValidDay || isNotValidMonth || isNotValidYear) {
+    return { age: outputAge, error: " " };
+  }
+  outputAge.day = dayNum;
+  outputAge.month = monthNum;
+  outputAge.year = yearNum;
+  // const isYearError = checkForYearError(currentAge);
+  // const isDayError = checkForDayError(currentAge);
+  return { age: outputAge, error: " " };
 }
 
 function getDisplayError(currentAge: InputAge): NewErrorObj {
