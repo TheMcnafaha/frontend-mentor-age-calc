@@ -7,8 +7,9 @@ type Display = {
   age: DisplayAge;
   error: string;
 };
-type TypePropAge = {
+export type TypePropAge = {
   display: Display;
+  error: NeoError;
 };
 type Age = {
   year: number;
@@ -31,6 +32,10 @@ type AgeFormInput = {
   inputAge: InputAge;
   display: Display;
 };
+export type NeoError = {
+  isError: boolean;
+  errorMessage: string;
+};
 
 type StateInputAgeFn = Dispatch<SetStateAction<InputAge>>;
 export const Refactor: NextPage = () => {
@@ -40,18 +45,22 @@ export const Refactor: NextPage = () => {
     month: "MM",
     day: "DD",
   } as InputAge);
-
+  const [displayError, setdisplayError] = useState({
+    isError: true,
+    errorMessage: "test123",
+  } as NeoError);
   const display: Display = getNewDisplayAge(inputAge);
   // const display: Display = { age: { year: 1, month: 1, day: 1 }, error: "lol" };
   return (
     <div className=" mt-20 flex max-w-[340px] flex-col rounded-2xl rounded-br-[4.5em] bg-[#fff] px-6 py-4 shadow-sm lg:max-w-[400px] ">
+      <h1>This is the refactored one lul</h1>
       <AgeForm
         age={display.age}
         setInputAge={setInputAge}
         inputAge={inputAge}
         display={display}
       ></AgeForm>
-      <DisplayResult display={display} />
+      <DisplayResult display={display} error={displayError} />
     </div>
   );
 };
@@ -143,7 +152,21 @@ function AgeForm({ setInputAge, display }: AgeFormInput) {
     </>
   );
 }
-function DisplayResult({ display }: TypePropAge) {
+function DisplayResult({ display, error }: TypePropAge) {
+  if (error.isError) {
+    return (
+      <>
+        <h1 className="mb-6 text-5xl font-extrabold italic">
+          <p>{error.errorMessage}</p>
+          <span className=" text-template_purple">--</span> years
+          <br></br>
+          <span className=" text-template_purple">--</span> months
+          <br></br>
+          <span className=" text-template_purple">--</span> days
+        </h1>
+      </>
+    );
+  }
   return (
     <>
       <h1 className="mb-6 text-5xl font-extrabold italic">
@@ -255,7 +278,7 @@ function makeTS_ReturnNumber(
   }
   return -1;
 }
-export function checkForYearError(possibeAge: PossibleAge): false | ErrorObj {
+export function checkForYearError(possibeAge: PossibleAge): NeoError {
   const isDay = Number.isInteger(possibeAge.day);
   const isMonth = Number.isInteger(possibeAge.month);
   const isYear = Number.isInteger(possibeAge.year);
@@ -274,7 +297,7 @@ export function checkForYearError(possibeAge: PossibleAge): false | ErrorObj {
       return { isError: true, errorMessage: "Must be in the past" };
     }
   }
-  return false;
+  return { isError: false, errorMessage: "" };
 }
 function dispayYearError(possibeAge: InputAge): ErrorObj {
   const isDay = Number.isInteger(possibeAge.day);
@@ -297,7 +320,7 @@ function dispayYearError(possibeAge: InputAge): ErrorObj {
   }
   return { isError: false, errorMessage: " " };
 }
-export function checkForDayError(possibleAge: PossibleAge): false | ErrorObj {
+export function checkForDayError(possibleAge: PossibleAge): NeoError {
   const isDay = Number.isInteger(possibleAge.day);
   const isMonth = Number.isInteger(possibleAge.month);
   const isYear = Number.isInteger(possibleAge.year);
@@ -321,7 +344,7 @@ export function checkForDayError(possibleAge: PossibleAge): false | ErrorObj {
         errorMessage: `The last day of ${monthName} ${shouldBeAge.year} is the ${lastPossibleDay}th`,
       } as ErrorObj;
     }
-    return false;
+    return { isError: false, errorMessage: "" };
   }
-  return false;
+  return { isError: false, errorMessage: "" };
 }

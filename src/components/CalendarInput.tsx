@@ -1,5 +1,6 @@
 import React from "react";
 import type { Dispatch, SetStateAction } from "react";
+import type { NeoError } from "./refactor";
 export type ErrorObj = {
   isError: boolean;
   errorMessage: string;
@@ -13,7 +14,7 @@ type CalendarInput = {
   maxInputLength: number;
   textInput: string | number;
   setTextInput: stateFn;
-  customError: ErrorObj | false;
+  customError: NeoError;
 };
 export function CalendarInput({
   id,
@@ -40,7 +41,7 @@ export function CalendarInput({
       "m-1  ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl mix-blend-darken ring-1       ring-template_ligth_grey lg:hover:ring-template_purple lg:hover:ring-2 ";
   }
   // custom error has less precedence than the non-custom error, thus else-if-ed last
-  else if (customError != false && customError.isError) {
+  else if (customError.isError) {
     appliedErrorMessage = customError.errorMessage;
     className =
       "m-1  ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl mix-blend-darken ring-1       ring-template_ligth_grey lg:hover:ring-template_purple lg:hover:ring-2 ";
