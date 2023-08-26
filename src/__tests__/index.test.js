@@ -1,7 +1,11 @@
 // you run the test by typing "npm test" on srs dir
 import "@testing-library/jest-dom";
-import { getAgeDiff, checkForYearError } from "../pages/index";
-import { checkForDayError } from "../pages/index";
+import {
+  getAgeDiff,
+  checkForYearError,
+  checkForDayError,
+  getNewDisplayAge,
+} from "../pages/index";
 function makeAge(year, month, day) {
   return {
     year: year,
@@ -85,4 +89,22 @@ test("days should never be bigger than last day of month", () => {
 });
 test("days should account for leap years", () => {
   expect(checkForDayError(makeAge(2020, 2, 29))).toStrictEqual(false);
+});
+// tests below relate to display errors
+const emptyAge = {
+  year: "--",
+  month: "--",
+  day: "--",
+};
+const febError = {
+  age: emptyAge,
+  error: {
+    isError: true,
+    errorMessage: "The last day of February 2023 is the 28th",
+  },
+};
+test("display should error on days outside of month bound", () => {
+  return expect(
+    getNewDisplayAge(makeAge(2023, 2, 29)).error.isError
+  ).toStrictEqual(true);
 });

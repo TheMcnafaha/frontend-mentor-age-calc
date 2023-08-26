@@ -181,6 +181,35 @@ export function checkForDayError(possibleAge: PossibleAge): false | ErrorObj {
   }
   return false;
 }
+export function displayDayError(possibleAge: InputAge): ErrorObj {
+  const isDay = Number.isInteger(possibleAge.day);
+  const isMonth = Number.isInteger(possibleAge.month);
+  const isYear = Number.isInteger(possibleAge.year);
+
+  if (isDay && isMonth && isYear) {
+    const shouldBeAge: Age = {
+      year: makeTS_ReturnNumber(possibleAge.year),
+      month: makeTS_ReturnNumber(possibleAge.month),
+      day: makeTS_ReturnNumber(possibleAge.day),
+    };
+    const lastPossibleDay = actualLastDayOfMonth(shouldBeAge);
+    const monthName = new Date(
+      shouldBeAge.year,
+      shouldBeAge.month - 1,
+      1
+    ).toLocaleString("default", { month: "long" });
+
+    if (shouldBeAge.day > lastPossibleDay) {
+      return {
+        isError: true,
+        errorMessage: `The last day of ${monthName} ${shouldBeAge.year} is the ${lastPossibleDay}th`,
+      } as ErrorObj;
+    }
+
+    return { isError: false, errorMessage: " " };
+  }
+  return { isError: false, errorMessage: " " };
+}
 export function checkForYearError(possibeAge: PossibleAge): false | ErrorObj {
   const isDay = Number.isInteger(possibeAge.day);
   const isMonth = Number.isInteger(possibeAge.month);
@@ -201,6 +230,27 @@ export function checkForYearError(possibeAge: PossibleAge): false | ErrorObj {
     }
   }
   return false;
+}
+export function dispayYearError(possibeAge: InputAge): ErrorObj {
+  const isDay = Number.isInteger(possibeAge.day);
+  const isMonth = Number.isInteger(possibeAge.month);
+  const isYear = Number.isInteger(possibeAge.year);
+  // return { isError: true, errorMessage: "test" };
+  if (makeTS_ReturnNumber(possibeAge.year) <= 0) {
+    return { isError: true, errorMessage: "Date must be older than 0 CE" };
+  }
+  if (isDay && isMonth && isYear) {
+    const presentEpoch = new Date().getTime();
+    const inputEpoch = new Date(
+      makeTS_ReturnNumber(possibeAge.year),
+      makeTS_ReturnNumber(possibeAge.month),
+      makeTS_ReturnNumber(possibeAge.day)
+    ).getTime();
+    if (inputEpoch > presentEpoch) {
+      return { isError: true, errorMessage: "Must be in the past" };
+    }
+  }
+  return { isError: false, errorMessage: " " };
 }
 function makeTS_ReturnNumber(
   friendlyNumber: string | number | undefined
@@ -292,6 +342,10 @@ function getDisplayAge(
   if (hasErrors) {
     return outputAge;
   }
+
+  // run display errors check
+  const isYearError = checkForYearError(currentAge);
+  const isDayError = checkForDayError(currentAge);
   const monthNum = makeInputAgeNumber(currentAge.month, [0, 12]);
   const yearNum = makeInputAgeNumber(currentAge.year, [
     0,
@@ -317,8 +371,13 @@ function getDisplayAge(
   return outputAge;
 }
 
-function getNewDisplayAge(currentAge: InputAge): Display {
+export function getNewDisplayAge(currentAge: InputAge): Display {
   const outputAge: DisplayAge = {
+    year: "--",
+    month: "--",
+    day: "--",
+  };
+  const emptyAge: DisplayAge = {
     year: "--",
     month: "--",
     day: "--",
@@ -342,14 +401,21 @@ function getNewDisplayAge(currentAge: InputAge): Display {
   const isNotValidDay = dayNum === -1;
   const isNotValidMonth = monthNum === -1;
   const isNotValidYear = yearNum === -1;
+  // check for default values or if all inputs are empty
   if (isNotValidDay || isNotValidMonth || isNotValidYear) {
     return { age: outputAge, error: " " };
+  }
+  const isYearError = dispayYearError(currentAge);
+  const isDayError = checkForDayError(currentAge);
+  if (isYearError.isError) {
+    return { age: emptyAge, error: isYearError.errorMessage };
+  }
+  if (isDayError.isError) {
+    return { age: emptyAge, error: isDayError.errorMessage };
   }
   outputAge.day = dayNum;
   outputAge.month = monthNum;
   outputAge.year = yearNum;
-  // const isYearError = checkForYearError(currentAge);
-  // const isDayError = checkForDayError(currentAge);
   return { age: outputAge, error: " " };
 }
 
