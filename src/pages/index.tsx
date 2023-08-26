@@ -4,6 +4,7 @@ import Head from "next/head";
 import { useState } from "react";
 import { CalendarInput } from "../components/CalendarInput";
 import type { ErrorObj } from "../components/CalendarInput";
+import { Refactor } from "../components/refactor";
 const Home: NextPage = () => {
   return (
     <>
@@ -14,6 +15,7 @@ const Home: NextPage = () => {
       </Head>
       <main className="flex  min-h-screen flex-col  items-center  bg-template_off_white font-['Poppins']">
         <CalendarComponent />
+        <Refactor />
       </main>
     </>
   );
