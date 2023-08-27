@@ -46,7 +46,7 @@ export const Refactor: NextPage = () => {
     day: "DD",
   } as InputAge);
   const [displayError, setdisplayError] = useState({
-    isError: true,
+    isError: false,
     errorMessage: "test123",
   } as NeoError);
   const display: Display = getNewDisplayAge(inputAge);
@@ -109,6 +109,7 @@ function AgeForm({ setInputAge, display }: AgeFormInput) {
             const nextAge = getAgeDiff(currentAge);
             setInputAge(nextAge);
           } else {
+            console.log("else wah lol");
           }
         }}
       >
@@ -131,7 +132,7 @@ function AgeForm({ setInputAge, display }: AgeFormInput) {
             errorRange={[1, 13]}
             textInput={monthInput}
             setTextInput={setmonthInput}
-            customError={false}
+            customError={{ isError: false, errorMessage: "" }}
           ></CalendarInput>
           <CalendarInput
             maxInputLength={4}
@@ -157,6 +158,7 @@ function DisplayResult({ display, error }: TypePropAge) {
     return (
       <>
         <h1 className="mb-6 text-5xl font-extrabold italic">
+          <p>we got error</p>
           <p>{error.errorMessage}</p>
           <span className=" text-template_purple">--</span> years
           <br></br>
@@ -347,4 +349,108 @@ export function checkForDayError(possibleAge: PossibleAge): NeoError {
     return { isError: false, errorMessage: "" };
   }
   return { isError: false, errorMessage: "" };
+}
+function isInputAgeSound(possibleAge: InputAge): boolean {
+  const isDay = Number.isInteger(possibleAge.day);
+  const isMonth = Number.isInteger(possibleAge.month);
+  const isYear = Number.isInteger(possibleAge.year);
+  if (isDay && isMonth && isYear) {
+    return true;
+  }
+  return false;
+}
+export function getAgeDiff(DOB: Age, present: Age = presentAge()): Age {
+  const wholeMonthPivot = {
+    year: present.year,
+    month: present.month,
+    day: DOB.day,
+  };
+
+  const outputDate: Age = {
+    year: 0,
+    month: 0,
+    day: 0,
+  };
+  outputDate.year = wholeMonthPivot.year - DOB.year;
+  const bdayIsToday = fullYearDifference(present, DOB);
+  if (bdayIsToday) {
+    return outputDate;
+  }
+  const bdayHasPassed = hasBdayPassed(DOB, present);
+  if (bdayHasPassed) {
+    outputDate.month = present.month - DOB.month;
+    if (present.day === wholeMonthPivot.day) {
+      return outputDate;
+    }
+    if (present.day > wholeMonthPivot.day) {
+      outputDate.day = present.day - wholeMonthPivot.day;
+      return outputDate;
+    }
+    if (present.day < wholeMonthPivot.day) {
+      outputDate.month--;
+      const previousWholeMonthPivot: Age = {
+        year: wholeMonthPivot.year,
+        month: wholeMonthPivot.month - 2,
+        day: wholeMonthPivot.day,
+      };
+      const dayFix =
+        getLastDayOfMonth(previousWholeMonthPivot) - wholeMonthPivot.day;
+      outputDate.day = present.day + dayFix;
+      return outputDate;
+    }
+    return outputDate;
+  }
+  outputDate.year = outputDate.year - 1;
+  const passedMonths = 12 - DOB.month;
+  if (present.day === wholeMonthPivot.day) {
+    outputDate.month = passedMonths + present.month;
+    return outputDate;
+  }
+  outputDate.month = wholeMonthPivot.month + passedMonths;
+  if (present.day > wholeMonthPivot.day) {
+    outputDate.day = present.day - wholeMonthPivot.day;
+    return outputDate;
+  }
+  if (present.day < wholeMonthPivot.day) {
+    outputDate.month = outputDate.month - 1;
+    const previousWholeMonthPivot: Age = {
+      year: wholeMonthPivot.year,
+      month: wholeMonthPivot.month - 2,
+      day: wholeMonthPivot.day,
+    };
+    const dayFix =
+      getLastDayOfMonth(previousWholeMonthPivot) - wholeMonthPivot.day;
+
+    outputDate.day = present.day + dayFix;
+    return outputDate;
+  }
+  return outputDate;
+}
+function presentAge(): Age {
+  const present = new Date();
+  return {
+    year: present.getFullYear(),
+    month: present.getMonth() + 1,
+    day: present.getDate(),
+  };
+}
+function getLastDayOfMonth(age: Age): number {
+  //Minus one since rest of program indexes months at 1 while js indexes months at zero
+  const dateOfMonth = new Date(age.year, age.month - 1, 0);
+  return dateOfMonth.getDate();
+}
+function fullYearDifference(date1: Age, date2: Age): boolean {
+  if (date1.month === date2.month && date1.day === date2.day) {
+    return true;
+  }
+  return false;
+}
+function hasBdayPassed(bday: Age, referenceAge: Age): boolean {
+  if (bday.month < referenceAge.month) {
+    return true;
+  }
+  if (bday.month === referenceAge.month) {
+    return bday.day < referenceAge.day;
+  }
+  return false;
 }
