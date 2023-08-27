@@ -3,6 +3,7 @@ import type { Dispatch, SetStateAction } from "react";
 import type { ErrorObj } from "../components/CalendarInput";
 import { useState } from "react";
 import { NextPage } from "next";
+import { error } from "console";
 type Display = {
   age: DisplayAge;
   error: string;
@@ -45,10 +46,6 @@ export const Refactor: NextPage = () => {
     month: "MM",
     day: "DD",
   } as InputAge);
-  const [displayError, setdisplayError] = useState({
-    isError: false,
-    errorMessage: "test123",
-  } as NeoError);
   const display: Display = getNewDisplayAge(inputAge);
   // const display: Display = { age: { year: 1, month: 1, day: 1 }, error: "lol" };
   return (
@@ -60,7 +57,6 @@ export const Refactor: NextPage = () => {
         inputAge={inputAge}
         display={display}
       ></AgeForm>
-      <DisplayResult display={display} error={displayError} />
     </div>
   );
 };
@@ -82,14 +78,12 @@ function CalendarComponent() {
         inputAge={inputAge}
         display={display}
       ></AgeForm>
-      <DisplayResult display={display} />
     </div>
   );
 }
 
 function AgeForm({ setInputAge, display }: AgeFormInput) {
   const [dayInput, setDayInput] = useState("DD");
-
   const [monthInput, setmonthInput] = useState("MM");
   const [yearInput, setyearInput] = useState("YYYY");
   const currentAge = {
@@ -97,8 +91,9 @@ function AgeForm({ setInputAge, display }: AgeFormInput) {
     month: parseInt(monthInput, 10),
     day: parseInt(dayInput, 10),
   };
-  const isYearError = checkForYearError(currentAge);
-  const isDayError = checkForDayError(currentAge);
+  const isYearError = checkForYearError(currentAge, yearInput);
+  const isDayError = checkForDayError(currentAge, dayInput);
+  const displayError = getDisplayError([isYearError, isDayError]);
   return (
     <>
       <form
@@ -150,6 +145,7 @@ function AgeForm({ setInputAge, display }: AgeFormInput) {
         </p>
         <AgeFormSubmit />
       </form>
+      <DisplayResult display={display} error={displayError} />
     </>
   );
 }
@@ -280,10 +276,20 @@ function makeTS_ReturnNumber(
   }
   return -1;
 }
-export function checkForYearError(possibeAge: PossibleAge): NeoError {
+export function checkForYearError(
+  possibeAge: PossibleAge,
+  currentYear: string
+): NeoError {
+  if (currentYear === "YYYY") {
+    return { isError: true, errorMessage: "defaulted" };
+  }
   const isDay = Number.isInteger(possibeAge.day);
   const isMonth = Number.isInteger(possibeAge.month);
   const isYear = Number.isInteger(possibeAge.year);
+
+  if (possibeAge.year === "YYYY") {
+    return { isError: true, errorMessage: "default case" };
+  }
 
   if (makeTS_ReturnNumber(possibeAge.year) <= 0) {
     return { isError: true, errorMessage: "Date must be older than 0 CE" };
@@ -301,7 +307,10 @@ export function checkForYearError(possibeAge: PossibleAge): NeoError {
   }
   return { isError: false, errorMessage: "" };
 }
-function dispayYearError(possibeAge: InputAge): ErrorObj {
+function dispayYearError(possibeAge: InputAge, currentYear: string): ErrorObj {
+  if (currentYear === "YYYY") {
+    return { isError: true, errorMessage: "defaulted" };
+  }
   const isDay = Number.isInteger(possibeAge.day);
   const isMonth = Number.isInteger(possibeAge.month);
   const isYear = Number.isInteger(possibeAge.year);
@@ -322,7 +331,13 @@ function dispayYearError(possibeAge: InputAge): ErrorObj {
   }
   return { isError: false, errorMessage: " " };
 }
-export function checkForDayError(possibleAge: PossibleAge): NeoError {
+export function checkForDayError(
+  possibleAge: PossibleAge,
+  currentDay: string
+): NeoError {
+  if (currentDay === "DD") {
+    return { isError: true, errorMessage: " " };
+  }
   const isDay = Number.isInteger(possibleAge.day);
   const isMonth = Number.isInteger(possibleAge.month);
   const isYear = Number.isInteger(possibleAge.year);
@@ -453,4 +468,14 @@ function hasBdayPassed(bday: Age, referenceAge: Age): boolean {
     return bday.day < referenceAge.day;
   }
   return false;
+}
+function getDisplayError(singleErrors: NeoError[]) {
+  // first check single errors
+  for (let index = 0; index < singleErrors.length; index++) {
+    const e = singleErrors[index];
+    if (e?.isError) {
+      return e;
+    }
+  }
+  return { isError: true, errorMessage: " base case" } as NeoError;
 }
