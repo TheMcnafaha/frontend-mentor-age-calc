@@ -32,6 +32,12 @@ type AgeFormInput = {
   setInputAge: StateInputAgeFn;
   inputAge: InputAge;
   display: Display;
+  currentYear: string;
+  setCurrentYear: StateInputFn;
+  currentMonth: string;
+  setCurrentMonth: StateInputFn;
+  currentDay: string;
+  setCurrentDay: StateInputFn;
 };
 export type NeoError = {
   isError: boolean;
@@ -39,6 +45,7 @@ export type NeoError = {
 };
 
 type StateInputAgeFn = Dispatch<SetStateAction<InputAge>>;
+type StateInputFn = Dispatch<SetStateAction<string>>;
 export const Refactor: NextPage = () => {
   //input age servers as the state thats update eveytime the input changes, and when form is submitted & inputAge has passed all tests, inputAge becomes the new age
   const [inputAge, setInputAge] = useState({
@@ -46,6 +53,9 @@ export const Refactor: NextPage = () => {
     month: "MM",
     day: "DD",
   } as InputAge);
+  const [year, setyear] = useState("YYYY");
+  const [month, setmonth] = useState("MM");
+  const [day, setday] = useState("DD");
   const display: Display = getNewDisplayAge(inputAge);
   // const display: Display = { age: { year: 1, month: 1, day: 1 }, error: "lol" };
   return (
@@ -56,43 +66,61 @@ export const Refactor: NextPage = () => {
         setInputAge={setInputAge}
         inputAge={inputAge}
         display={display}
+        currentDay={day}
+        currentMonth={month}
+        currentYear={year}
+        setCurrentDay={setday}
+        setCurrentMonth={setmonth}
+        setCurrentYear={setyear}
       ></AgeForm>
     </div>
   );
 };
-function CalendarComponent() {
-  //input age servers as the state thats update eveytime the input changes, and when form is submitted & inputAge has passed all tests, inputAge becomes the new age
-  const [inputAge, setInputAge] = useState({
-    year: "YYYY",
-    month: "MM",
-    day: "DD",
-  } as InputAge);
+// function CalendarComponent() {
+//   //input age servers as the state thats update eveytime the input changes, and when form is submitted & inputAge has passed all tests, inputAge becomes the new age
+//   const [inputAge, setInputAge] = useState({
+//     year: "YYYY",
+//     month: "MM",
+//     day: "DD",
+//   } as InputAge);
+//
+//   const display: Display = getNewDisplayAge(inputAge);
+//   // const display: Display = { age: { year: 1, month: 1, day: 1 }, error: "lol" };
+//   return (
+//     <div className=" mt-20 flex max-w-[340px] flex-col rounded-2xl rounded-br-[4.5em] bg-[#fff] px-6 py-4 shadow-sm lg:max-w-[400px] ">
+//       <AgeForm
+//         age={display.age}
+//         setInputAge={setInputAge}
+//         inputAge={inputAge}
+//         display={display}
+//       ></AgeForm>
+//     </div>
+//   );
+// }
 
-  const display: Display = getNewDisplayAge(inputAge);
-  // const display: Display = { age: { year: 1, month: 1, day: 1 }, error: "lol" };
-  return (
-    <div className=" mt-20 flex max-w-[340px] flex-col rounded-2xl rounded-br-[4.5em] bg-[#fff] px-6 py-4 shadow-sm lg:max-w-[400px] ">
-      <AgeForm
-        age={display.age}
-        setInputAge={setInputAge}
-        inputAge={inputAge}
-        display={display}
-      ></AgeForm>
-    </div>
-  );
-}
-
-function AgeForm({ setInputAge, display }: AgeFormInput) {
-  const [dayInput, setDayInput] = useState("DD");
-  const [monthInput, setmonthInput] = useState("MM");
-  const [yearInput, setyearInput] = useState("YYYY");
+function AgeForm({
+  setInputAge,
+  display,
+  currentYear,
+  currentMonth,
+  currentDay,
+  setCurrentYear,
+  setCurrentMonth,
+  setCurrentDay,
+}: AgeFormInput) {
+  // const [dayInput, setDayInput] = useState("DD");
+  // const [monthInput, setmonthInput] = useState("MM");
+  // const [yearInput, setyearInput] = useState("YYYY");
+  const dayInput = currentDay;
+  const monthInput = currentMonth;
+  const yearInput = currentYear;
   const currentAge = {
     year: parseInt(yearInput, 10),
     month: parseInt(monthInput, 10),
     day: parseInt(dayInput, 10),
   };
-  const isYearError = checkForYearError(currentAge, yearInput);
-  const isDayError = checkForDayError(currentAge, dayInput);
+  const isYearError = checkForYearError(display.age, yearInput);
+  const isDayError = checkForDayError(display.age, dayInput);
   const displayError = getDisplayError([isYearError, isDayError]);
   return (
     <>
@@ -100,6 +128,7 @@ function AgeForm({ setInputAge, display }: AgeFormInput) {
         action=""
         onSubmit={(e) => {
           e.preventDefault();
+          // check to see if the input data is good enough to make a new age attempt
           if (isInputAgeSound(currentAge)) {
             const nextAge = getAgeDiff(currentAge);
             setInputAge(nextAge);
@@ -116,7 +145,7 @@ function AgeForm({ setInputAge, display }: AgeFormInput) {
             defaultValue="DD"
             errorRange={[1, 32]}
             textInput={dayInput}
-            setTextInput={setDayInput}
+            setTextInput={setCurrentDay}
             customError={isDayError}
           ></CalendarInput>
           <CalendarInput
@@ -126,7 +155,7 @@ function AgeForm({ setInputAge, display }: AgeFormInput) {
             defaultValue="MM"
             errorRange={[1, 13]}
             textInput={monthInput}
-            setTextInput={setmonthInput}
+            setTextInput={setCurrentMonth}
             customError={{ isError: false, errorMessage: "" }}
           ></CalendarInput>
           <CalendarInput
@@ -136,7 +165,7 @@ function AgeForm({ setInputAge, display }: AgeFormInput) {
             defaultValue="YYYY"
             errorRange={[-Infinity, new Date().getFullYear() + 1]}
             textInput={yearInput}
-            setTextInput={setyearInput}
+            setTextInput={setCurrentYear}
             customError={isYearError}
           ></CalendarInput>
         </div>
@@ -280,17 +309,13 @@ export function checkForYearError(
   possibeAge: PossibleAge,
   currentYear: string
 ): NeoError {
-  if (currentYear === "YYYY") {
-    return { isError: true, errorMessage: "defaulted" };
-  }
   const isDay = Number.isInteger(possibeAge.day);
   const isMonth = Number.isInteger(possibeAge.month);
   const isYear = Number.isInteger(possibeAge.year);
 
-  if (possibeAge.year === "YYYY") {
-    return { isError: true, errorMessage: "default case" };
+  if (currentYear === "YYYY") {
+    return { isError: true, errorMessage: "" };
   }
-
   if (makeTS_ReturnNumber(possibeAge.year) <= 0) {
     return { isError: true, errorMessage: "Date must be older than 0 CE" };
   }
@@ -309,7 +334,7 @@ export function checkForYearError(
 }
 function dispayYearError(possibeAge: InputAge, currentYear: string): ErrorObj {
   if (currentYear === "YYYY") {
-    return { isError: true, errorMessage: "defaulted" };
+    return { isError: true, errorMessage: "" };
   }
   const isDay = Number.isInteger(possibeAge.day);
   const isMonth = Number.isInteger(possibeAge.month);
