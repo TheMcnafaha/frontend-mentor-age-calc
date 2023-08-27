@@ -119,8 +119,8 @@ function AgeForm({
     month: parseInt(monthInput, 10),
     day: parseInt(dayInput, 10),
   };
-  const isYearError = checkForYearError(display.age, yearInput);
-  const isDayError = checkForDayError(display.age, dayInput);
+  const isYearError = checkForYearError(currentAge, yearInput);
+  const isDayError = checkForDayError(currentAge, dayInput);
   const displayError = getDisplayError([isYearError, isDayError]);
   return (
     <>
