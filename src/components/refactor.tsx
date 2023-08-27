@@ -502,5 +502,5 @@ function getDisplayError(singleErrors: NeoError[]) {
       return e;
     }
   }
-  return { isError: true, errorMessage: " base case" } as NeoError;
+  return { isError: false, errorMessage: " base case" } as NeoError;
 }
