@@ -4,6 +4,7 @@ import type { ErrorObj } from "../components/CalendarInput";
 import { useState } from "react";
 import { NextPage } from "next";
 import { error } from "console";
+import { isError } from "util";
 type Display = {
   age: DisplayAge;
   error: string;
@@ -183,8 +184,6 @@ function DisplayResult({ display, error }: TypePropAge) {
     return (
       <>
         <h1 className="mb-6 text-5xl font-extrabold italic">
-          <p>we got error</p>
-          <p>{error.errorMessage}</p>
           <span className=" text-template_purple">--</span> years
           <br></br>
           <span className=" text-template_purple">--</span> months
@@ -313,10 +312,15 @@ export function checkForYearError(
   const isMonth = Number.isInteger(possibeAge.month);
   const isYear = Number.isInteger(possibeAge.year);
 
+  if (!currentYear) {
+    return { isError: false, errorMessage: "" };
+  }
   if (currentYear === "YYYY") {
     return { isError: true, errorMessage: "" };
   }
-  if (makeTS_ReturnNumber(possibeAge.year) <= 0) {
+  if (makeTS_ReturnNumber(possibeAge.year) < 0) {
+    console.log(possibeAge.year, makeTS_ReturnNumber(possibeAge.year));
+
     return { isError: true, errorMessage: "Date must be older than 0 CE" };
   }
   if (isDay && isMonth && isYear) {
@@ -340,7 +344,9 @@ function dispayYearError(possibeAge: InputAge, currentYear: string): ErrorObj {
   const isMonth = Number.isInteger(possibeAge.month);
   const isYear = Number.isInteger(possibeAge.year);
   // return { isError: true, errorMessage: "test" };
-  if (makeTS_ReturnNumber(possibeAge.year) <= 0) {
+  if (makeTS_ReturnNumber(possibeAge.year) < 0) {
+    console.log(possibeAge.year, makeTS_ReturnNumber(possibeAge.year));
+
     return { isError: true, errorMessage: "Date must be older than 0 CE" };
   }
   if (isDay && isMonth && isYear) {
