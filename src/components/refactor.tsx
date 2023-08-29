@@ -3,8 +3,11 @@ import type { Dispatch, SetStateAction } from "react";
 import type { ErrorObj } from "../components/CalendarInput";
 import { useState } from "react";
 import { NextPage } from "next";
-import { error } from "console";
-import { isError } from "util";
+type PossibleAge = {
+  year: string | number | string;
+  month: string | number | string;
+  day: string | number | string;
+};
 type Display = {
   age: DisplayAge;
   error: string;
@@ -121,7 +124,7 @@ function AgeForm({
     day: parseInt(dayInput, 10),
   };
   const isYearError = checkForYearError(currentAge, yearInput);
-  const isDayError = checkForDayError(currentAge, dayInput);
+  const isDayError = checkForDayError(currentAge);
   const displayError = getDisplayError([isYearError, isDayError]);
   return (
     <>
@@ -336,8 +339,8 @@ export function checkForYearError(
   }
   return { isError: false, errorMessage: "" };
 }
-function dispayYearError(possibeAge: InputAge, currentYear: string): ErrorObj {
-  if (currentYear === "YYYY") {
+function dispayYearError(possibeAge: InputAge): ErrorObj {
+  if (possibeAge.year === "YYYY") {
     return { isError: true, errorMessage: "" };
   }
   const isDay = Number.isInteger(possibeAge.day);
@@ -362,11 +365,9 @@ function dispayYearError(possibeAge: InputAge, currentYear: string): ErrorObj {
   }
   return { isError: false, errorMessage: " " };
 }
-export function checkForDayError(
-  possibleAge: PossibleAge,
-  currentDay: string
-): NeoError {
-  if (currentDay === "DD") {
+
+export function checkForDayError(possibleAge: PossibleAge): NeoError {
+  if (possibleAge.day === "DD") {
     return { isError: true, errorMessage: " " };
   }
   const isDay = Number.isInteger(possibleAge.day);
