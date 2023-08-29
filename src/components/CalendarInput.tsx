@@ -15,6 +15,7 @@ type CalendarInput = {
   textInput: string | number;
   setTextInput: stateFn;
   customError: NeoError;
+  submit: boolean;
 };
 export function CalendarInput({
   id,
@@ -25,6 +26,7 @@ export function CalendarInput({
   textInput,
   setTextInput,
   customError,
+  submit,
 }: CalendarInput) {
   const hasAnyDefaultValue = textInput === defaultValue;
   const isError = isErrorCheck(textInput, errorRange);
@@ -41,7 +43,7 @@ export function CalendarInput({
       "m-1  ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl mix-blend-darken ring-1       ring-template_ligth_grey lg:hover:ring-template_purple lg:hover:ring-2 ";
   }
   // custom error has less precedence than the non-custom error, thus else-if-ed last
-  else if (customError.isError) {
+  else if (customError.isError && submit) {
     appliedErrorMessage = customError.errorMessage;
     className =
       "m-1  ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl mix-blend-darken ring-1       ring-template_ligth_grey lg:hover:ring-template_purple lg:hover:ring-2 ";

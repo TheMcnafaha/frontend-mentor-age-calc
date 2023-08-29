@@ -42,6 +42,8 @@ type AgeFormInput = {
   setCurrentMonth: StateInputFn;
   currentDay: string;
   setCurrentDay: StateInputFn;
+  submit: boolean;
+  setSubmit: Dispatch<SetStateAction<boolean>>;
 };
 export type NeoError = {
   isError: boolean;
@@ -57,6 +59,7 @@ export const Refactor: NextPage = () => {
     month: "MM",
     day: "DD",
   } as InputAge);
+  const [submitted, setsubmitted] = useState(false);
   const [year, setyear] = useState("YYYY");
   const [month, setmonth] = useState("MM");
   const [day, setday] = useState("DD");
@@ -76,6 +79,8 @@ export const Refactor: NextPage = () => {
         setCurrentDay={setday}
         setCurrentMonth={setmonth}
         setCurrentYear={setyear}
+        submit={submitted}
+        setSubmit={setsubmitted}
       ></AgeForm>
     </div>
   );
@@ -111,6 +116,8 @@ function AgeForm({
   setCurrentYear,
   setCurrentMonth,
   setCurrentDay,
+  submit,
+  setSubmit,
 }: AgeFormInput) {
   // const [dayInput, setDayInput] = useState("DD");
   // const [monthInput, setmonthInput] = useState("MM");
@@ -132,6 +139,7 @@ function AgeForm({
         action=""
         onSubmit={(e) => {
           e.preventDefault();
+          setSubmit(!submit);
           // check to see if the input data is good enough to make a new age attempt
           if (isInputAgeSound(currentAge)) {
             const nextAge = getAgeDiff(currentAge);
@@ -143,6 +151,7 @@ function AgeForm({
       >
         <div className="mt-5 flex">
           <CalendarInput
+            submit={submit}
             maxInputLength={2}
             id={"day"}
             errorMessage={"Must be a valid day"}
@@ -153,6 +162,7 @@ function AgeForm({
             customError={isDayError}
           ></CalendarInput>
           <CalendarInput
+            submit={submit}
             maxInputLength={2}
             id={"month"}
             errorMessage={"Must be a valid month"}
@@ -163,6 +173,7 @@ function AgeForm({
             customError={{ isError: false, errorMessage: "" }}
           ></CalendarInput>
           <CalendarInput
+            submit={submit}
             maxInputLength={4}
             id={"year"}
             errorMessage={"Must be in the past"}
@@ -509,5 +520,5 @@ function getDisplayError(singleErrors: NeoError[]) {
       return e;
     }
   }
-  return { isError: false, errorMessage: " base case" } as NeoError;
+  return { isError: false, errorMessage: "" } as NeoError;
 }
