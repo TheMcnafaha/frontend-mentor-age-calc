@@ -366,7 +366,7 @@ function dispayYearError(possibeAge: InputAge): ErrorObj {
   return { isError: false, errorMessage: " " };
 }
 
-export function checkForDayError(possibleAge: PossibleAge): NeoError {
+export function checkForDayError(possibleAge: InputAge): NeoError {
   if (possibleAge.day === "DD") {
     return { isError: true, errorMessage: " " };
   }
