@@ -85,28 +85,6 @@ export const Refactor: NextPage = () => {
     </div>
   );
 };
-// function CalendarComponent() {
-//   //input age servers as the state thats update eveytime the input changes, and when form is submitted & inputAge has passed all tests, inputAge becomes the new age
-//   const [inputAge, setInputAge] = useState({
-//     year: "YYYY",
-//     month: "MM",
-//     day: "DD",
-//   } as InputAge);
-//
-//   const display: Display = getNewDisplayAge(inputAge);
-//   // const display: Display = { age: { year: 1, month: 1, day: 1 }, error: "lol" };
-//   return (
-//     <div className=" mt-20 flex max-w-[340px] flex-col rounded-2xl rounded-br-[4.5em] bg-[#fff] px-6 py-4 shadow-sm lg:max-w-[400px] ">
-//       <AgeForm
-//         age={display.age}
-//         setInputAge={setInputAge}
-//         inputAge={inputAge}
-//         display={display}
-//       ></AgeForm>
-//     </div>
-//   );
-// }
-
 function AgeForm({
   setInputAge,
   display,
