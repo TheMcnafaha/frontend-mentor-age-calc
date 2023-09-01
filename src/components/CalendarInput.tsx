@@ -1,6 +1,6 @@
 import React from "react";
 import type { Dispatch, SetStateAction } from "react";
-import type { NeoError } from "./refactor";
+import type { NeoError } from "./CalendarForm";
 export type ErrorObj = {
   isError: boolean;
   errorMessage: string;

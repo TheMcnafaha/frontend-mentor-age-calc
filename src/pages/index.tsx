@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { Refactor } from "../components/refactor";
+import { CalendarForm } from "../components/CalendarForm";
 const Home: NextPage = () => {
   return (
     <>
@@ -10,7 +10,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/calculator-svgrepo-com.svg" />
       </Head>
       <main className="flex  min-h-screen flex-col  items-center  bg-template_off_white font-['Poppins']">
-        <Refactor />
+        <CalendarForm />
       </main>
     </>
   );
