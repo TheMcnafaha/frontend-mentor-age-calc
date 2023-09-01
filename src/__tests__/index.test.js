@@ -5,7 +5,7 @@ import {
   checkForYearError,
   checkForDayError,
   getNewDisplayAge,
-} from "../pages/index";
+} from "../components/CalendarForm.tsx";
 function makeAge(year, month, day) {
   return {
     year: year,
