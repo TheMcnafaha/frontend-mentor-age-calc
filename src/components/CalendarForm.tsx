@@ -1,5 +1,7 @@
 import { CalendarInput } from "../components/CalendarInput";
-import type { Dispatch, SetStateAction } from "react";
+import { CalendarOutput } from "../components/CalendarOutput";
+import { useCountUp } from "react-countup";
+import { Dispatch, SetStateAction, useRef } from "react";
 import type { ErrorObj } from "../components/CalendarInput";
 import { useState } from "react";
 import type { NextPage } from "next";
@@ -171,11 +173,13 @@ function AgeForm({
   );
 }
 function DisplayResult({ display, error }: TypePropAge) {
-  if (error.isError) {
+  const anyEmpty = display.age.year === "--";
+  if (error.isError || anyEmpty) {
     return (
       <>
         <h1 className="mb-6 text-5xl font-extrabold italic">
           <span className=" text-template_purple">--</span> years
+          <CalendarOutput number={19} title="years"></CalendarOutput>
           <br></br>
           <span className=" text-template_purple">--</span> months
           <br></br>
@@ -187,7 +191,10 @@ function DisplayResult({ display, error }: TypePropAge) {
   return (
     <>
       <h1 className="mb-6 text-5xl font-extrabold italic">
-        <span className=" text-template_purple">{display.age.year}</span> years
+        <CalendarOutput
+          number={display.age.year}
+          title="years"
+        ></CalendarOutput>
         <br></br>
         <span className=" text-template_purple">{display.age.month}</span>{" "}
         months

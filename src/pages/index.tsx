@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import { CountUp } from "react-countup";
 import Head from "next/head";
 import { CalendarForm } from "../components/CalendarForm";
 const Home: NextPage = () => {
