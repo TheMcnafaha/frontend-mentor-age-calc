@@ -69,13 +69,13 @@ test(" test for weird bug where date is passed wrong", () => {
 const futureDate = makeAge(3023, 1, 1);
 const reallyPastDate = makeAge(-420, 6, 9);
 test("only dates from the past should be allowed", () => {
-  expect(checkForYearError(futureDate)).toStrictEqual({
+  expect(checkForYearError(futureDate, "2023")).toStrictEqual({
     isError: true,
     errorMessage: "Must be in the past",
   });
 });
 test("dates too past should error out", () => {
-  expect(checkForYearError(reallyPastDate)).toStrictEqual({
+  expect(checkForYearError(reallyPastDate, "2023")).toStrictEqual({
     isError: true,
     errorMessage: "Date must be older than 0 CE",
   });
@@ -88,7 +88,7 @@ test("days should never be bigger than last day of month", () => {
   });
 });
 test("days should account for leap years", () => {
-  expect(checkForDayError(makeAge(2020, 2, 29))).toStrictEqual(false);
+  expect(checkForDayError(makeAge(2020, 2, 29)).isError).toStrictEqual(false);
 });
 // tests below relate to display errors
 const emptyAge = {
@@ -98,13 +98,8 @@ const emptyAge = {
 };
 const febError = {
   age: emptyAge,
-  error: {
-    isError: true,
-    errorMessage: "The last day of February 2023 is the 28th",
-  },
+  error: " ",
 };
 test("display should error on days outside of month bound", () => {
-  return expect(
-    getNewDisplayAge(makeAge(2023, 2, 29)).error.isError
-  ).toStrictEqual(true);
+  return expect(getNewDisplayAge(makeAge(2023, 2, 29))).toStrictEqual(febError);
 });

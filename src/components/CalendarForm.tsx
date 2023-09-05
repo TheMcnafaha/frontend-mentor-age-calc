@@ -2,7 +2,7 @@ import { CalendarInput } from "../components/CalendarInput";
 import type { Dispatch, SetStateAction } from "react";
 import type { ErrorObj } from "../components/CalendarInput";
 import { useState } from "react";
-import { NextPage } from "next";
+import type { NextPage } from "next";
 type PossibleAge = {
   year: string | number | string;
   month: string | number | string;
