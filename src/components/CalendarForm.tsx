@@ -1,8 +1,7 @@
 import { CalendarInput } from "../components/CalendarInput";
-import { CalendarOutput } from "../components/CalendarOutput";
-import { useCountUp } from "react-countup";
-import { Dispatch, SetStateAction, useRef } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import type { ErrorObj } from "../components/CalendarInput";
+import { CalendarOutput } from "../components/CalendarOutput";
 import { useState } from "react";
 import type { NextPage } from "next";
 type PossibleAge = {
@@ -169,17 +168,19 @@ function AgeForm({
         <AgeFormSubmit />
       </form>
       <DisplayResult display={display} error={displayError} />
+      <NeoDisplayResult
+        display={display}
+        error={displayError}
+      ></NeoDisplayResult>
     </>
   );
 }
-function DisplayResult({ display, error }: TypePropAge) {
-  const anyEmpty = display.age.year === "--";
-  if (error.isError || anyEmpty) {
+function NeoDisplayResult({ display, error }: TypePropAge) {
+  if (error.isError) {
     return (
       <>
         <h1 className="mb-6 text-5xl font-extrabold italic">
           <span className=" text-template_purple">--</span> years
-          <CalendarOutput number={19} title="years"></CalendarOutput>
           <br></br>
           <span className=" text-template_purple">--</span> months
           <br></br>
@@ -191,10 +192,37 @@ function DisplayResult({ display, error }: TypePropAge) {
   return (
     <>
       <h1 className="mb-6 text-5xl font-extrabold italic">
+        <CalendarOutput number={display.age.year} title={"  years"} />
+        <br></br>
         <CalendarOutput
-          number={display.age.year}
-          title="years"
+          number={display.age.month}
+          title="months"
         ></CalendarOutput>
+        <br></br>
+        <CalendarOutput number={display.age.day} title="days"></CalendarOutput>
+      </h1>
+    </>
+  );
+}
+
+function DisplayResult({ display, error }: TypePropAge) {
+  if (error.isError) {
+    return (
+      <>
+        <h1 className="mb-6 text-5xl font-extrabold italic">
+          <span className=" text-template_purple">--</span> years
+          <br></br>
+          <span className=" text-template_purple">--</span> months
+          <br></br>
+          <span className=" text-template_purple">--</span> days
+        </h1>
+      </>
+    );
+  }
+  return (
+    <>
+      <h1 className="mb-6 text-5xl font-extrabold italic">
+        <span className=" text-template_purple">{display.age.year}</span> years
         <br></br>
         <span className=" text-template_purple">{display.age.month}</span>{" "}
         months
