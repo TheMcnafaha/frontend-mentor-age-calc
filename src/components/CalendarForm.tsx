@@ -64,7 +64,7 @@ export const CalendarForm: NextPage = () => {
   const [year, setyear] = useState("YYYY");
   const [month, setmonth] = useState("MM");
   const [day, setday] = useState("DD");
-  const display: Display = getNewDisplayAge(inputAge);
+  const display: Display = getNewDisplayAge(inputAge, submitted, setsubmitted);
   // const display: Display = { age: { year: 1, month: 1, day: 1 }, error: "lol" };
   return (
     <div className=" mt-20 flex max-w-[340px] flex-col rounded-2xl rounded-br-[4.5em] bg-[#fff] px-6 py-4 shadow-sm lg:max-w-[400px] ">
@@ -117,6 +117,8 @@ function AgeForm({
         action=""
         onSubmit={(e) => {
           e.preventDefault();
+          console.log("here");
+
           setSubmit(!submit);
           // check to see if the input data is good enough to make a new age attempt
           if (isInputAgeSound(currentAge)) {
@@ -248,7 +250,11 @@ function AgeFormSubmit() {
     </>
   );
 }
-export function getNewDisplayAge(currentAge: InputAge): Display {
+export function getNewDisplayAge(
+  currentAge: InputAge,
+  isSubmit: boolean,
+  setSubmit: Function
+): Display {
   const outputAge: DisplayAge = {
     year: "--",
     month: "--",
@@ -275,13 +281,22 @@ export function getNewDisplayAge(currentAge: InputAge): Display {
       day: makeTS_ReturnNumber(currentAge.day),
     }),
   ]);
+
   const isNotValidDay = dayNum === -1;
   const isNotValidMonth = monthNum === -1;
   const isNotValidYear = yearNum === -1;
+  if (isSubmit) {
+    // we do what we must because we can't afford reading documentation
+    setTimeout(() => {
+      setSubmit(false);
+    }, 0);
+    return { age: emptyAge, error: "" };
+  }
   // check for default values or if all inputs are empty
   if (isNotValidDay || isNotValidMonth || isNotValidYear) {
     return { age: outputAge, error: " " };
   }
+
   const isYearError = dispayYearError(currentAge);
   const isDayError = checkForDayError(currentAge);
   if (isYearError.isError) {
