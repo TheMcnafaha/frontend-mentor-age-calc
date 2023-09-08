@@ -8,6 +8,7 @@ type Output = {
 type Render = {
   end: number;
   isReset: boolean;
+  title: string;
 };
 export const CalendarOutput = ({ number, title }: Output) => {
   const isNumber = typeof number === "number";
@@ -15,18 +16,19 @@ export const CalendarOutput = ({ number, title }: Output) => {
     return (
       <>
         <span className=" text-template_purple">--</span> {title}
-        <br></br>
       </>
     );
   }
   return (
     <>
-      <span className=" text-template_purple">{number}</span> {title}
+      <MyWay end={number} title={title}>
+        {" "}
+      </MyWay>
     </>
   );
 };
 
-const MyWay = ({ end, isReset }: Render) => {
+const MyWay = ({ end, isReset, title }: Render) => {
   const countUpRef = useRef(null);
   const { reset } = useCountUp({
     ref: countUpRef,
@@ -39,8 +41,8 @@ const MyWay = ({ end, isReset }: Render) => {
     onPauseResume: () => console.log("Paused or resumed!"),
   });
   return (
-    <div>
-      <div ref={countUpRef} />
-    </div>
+    <>
+      <span className=" text-template_purple" ref={countUpRef} /> {title}
+    </>
   );
 };
