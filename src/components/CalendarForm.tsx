@@ -194,14 +194,19 @@ function NeoDisplayResult({ display, error }: TypePropAge) {
   return (
     <>
       <h1 className="mb-6 text-5xl font-extrabold italic">
-        <CalendarOutput number={display.age.year} title={"  years"} />
+        <CalendarOutput number={display.age.year} title={"  years"} delay={1} />
         <br></br>
         <CalendarOutput
           number={display.age.month}
           title="months"
+          delay={2}
         ></CalendarOutput>
         <br></br>
-        <CalendarOutput number={display.age.day} title="days"></CalendarOutput>
+        <CalendarOutput
+          number={display.age.day}
+          title="days"
+          delay={4}
+        ></CalendarOutput>
       </h1>
     </>
   );
