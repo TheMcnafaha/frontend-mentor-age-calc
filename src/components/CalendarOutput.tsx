@@ -1,17 +1,16 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import { useCountUp } from "react-countup";
 
 type Output = {
   number: number | "--";
   title: string;
-  delay: number;
 };
 type Render = {
   end: number;
-  delay: number;
+  isReset: boolean;
   title: string;
 };
-export const CalendarOutput = ({ number, title, delay = 0 }: Output) => {
+export const CalendarOutput = ({ number, title }: Output) => {
   const isNumber = typeof number === "number";
   if (!isNumber) {
     return (
@@ -20,21 +19,22 @@ export const CalendarOutput = ({ number, title, delay = 0 }: Output) => {
       </>
     );
   }
-
   return (
     <>
-      <MyWay end={number} title={title} delay={delay}></MyWay>
+      <MyWay end={number} title={title}>
+        {" "}
+      </MyWay>
     </>
   );
 };
 
-const MyWay = ({ end, title, delay }: Render) => {
+const MyWay = ({ end, isReset, title }: Render) => {
   const countUpRef = useRef(null);
   const { reset } = useCountUp({
     ref: countUpRef,
-    start: 0,
+    start: 1,
     end: end,
-    delay: delay,
+    delay: 0,
     duration: 4,
     onReset: () => console.log("Resetted!"),
     onUpdate: () => console.log("Updated!"),
