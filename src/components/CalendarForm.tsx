@@ -1,4 +1,5 @@
 import { CalendarInput } from "../components/CalendarInput";
+import { Delayed } from "../components/Delay";
 import type { Dispatch, SetStateAction } from "react";
 import type { ErrorObj } from "../components/CalendarInput";
 import { CalendarOutput } from "../components/CalendarOutput";
@@ -188,25 +189,23 @@ function NeoDisplayResult({ display, error }: TypePropAge) {
           <br></br>
           <span className=" text-template_purple">--</span> days
         </h1>
+        <Delayed title="Test 123" waitBeforeShow={2000}>
+          <h1>Hola Mundo</h1>
+        </Delayed>
       </>
     );
   }
   return (
     <>
       <h1 className="mb-6 text-5xl font-extrabold italic">
-        <CalendarOutput number={display.age.year} title={"  years"} delay={1} />
+        <CalendarOutput number={display.age.year} title={"  years"} />
         <br></br>
         <CalendarOutput
           number={display.age.month}
           title="months"
-          delay={2}
         ></CalendarOutput>
         <br></br>
-        <CalendarOutput
-          number={display.age.day}
-          title="days"
-          delay={4}
-        ></CalendarOutput>
+        <CalendarOutput number={display.age.day} title="days"></CalendarOutput>
       </h1>
     </>
   );

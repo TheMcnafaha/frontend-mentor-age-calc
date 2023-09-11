@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useCountUp } from "react-countup";
-
+import { EmptyOutput } from "./EmptyOutput";
 type Output = {
   number: number | "--";
   title: string;
@@ -13,17 +13,11 @@ type Render = {
 export const CalendarOutput = ({ number, title }: Output) => {
   const isNumber = typeof number === "number";
   if (!isNumber) {
-    return (
-      <>
-        <span className=" text-template_purple">--</span> {title}
-      </>
-    );
+    return <EmptyOutput title={title}></EmptyOutput>;
   }
   return (
     <>
-      <MyWay end={number} title={title}>
-        {" "}
-      </MyWay>
+      <MyWay end={number} title={title}></MyWay>
     </>
   );
 };
