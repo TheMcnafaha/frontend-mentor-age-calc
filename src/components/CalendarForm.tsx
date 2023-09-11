@@ -5,6 +5,7 @@ import type { ErrorObj } from "../components/CalendarInput";
 import { CalendarOutput } from "../components/CalendarOutput";
 import { useState } from "react";
 import type { NextPage } from "next";
+import { EmptyOutput } from "./EmptyOutput";
 type PossibleAge = {
   year: string | number | string;
   month: string | number | string;
@@ -183,11 +184,11 @@ function NeoDisplayResult({ display, error }: TypePropAge) {
     return (
       <>
         <h1 className="mb-6 text-5xl font-extrabold italic">
-          <span className=" text-template_purple">--</span> years
+          <EmptyOutput title="years"></EmptyOutput>
           <br></br>
-          <span className=" text-template_purple">--</span> months
+          <EmptyOutput title="months"></EmptyOutput>
           <br></br>
-          <span className=" text-template_purple">--</span> days
+          <EmptyOutput title="days"></EmptyOutput>
         </h1>
         <Delayed title="Test 123" waitBeforeShow={2000}>
           <h1>Hola Mundo</h1>
@@ -198,14 +199,26 @@ function NeoDisplayResult({ display, error }: TypePropAge) {
   return (
     <>
       <h1 className="mb-6 text-5xl font-extrabold italic">
-        <CalendarOutput number={display.age.year} title={"  years"} />
+        <CalendarOutput
+          number={display.age.year}
+          title={"  years"}
+          delay={0}
+          pre_delay={1000}
+        />
         <br></br>
         <CalendarOutput
           number={display.age.month}
           title="months"
+          delay={0}
+          pre_delay={2000}
         ></CalendarOutput>
         <br></br>
-        <CalendarOutput number={display.age.day} title="days"></CalendarOutput>
+        <CalendarOutput
+          number={display.age.day}
+          title="days"
+          delay={0}
+          pre_delay={3000}
+        ></CalendarOutput>
       </h1>
     </>
   );
