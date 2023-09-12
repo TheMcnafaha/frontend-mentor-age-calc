@@ -45,7 +45,7 @@ type AgeFormInput = {
   currentDay: string;
   setCurrentDay: StateInputFn;
   submit: boolean;
-  setSubmit: Dispatch<SetStateAction<boolean>>;
+  setSubmit: StateSubmitFn;
 };
 export type NeoError = {
   isError: boolean;
@@ -54,6 +54,7 @@ export type NeoError = {
 
 type StateInputAgeFn = Dispatch<SetStateAction<InputAge>>;
 type StateInputFn = Dispatch<SetStateAction<string>>;
+type StateSubmitFn = Dispatch<SetStateAction<boolean>>;
 export const CalendarForm: NextPage = () => {
   //input age servers as the state thats update eveytime the input changes, and when form is submitted & inputAge has passed all tests, inputAge becomes the new age
   const [inputAge, setInputAge] = useState({
@@ -238,7 +239,7 @@ function AgeFormSubmit() {
 export function getNewDisplayAge(
   currentAge: InputAge,
   isSubmit: boolean,
-  setSubmit: Function
+  setSubmit: StateSubmitFn
 ): Display {
   const outputAge: DisplayAge = {
     year: "--",
