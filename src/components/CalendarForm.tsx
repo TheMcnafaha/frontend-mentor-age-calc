@@ -1,5 +1,4 @@
 import { CalendarInput } from "../components/CalendarInput";
-import { Delayed } from "../components/Delay";
 import type { Dispatch, SetStateAction } from "react";
 import type { ErrorObj } from "../components/CalendarInput";
 import { CalendarOutput } from "../components/CalendarOutput";
@@ -171,7 +170,6 @@ function AgeForm({
         </p>
         <AgeFormSubmit />
       </form>
-      <DisplayResult display={display} error={displayError} />
       <NeoDisplayResult
         display={display}
         error={displayError}
@@ -190,9 +188,6 @@ function NeoDisplayResult({ display, error }: TypePropAge) {
           <br></br>
           <EmptyOutput title="days"></EmptyOutput>
         </h1>
-        <Delayed title="Test 123" waitBeforeShow={2000}>
-          <h1>Hola Mundo</h1>
-        </Delayed>
       </>
     );
   }
@@ -203,54 +198,27 @@ function NeoDisplayResult({ display, error }: TypePropAge) {
           number={display.age.year}
           title={"  years"}
           delay={0}
-          pre_delay={1000}
+          pre_delay={0}
         />
         <br></br>
         <CalendarOutput
           number={display.age.month}
           title="months"
           delay={0}
-          pre_delay={2000}
+          pre_delay={0}
         ></CalendarOutput>
         <br></br>
         <CalendarOutput
           number={display.age.day}
           title="days"
           delay={0}
-          pre_delay={3000}
+          pre_delay={0}
         ></CalendarOutput>
       </h1>
     </>
   );
 }
 
-function DisplayResult({ display, error }: TypePropAge) {
-  if (error.isError) {
-    return (
-      <>
-        <h1 className="mb-6 text-5xl font-extrabold italic">
-          <span className=" text-template_purple">--</span> years
-          <br></br>
-          <span className=" text-template_purple">--</span> months
-          <br></br>
-          <span className=" text-template_purple">--</span> days
-        </h1>
-      </>
-    );
-  }
-  return (
-    <>
-      <h1 className="mb-6 text-5xl font-extrabold italic">
-        <span className=" text-template_purple">{display.age.year}</span> years
-        <br></br>
-        <span className=" text-template_purple">{display.age.month}</span>{" "}
-        months
-        <br></br>
-        <span className=" text-template_purple">{display.age.day}</span> days
-      </h1>
-    </>
-  );
-}
 function AgeFormSubmit() {
   return (
     <>

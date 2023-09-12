@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { useCountUp } from "react-countup";
 import { EmptyOutput } from "./EmptyOutput";
 import Delayed from "./Delay";
@@ -30,12 +30,12 @@ export const CalendarOutput = ({ number, title, delay, pre_delay }: Output) => {
 
 const MyWay = ({ end, title, delay }: Render) => {
   const countUpRef = useRef(null);
-  const { reset } = useCountUp({
+  const {} = useCountUp({
     ref: countUpRef,
     start: 1,
     end: end,
     delay: delay,
-    duration: 4,
+    duration: 3,
     onReset: () => console.log("Resetted!"),
     onUpdate: () => console.log("Updated!"),
     onPauseResume: () => console.log("Paused or resumed!"),

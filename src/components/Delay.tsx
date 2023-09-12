@@ -1,4 +1,4 @@
-import { useState, useEffect, JSXElementConstructor } from "react";
+import { useState, useEffect } from "react";
 import { EmptyOutput } from "./EmptyOutput";
 type Props = {
   children: React.ReactNode;
@@ -17,7 +17,7 @@ export const Delayed = ({ children, waitBeforeShow, title }: Props) => {
     return () => clearTimeout(timer);
   }, [waitBeforeShow]);
 
-  return isShown ? children : Default;
+  return isShown ? <> {children}</> : Default;
 };
 
 export default Delayed;
