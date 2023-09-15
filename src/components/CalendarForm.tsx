@@ -75,7 +75,6 @@ export const CalendarForm: NextPage = () => {
     }
     setInputAge(defaultOutput as InputAge);
   }
-  // const display: Display = { age: { year: 1, month: 1, day: 1 }, error: "lol" };
   return (
     <div className=" mt-20 flex max-w-[340px] flex-col rounded-2xl rounded-br-[4.5em] bg-[#fff] px-6 py-4 shadow-sm lg:max-w-[400px] ">
       <AgeForm
@@ -109,9 +108,6 @@ function AgeForm({
   setSubmit,
   resetOutput,
 }: AgeFormInput) {
-  // const [dayInput, setDayInput] = useState("DD");
-  // const [monthInput, setmonthInput] = useState("MM");
-  // const [yearInput, setyearInput] = useState("YYYY");
   const dayInput = currentDay;
   const monthInput = currentMonth;
   const yearInput = currentYear;

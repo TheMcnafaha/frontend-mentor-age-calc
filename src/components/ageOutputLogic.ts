@@ -16,16 +16,6 @@ type Age = {
   month: number;
   day: number;
 };
-function getDisplayError(singleErrors: NeoError[]) {
-  // first check single errors
-  for (let index = 0; index < singleErrors.length; index++) {
-    const e = singleErrors[index];
-    if (e?.isError) {
-      return e;
-    }
-  }
-  return { isError: false, errorMessage: "" } as NeoError;
-}
 
 function makeTS_ReturnNumber(
   friendlyNumber: string | number | undefined
@@ -58,9 +48,6 @@ export function getNewDisplayAge(
     month: "--",
     day: "--",
   };
-  // if (currentDisplay.error != "") {
-  //   return { age: outputAge, error: currentDisplay.error };
-  // }
   const monthNum = makeInputAgeNumber(currentAge.month, [0, 12]);
   const yearNum = makeInputAgeNumber(currentAge.year, [
     0,
