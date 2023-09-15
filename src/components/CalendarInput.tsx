@@ -1,6 +1,6 @@
 import React from "react";
 import type { Dispatch, SetStateAction } from "react";
-import type { NeoError } from "./CalendarForm";
+import type { NeoError, OutputReset } from "./CalendarForm";
 export type ErrorObj = {
   isError: boolean;
   errorMessage: string;
@@ -16,6 +16,7 @@ type CalendarInput = {
   setTextInput: stateFn;
   customError: NeoError;
   submit: boolean;
+  resetOutput: OutputReset;
 };
 export function CalendarInput({
   id,
@@ -27,6 +28,7 @@ export function CalendarInput({
   setTextInput,
   customError,
   submit,
+  resetOutput,
 }: CalendarInput) {
   const hasAnyDefaultValue = textInput === defaultValue;
   const isError = isErrorCheck(textInput, errorRange);
@@ -74,6 +76,7 @@ export function CalendarInput({
         onChange={(e) => {
           const input = e.target.value;
           setTextInput(input);
+          resetOutput();
         }}
       />
       <div className="text-xs italic text-template_red">

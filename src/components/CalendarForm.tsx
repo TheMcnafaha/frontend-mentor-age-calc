@@ -41,6 +41,7 @@ type AgeFormInput = {
   setCurrentDay: StateInputFn;
   submit: boolean;
   setSubmit: StateSubmitFn;
+  resetOutput: OutputReset;
 };
 export type NeoError = {
   isError: boolean;
@@ -50,6 +51,7 @@ export type NeoError = {
 type StateInputAgeFn = Dispatch<SetStateAction<InputAge>>;
 type StateInputFn = Dispatch<SetStateAction<string>>;
 export type StateSubmitFn = Dispatch<SetStateAction<boolean>>;
+export type OutputReset = () => void;
 export const CalendarForm: NextPage = () => {
   //input age servers as the state thats update eveytime the input changes, and when form is submitted & inputAge has passed all tests, inputAge becomes the new age
   const [inputAge, setInputAge] = useState({
@@ -62,6 +64,17 @@ export const CalendarForm: NextPage = () => {
   const [month, setmonth] = useState("MM");
   const [day, setday] = useState("DD");
   const display: Display = getNewDisplayAge(inputAge, submitted, setsubmitted);
+  function resetOutput() {
+    const defaultOutput = {
+      year: "YYYY",
+      month: "MM",
+      day: "DD",
+    };
+    if (display.age === inputAge) {
+      return;
+    }
+    setInputAge(defaultOutput as InputAge);
+  }
   // const display: Display = { age: { year: 1, month: 1, day: 1 }, error: "lol" };
   return (
     <div className=" mt-20 flex max-w-[340px] flex-col rounded-2xl rounded-br-[4.5em] bg-[#fff] px-6 py-4 shadow-sm lg:max-w-[400px] ">
@@ -78,6 +91,7 @@ export const CalendarForm: NextPage = () => {
         setCurrentYear={setyear}
         submit={submitted}
         setSubmit={setsubmitted}
+        resetOutput={resetOutput}
       ></AgeForm>
     </div>
   );
@@ -93,6 +107,7 @@ function AgeForm({
   setCurrentDay,
   submit,
   setSubmit,
+  resetOutput,
 }: AgeFormInput) {
   // const [dayInput, setDayInput] = useState("DD");
   // const [monthInput, setmonthInput] = useState("MM");
@@ -137,6 +152,7 @@ function AgeForm({
             textInput={dayInput}
             setTextInput={setCurrentDay}
             customError={isDayError}
+            resetOutput={resetOutput}
           ></CalendarInput>
           <CalendarInput
             submit={submit}
@@ -148,6 +164,7 @@ function AgeForm({
             textInput={monthInput}
             setTextInput={setCurrentMonth}
             customError={{ isError: false, errorMessage: "" }}
+            resetOutput={resetOutput}
           ></CalendarInput>
           <CalendarInput
             submit={submit}
@@ -159,6 +176,7 @@ function AgeForm({
             textInput={yearInput}
             setTextInput={setCurrentYear}
             customError={isYearError}
+            resetOutput={resetOutput}
           ></CalendarInput>
         </div>
         <p className=" text-center text-base italic text-template_red">
