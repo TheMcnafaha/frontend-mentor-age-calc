@@ -129,7 +129,6 @@ function AgeForm({
         action=""
         onSubmit={(e) => {
           e.preventDefault();
-          console.log("here");
 
           setSubmit(!submit);
           // check to see if the input data is good enough to make a new age attempt
@@ -137,7 +136,7 @@ function AgeForm({
             const nextAge = getAgeDiff(currentAge);
             setInputAge(nextAge);
           } else {
-            console.log("else wah lol");
+            return;
           }
         }}
       >

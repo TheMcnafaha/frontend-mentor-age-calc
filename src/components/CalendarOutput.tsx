@@ -36,9 +36,6 @@ const MyWay = ({ end, title, delay }: Render) => {
     end: end,
     delay: delay,
     duration: 3,
-    onReset: () => console.log("Resetted!"),
-    onUpdate: () => console.log("Updated!"),
-    onPauseResume: () => console.log("Paused or resumed!"),
   });
   return (
     <>
