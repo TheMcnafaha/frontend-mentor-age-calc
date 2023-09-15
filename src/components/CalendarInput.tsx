@@ -31,7 +31,7 @@ export function CalendarInput({
   resetOutput,
 }: CalendarInput) {
   const hasAnyDefaultValue = textInput === defaultValue;
-  const isError = isErrorCheck(textInput, errorRange);
+  const isError = isErrorCheck(textInput, errorMessage, errorRange);
   let className =
     "m-1  ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl mix-blend-darken ring-1       ring-template_ligth_grey lg:hover:ring-template_purple lg:hover:ring-2 ";
   let appliedErrorMessage = "";
@@ -39,8 +39,8 @@ export function CalendarInput({
   if (hasAnyDefaultValue || textInput === "") {
     className =
       "m-1   ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl text-template_smokey_grey  mix-blend-darken ring-1     ring-template_ligth_grey lg:hover:ring-template_purple  w-[3.75em] lg:hover:ring-2 ";
-  } else if (isError) {
-    appliedErrorMessage = errorMessage;
+  } else if (isError.isError) {
+    appliedErrorMessage = isError.errorMessage;
     className =
       "m-1  ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl mix-blend-darken ring-1       ring-template_ligth_grey lg:hover:ring-template_purple lg:hover:ring-2 ";
   }
@@ -88,23 +88,27 @@ export function CalendarInput({
 
 function isErrorCheck(
   input: string | number,
+  defaultError: string,
   errRange: [number, number]
-): boolean {
+): NeoError {
   const isString = typeof input === "string";
-  if (isString && checkForLetters(input)) {
-    return true;
+  if (isString && !allDigits(input)) {
+    return { isError: true, errorMessage: "Only digits allowed!" };
   }
   const parsed = isString ? parseInt(input, 10) : input;
   if (!Number.isInteger(parsed)) {
-    return true;
+    return { isError: true, errorMessage: defaultError };
   }
   if (parsed >= errRange[0] && parsed < errRange[1]) {
-    return false;
+    return { isError: false, errorMessage: " " };
   }
-  return true;
+  return { isError: true, errorMessage: " " };
 }
-function checkForLetters(input: string): boolean {
-  // lord forgive thee for I have regexed
-  const hasAnyLetters = /\p{L}/u.test(input);
-  return hasAnyLetters;
+
+function allDigits(input: string): boolean {
+  // forgive me father for I have regexxed
+  if (/^[0-9]+$/.test(input)) {
+    return true;
+  }
+  return false;
 }
