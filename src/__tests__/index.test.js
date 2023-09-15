@@ -1,11 +1,5 @@
 // you run the test by typing "npm test" on srs dir
 import "@testing-library/jest-dom";
-import {
-  getAgeDiff,
-  checkForYearError,
-  checkForDayError,
-  getNewDisplayAge,
-} from "../components/CalendarForm.tsx";
 function makeAge(year, month, day) {
   return {
     year: year,
@@ -13,6 +7,12 @@ function makeAge(year, month, day) {
     day: day,
   };
 }
+import { getAgeDiff } from "../components/ageLogic";
+import {
+  checkForDayError,
+  checkForYearError,
+  getNewDisplayAge,
+} from "../components/ageOutputLogic";
 // This test relate solely to the agediff fn
 const secondTestDate = makeAge(2023, 7, 2);
 const testDate = makeAge(2023, 6, 15);
