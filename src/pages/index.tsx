@@ -2,31 +2,16 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { CalendarForm } from "../components/CalendarForm";
 import { useRouter } from "next/router";
+import { LangContext } from "~/locales/allLocales";
+import { useContext } from "react";
 
-type Locale = {
-  title: string;
-  day: string;
-  month: string;
-  year: string;
-};
-const defaultLocale: Locale = {
-  title: "Age App Calculator",
-  day: "day",
-  month: "month",
-  year: "year",
-};
-const esLocale: Locale = {
-  title: "Calculadora de Edad",
-  day: "dia",
-  month: "mes",
-  year: "año",
-};
 const Home: NextPage = () => {
   const { locale } = useRouter();
   console.log("me is a ", locale);
-  let currentLocale = defaultLocale;
+  const locales = useContext(LangContext);
+  let currentLocale = locales.en;
   if (locale === "es") {
-    currentLocale = esLocale;
+    currentLocale = locales.es;
   }
   return (
     <>

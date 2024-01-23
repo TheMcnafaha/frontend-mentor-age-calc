@@ -1,7 +1,7 @@
 import { CalendarInput } from "../components/CalendarInput";
 import type { Dispatch, SetStateAction } from "react";
 import { CalendarOutput } from "../components/CalendarOutput";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import type { NextPage } from "next";
 import { EmptyOutput } from "./EmptyOutput";
 import { getAgeDiff } from "./ageLogic";
@@ -10,6 +10,8 @@ import {
   checkForYearError,
   getNewDisplayAge,
 } from "./ageOutputLogic";
+import { useRouter } from "next/router";
+import { LangContext } from "~/locales/allLocales";
 export type Display = {
   age: DisplayAge;
   error: string;
@@ -54,6 +56,12 @@ export type StateSubmitFn = Dispatch<SetStateAction<boolean>>;
 export type OutputReset = () => void;
 export const CalendarForm: NextPage = () => {
   //input age servers as the state thats update eveytime the input changes, and when form is submitted & inputAge has passed all tests, inputAge becomes the new age
+  const { locale } = useRouter();
+  const locales = useContext(LangContext);
+  let currentLocale = locales.en;
+  if (locale === "es") {
+    currentLocale = locales.es;
+  }
   const [inputAge, setInputAge] = useState({
     year: "YYYY",
     month: "MM",
