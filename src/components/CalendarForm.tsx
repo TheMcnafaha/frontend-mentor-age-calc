@@ -51,6 +51,11 @@ export type NeoError = {
   errorMessage: string;
 };
 
+type NeoDisplay = {
+  display: Display;
+  error: NeoError;
+  currentLocale: MyLocale;
+};
 type StateInputAgeFn = Dispatch<SetStateAction<InputAge>>;
 type StateInputFn = Dispatch<SetStateAction<string>>;
 export type StateSubmitFn = Dispatch<SetStateAction<boolean>>;
@@ -159,30 +164,33 @@ function AgeForm({
             setTextInput={setCurrentDay}
             customError={isDayError}
             resetOutput={resetOutput}
+            currentLocale={currentLocale}
           ></CalendarInput>
           <CalendarInput
             submit={submit}
             maxInputLength={2}
             id={"month"}
-            errorMessage={"Must be a valid month"}
+            errorMessage={currentLocale.errors.month}
             defaultValue={currentLocale.abreviations.month}
             errorRange={[1, 13]}
             textInput={monthInput}
             setTextInput={setCurrentMonth}
             customError={{ isError: false, errorMessage: "" }}
             resetOutput={resetOutput}
+            currentLocale={currentLocale}
           ></CalendarInput>
           <CalendarInput
             submit={submit}
             maxInputLength={4}
             id={"year"}
-            errorMessage={"Must be in the past"}
+            errorMessage={currentLocale.errors.year}
             defaultValue={currentLocale.abreviations.year}
             errorRange={[-Infinity, new Date().getFullYear() + 1]}
             textInput={yearInput}
             setTextInput={setCurrentYear}
             customError={isYearError}
             resetOutput={resetOutput}
+            currentLocale={currentLocale}
           ></CalendarInput>
         </div>
         <p className=" text-center text-base italic text-template_red">
@@ -193,20 +201,24 @@ function AgeForm({
       <NeoDisplayResult
         display={display}
         error={displayError}
+        currentLocale={currentLocale}
       ></NeoDisplayResult>
     </>
   );
 }
-function NeoDisplayResult({ display, error }: TypePropAge) {
+function NeoDisplayResult({ display, error, currentLocale }: NeoDisplay) {
+  const years = currentLocale.plurals.year;
+  const months = currentLocale.plurals.month;
+  const days = currentLocale.plurals.day;
   if (error.isError) {
     return (
       <>
         <h1 className="mb-6 text-5xl font-extrabold italic">
-          <EmptyOutput title="years"></EmptyOutput>
+          <EmptyOutput title={years}></EmptyOutput>
           <br></br>
-          <EmptyOutput title="months"></EmptyOutput>
+          <EmptyOutput title={months}></EmptyOutput>
           <br></br>
-          <EmptyOutput title="days"></EmptyOutput>
+          <EmptyOutput title={days}></EmptyOutput>
         </h1>
       </>
     );
@@ -216,21 +228,21 @@ function NeoDisplayResult({ display, error }: TypePropAge) {
       <h1 className="mb-6 text-5xl font-extrabold italic">
         <CalendarOutput
           number={display.age.year}
-          title={"  years"}
+          title={years}
           delay={0}
           pre_delay={0}
         />
         <br></br>
         <CalendarOutput
           number={display.age.month}
-          title="months"
+          title={months}
           delay={0}
           pre_delay={0}
         ></CalendarOutput>
         <br></br>
         <CalendarOutput
           number={display.age.day}
-          title="days"
+          title={days}
           delay={0}
           pre_delay={0}
         ></CalendarOutput>

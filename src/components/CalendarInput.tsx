@@ -1,6 +1,7 @@
 import React from "react";
 import type { Dispatch, SetStateAction } from "react";
 import type { NeoError, OutputReset } from "./CalendarForm";
+import { MyLocale } from "~/locales/allLocales";
 export type ErrorObj = {
   isError: boolean;
   errorMessage: string;
@@ -17,6 +18,7 @@ type CalendarInput = {
   customError: NeoError;
   submit: boolean;
   resetOutput: OutputReset;
+  currentLocale: MyLocale;
 };
 export function CalendarInput({
   id,
@@ -29,6 +31,7 @@ export function CalendarInput({
   customError,
   submit,
   resetOutput,
+  currentLocale,
 }: CalendarInput) {
   const hasAnyDefaultValue = textInput === defaultValue;
   const isError = isErrorCheck(textInput, errorMessage, errorRange);
@@ -56,7 +59,7 @@ export function CalendarInput({
         htmlFor={id}
         className=" text-xs font-light uppercase text-template_smokey_grey"
       >
-        {id}
+        {currentLocale[id]}
       </label>
       <input
         className={className}
