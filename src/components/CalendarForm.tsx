@@ -135,6 +135,8 @@ function AgeForm({
   const isYearError = checkForYearError(currentAge, yearInput);
   const isDayError = checkForDayError(currentAge);
   const displayError = getDisplayError([isYearError, isDayError]);
+  console.log("my errors: ", isDayError, " from ", currentAge);
+
   return (
     <>
       <form
