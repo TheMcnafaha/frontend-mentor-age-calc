@@ -6,6 +6,7 @@ import type {
   Display,
 } from "./CalendarForm";
 import type { ErrorObj } from "../components/CalendarInput";
+import { MyLocale } from "~/locales/allLocales";
 type PossibleAge = {
   year: string | number | string;
   month: string | number | string;
@@ -137,7 +138,10 @@ function dispayYearError(possibeAge: InputAge): ErrorObj {
   }
   return { isError: false, errorMessage: " " };
 }
-export function checkForDayError(possibleAge: InputAge): NeoError {
+export function checkForDayError(
+  possibleAge: InputAge,
+  currentLocale: MyLocale
+): NeoError {
   if (possibleAge.day === "DD") {
     return { isError: true, errorMessage: " " };
   }
@@ -156,12 +160,12 @@ export function checkForDayError(possibleAge: InputAge): NeoError {
       shouldBeAge.year,
       shouldBeAge.month - 1,
       1
-    ).toLocaleString("default", { month: "long" });
+    ).toLocaleString(currentLocale.locale, { month: "long" });
 
     if (shouldBeAge.day > lastPossibleDay) {
       return {
         isError: true,
-        errorMessage: `The last day of ${monthName} ${shouldBeAge.year} is the ${lastPossibleDay}th`,
+        errorMessage: `${currentLocale.errors.checkDay.start} ${monthName} ${shouldBeAge.year} ${currentLocale.errors.checkDay.middle} ${lastPossibleDay}${currentLocale.errors.checkDay.end}`,
       } as ErrorObj;
     }
     return { isError: false, errorMessage: "" };

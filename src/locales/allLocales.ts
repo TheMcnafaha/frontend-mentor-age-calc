@@ -5,6 +5,7 @@ type AllLocales = {
   es: MyLocale;
 };
 export type MyLocale = {
+  locale: string;
   title: string;
   day: string;
   month: string;
@@ -32,6 +33,7 @@ export type MyLocale = {
   digitError: string;
 };
 const defaultLocale: MyLocale = {
+  locale: "en",
   title: "Age App Calculator",
   day: "day",
   month: "month",
@@ -45,6 +47,11 @@ const defaultLocale: MyLocale = {
     day: "Must be a valid day",
     month: "Must be a valid month",
     year: "Must be in the past",
+    checkDay: {
+      start: "The last day of",
+      middle: "is the",
+      end: "th",
+    },
   },
   plurals: {
     day: "days",
@@ -54,6 +61,7 @@ const defaultLocale: MyLocale = {
   digitError: "Only digits allowed!",
 };
 const esLocale: MyLocale = {
+  locale: "es",
   title: "Calculadora de Edad",
   day: "dia",
   month: "mes",
@@ -67,6 +75,11 @@ const esLocale: MyLocale = {
     day: "Tiene que ser un dia valido",
     month: "Tiene que ser un mes valido",
     year: "Tiene que estar en el pasado",
+    checkDay: {
+      start: "El ultimo dia de",
+      middle: "es el",
+      end: "",
+    },
   },
   plurals: {
     day: "dias",

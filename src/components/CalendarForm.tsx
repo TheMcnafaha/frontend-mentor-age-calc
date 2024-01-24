@@ -133,7 +133,7 @@ function AgeForm({
     day: parseInt(dayInput, 10),
   };
   const isYearError = checkForYearError(currentAge, yearInput);
-  const isDayError = checkForDayError(currentAge);
+  const isDayError = checkForDayError(currentAge, currentLocale);
   const displayError = getDisplayError([isYearError, isDayError]);
   console.log("my errors: ", isDayError, " from ", currentAge);
 
