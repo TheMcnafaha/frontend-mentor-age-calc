@@ -18,6 +18,11 @@ export type MyLocale = {
     day: string;
     month: string;
     year: string;
+    checkDay: {
+      start: string;
+      middle: string;
+      end: string;
+    };
   };
   plurals: {
     day: string;
