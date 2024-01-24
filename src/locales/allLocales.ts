@@ -24,6 +24,7 @@ export type MyLocale = {
     month: string;
     year: string;
   };
+  digitError: string;
 };
 const defaultLocale: MyLocale = {
   title: "Age App Calculator",
@@ -45,6 +46,7 @@ const defaultLocale: MyLocale = {
     month: "months",
     year: "years",
   },
+  digitError: "Only digits allowed!",
 };
 const esLocale: MyLocale = {
   title: "Calculadora de Edad",
@@ -66,6 +68,7 @@ const esLocale: MyLocale = {
     month: "meses",
     year: "años",
   },
+  digitError: "Solo se permiten digitos",
 };
 const allLocales: AllLocales = {
   en: defaultLocale,

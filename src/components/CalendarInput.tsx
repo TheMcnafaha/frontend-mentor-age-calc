@@ -34,7 +34,12 @@ export function CalendarInput({
   currentLocale,
 }: CalendarInput) {
   const hasAnyDefaultValue = textInput === defaultValue;
-  const isError = isErrorCheck(textInput, errorMessage, errorRange);
+  const isError = isErrorCheck(
+    textInput,
+    errorMessage,
+    currentLocale.digitError,
+    errorRange
+  );
   let className =
     "m-1  ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl mix-blend-darken ring-1       ring-template_ligth_grey lg:hover:ring-template_purple lg:hover:ring-2 ";
   let appliedErrorMessage = "";
@@ -92,11 +97,12 @@ export function CalendarInput({
 function isErrorCheck(
   input: string | number,
   defaultError: string,
+  digitError: string,
   errRange: [number, number]
 ): NeoError {
   const isString = typeof input === "string";
   if (isString && !allDigits(input)) {
-    return { isError: true, errorMessage: "Only digits allowed!" };
+    return { isError: true, errorMessage: digitError };
   }
   const parsed = isString ? parseInt(input, 10) : input;
   if (!Number.isInteger(parsed)) {
