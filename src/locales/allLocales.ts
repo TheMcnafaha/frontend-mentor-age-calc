@@ -1,10 +1,10 @@
 import { createContext } from "react";
 
 type AllLocales = {
-  en: Locale;
-  es: Locale;
+  en: MyLocale;
+  es: MyLocale;
 };
-type Locale = {
+export type MyLocale = {
   title: string;
   day: string;
   month: string;
@@ -20,7 +20,7 @@ type Locale = {
     year: string;
   };
 };
-const defaultLocale: Locale = {
+const defaultLocale: MyLocale = {
   title: "Age App Calculator",
   day: "day",
   month: "month",
@@ -36,7 +36,7 @@ const defaultLocale: Locale = {
     year: "Must be in the past",
   },
 };
-const esLocale: Locale = {
+const esLocale: MyLocale = {
   title: "Calculadora de Edad",
   day: "dia",
   month: "mes",

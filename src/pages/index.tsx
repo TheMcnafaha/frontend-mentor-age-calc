@@ -7,7 +7,6 @@ import { useContext } from "react";
 
 const Home: NextPage = () => {
   const { locale } = useRouter();
-  console.log("me is a ", locale);
   const locales = useContext(LangContext);
   let currentLocale = locales.en;
   if (locale === "es") {

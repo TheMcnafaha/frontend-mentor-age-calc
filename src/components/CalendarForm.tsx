@@ -11,7 +11,7 @@ import {
   getNewDisplayAge,
 } from "./ageOutputLogic";
 import { useRouter } from "next/router";
-import { LangContext } from "~/locales/allLocales";
+import { LangContext, MyLocale } from "~/locales/allLocales";
 export type Display = {
   age: DisplayAge;
   error: string;
@@ -44,6 +44,7 @@ type AgeFormInput = {
   submit: boolean;
   setSubmit: StateSubmitFn;
   resetOutput: OutputReset;
+  currentLocale: MyLocale;
 };
 export type NeoError = {
   isError: boolean;
@@ -68,15 +69,15 @@ export const CalendarForm: NextPage = () => {
     day: "DD",
   } as InputAge);
   const [submitted, setsubmitted] = useState(false);
-  const [year, setyear] = useState("YYYY");
+  const [year, setyear] = useState(currentLocale.abreviations.year);
   const [month, setmonth] = useState("MM");
   const [day, setday] = useState("DD");
   const display: Display = getNewDisplayAge(inputAge, submitted, setsubmitted);
   function resetOutput() {
     const defaultOutput = {
-      year: "YYYY",
-      month: "MM",
-      day: "DD",
+      year: currentLocale.abreviations.year,
+      month: currentLocale.abreviations.month,
+      day: currentLocale.abreviations.day,
     };
     if (display.age === inputAge) {
       return;
@@ -99,6 +100,7 @@ export const CalendarForm: NextPage = () => {
         submit={submitted}
         setSubmit={setsubmitted}
         resetOutput={resetOutput}
+        currentLocale={currentLocale}
       ></AgeForm>
     </div>
   );
@@ -115,6 +117,7 @@ function AgeForm({
   submit,
   setSubmit,
   resetOutput,
+  currentLocale,
 }: AgeFormInput) {
   const dayInput = currentDay;
   const monthInput = currentMonth;
@@ -149,8 +152,8 @@ function AgeForm({
             submit={submit}
             maxInputLength={2}
             id={"day"}
-            errorMessage={"Must be a valid day"}
-            defaultValue="DD"
+            errorMessage={currentLocale.errors.day}
+            defaultValue={currentLocale.abreviations.day}
             errorRange={[1, 32]}
             textInput={dayInput}
             setTextInput={setCurrentDay}
@@ -162,7 +165,7 @@ function AgeForm({
             maxInputLength={2}
             id={"month"}
             errorMessage={"Must be a valid month"}
-            defaultValue="MM"
+            defaultValue={currentLocale.abreviations.month}
             errorRange={[1, 13]}
             textInput={monthInput}
             setTextInput={setCurrentMonth}
@@ -174,7 +177,7 @@ function AgeForm({
             maxInputLength={4}
             id={"year"}
             errorMessage={"Must be in the past"}
-            defaultValue="YYYY"
+            defaultValue={currentLocale.abreviations.year}
             errorRange={[-Infinity, new Date().getFullYear() + 1]}
             textInput={yearInput}
             setTextInput={setCurrentYear}
