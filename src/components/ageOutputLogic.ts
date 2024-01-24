@@ -6,7 +6,7 @@ import type {
   Display,
 } from "./CalendarForm";
 import type { ErrorObj } from "../components/CalendarInput";
-import { MyLocale } from "~/locales/allLocales";
+import type { MyLocale } from "~/locales/allLocales";
 type PossibleAge = {
   year: string | number | string;
   month: string | number | string;
@@ -37,7 +37,8 @@ function makeTS_ReturnNumber(
 export function getNewDisplayAge(
   currentAge: InputAge,
   isSubmit: boolean,
-  setSubmit: StateSubmitFn
+  setSubmit: StateSubmitFn,
+  currentLocale: MyLocale
 ): Display {
   const outputAge: DisplayAge = {
     year: "--",
@@ -79,7 +80,7 @@ export function getNewDisplayAge(
   }
 
   const isYearError = dispayYearError(currentAge);
-  const isDayError = checkForDayError(currentAge);
+  const isDayError = checkForDayError(currentAge, currentLocale);
   if (isYearError.isError) {
     return { age: emptyAge, error: isYearError.errorMessage };
   }
@@ -121,8 +122,6 @@ function dispayYearError(possibeAge: InputAge): ErrorObj {
   const isYear = Number.isInteger(possibeAge.year);
   // return { isError: true, errorMessage: "test" };
   if (makeTS_ReturnNumber(possibeAge.year) < 0) {
-    console.log(possibeAge.year, makeTS_ReturnNumber(possibeAge.year));
-
     return { isError: true, errorMessage: "Date must be older than 0 CE" };
   }
   if (isDay && isMonth && isYear) {
@@ -187,8 +186,6 @@ export function checkForYearError(
     return { isError: true, errorMessage: "" };
   }
   if (makeTS_ReturnNumber(possibeAge.year) < 0) {
-    console.log(possibeAge.year, makeTS_ReturnNumber(possibeAge.year));
-
     return { isError: true, errorMessage: "Date must be older than 0 CE" };
   }
   if (isDay && isMonth && isYear) {

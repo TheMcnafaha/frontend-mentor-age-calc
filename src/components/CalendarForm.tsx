@@ -11,7 +11,7 @@ import {
   getNewDisplayAge,
 } from "./ageOutputLogic";
 import { useRouter } from "next/router";
-import { LangContext, MyLocale } from "~/locales/allLocales";
+import { LangContext, type MyLocale } from "~/locales/allLocales";
 export type Display = {
   age: DisplayAge;
   error: string;
@@ -77,7 +77,12 @@ export const CalendarForm: NextPage = () => {
   const [year, setyear] = useState(currentLocale.abreviations.year);
   const [month, setmonth] = useState("MM");
   const [day, setday] = useState("DD");
-  const display: Display = getNewDisplayAge(inputAge, submitted, setsubmitted);
+  const display: Display = getNewDisplayAge(
+    inputAge,
+    submitted,
+    setsubmitted,
+    currentLocale
+  );
   function resetOutput() {
     const defaultOutput = {
       year: currentLocale.abreviations.year,
@@ -135,7 +140,6 @@ function AgeForm({
   const isYearError = checkForYearError(currentAge, yearInput);
   const isDayError = checkForDayError(currentAge, currentLocale);
   const displayError = getDisplayError([isYearError, isDayError]);
-  console.log("my errors: ", isDayError, " from ", currentAge);
 
   return (
     <>

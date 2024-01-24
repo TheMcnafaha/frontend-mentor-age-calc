@@ -1,8 +1,7 @@
 import React from "react";
 import type { Dispatch, SetStateAction } from "react";
 import type { NeoError, OutputReset } from "./CalendarForm";
-import { MyLocale } from "~/locales/allLocales";
-import { checkForDayError } from "./ageOutputLogic";
+import type { MyLocale } from "~/locales/allLocales";
 export type ErrorObj = {
   isError: boolean;
   errorMessage: string;
@@ -30,7 +29,6 @@ export function CalendarInput({
   textInput,
   setTextInput,
   customError,
-  submit,
   resetOutput,
   currentLocale,
 }: CalendarInput) {
@@ -60,7 +58,6 @@ export function CalendarInput({
     className =
       "m-1  ml-[.10rem] cursor-pointer rounded py-1 pl-3 text-xl mix-blend-darken ring-1       ring-template_ligth_grey lg:hover:ring-template_purple lg:hover:ring-2 ";
   }
-  console.log("here ", id, customError.isError);
   return (
     <div className="flex w-1/3 flex-col pr-5 ">
       <label
